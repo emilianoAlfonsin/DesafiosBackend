@@ -5,14 +5,18 @@ class ProductManager {
 
     constructor (path) { 
         this.path = path
-        this.products = []
     }
 
     // Método para obtener todos los productos del array de productos
     getProducts = async() =>{
-        const data = await fs.promises.readFile(this.path, 'utf-8')
-        const products = data ? JSON.parse(data) : []
-        return products
+        try{
+            const data = await fs.promises.readFile(this.path, 'utf-8')
+            const products = JSON.parse(data)
+            return products
+        }
+        catch(error){
+            await fs.promises.writeFile(this.path, '[]')
+        }
     }  
 
     // Método para agregar productos al array de productos
@@ -46,8 +50,7 @@ class ProductManager {
         return console.log("El código del producto ya existe")
         } 
         
-        // Agregando el producto al array de productos
-
+        // Agregando el producto al array de productos y sobreescribiendo el JSON
         products.push(product)
         await fs.promises.writeFile(this.path, JSON.stringify(products))
 
@@ -56,32 +59,49 @@ class ProductManager {
 
 
     // Método para obtener un producto del array de productos por su id
-    getProductByID = (id) => {
-        const prodById = this.products.find((prod) => prod.id == id)
+    getProductByID = async (id) => {
+        const products = await this.getProducts()
+        const prodById = products.find((prod) => prod.id == id)
         prodById 
         ? console.log(prodById) 
         : console.log("No se encuentra el producto seleccionado")
     }
 
     // Método para eliminar un producto del array de productos por su id
-    deleteProductById = (id) => {
-        const prodById = this.products.find((prod) => prod.id == id)
+    deleteProductById = async (id) => {
+        const products = await this.getProducts()
+        const prodById = products.find((prod) => prod.id === id)
         prodById
-        ? this.products.splice(prodById, 1) && console.log("Producto eliminado")
+        ? products.splice(prodById, 1) && console.log(`${prodById.title} eliminado`)
         : console.log("No se encuentra el producto seleccionado")
+
+        await fs.promises.writeFile(this.path, JSON.stringify(products))
+    }
+
+    updateProduct = async (id, {key : value}) => {
+        const products = await this.getProducts()
+        const prodById = products.find((prod) => prod.id == id)
+
+        prodById
+
+
+        await fs.promises.writeFile(this.path, JSON.stringify(products))
     }
 
 }
 // Testeando funcionamiento
-async function run () {
+async function test() {
+    const manager = new ProductManager('./products.json')
+    await manager.getProducts()
+    await manager.addProduct('Producto 1', 'Descripción del producto 15', 100, 'imagen1.jpg', 'ABC1', 10, true)
+    await manager.addProduct('Producto 2', 'Descripción del producto 15', 100, 'imagen1.jpg', 'ABC2', 10, true)
+    await manager.addProduct('Producto 3', 'Descripción del producto 15', 100, 'imagen1.jpg', 'ABC3', 10, true)
+    await manager.addProduct('Producto 4', 'Descripción del producto 15', 100, 'imagen1.jpg', 'ABC4', 10, true)
 
-const manager = new ProductManager('./products.json')
-
-// Agregando productos
-
-await manager.addProduct('Producto 10', 'Descripción del producto 10', 100, 'imagen1.jpg', 'ABC10', 10, true)
-
-await manager.getProducts()
+    await manager.getProductByID(1)
+    await manager.deleteProductById(2)
+    // await manager.updateProduct(2, {title : 'Producto 2 modificado'})
+    await manager.getProductByID(2)
 }
 
-run()
+test()
