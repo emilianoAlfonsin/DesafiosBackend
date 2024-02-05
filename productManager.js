@@ -1,27 +1,31 @@
 const fs = require('fs')
 
+// 1) Al instanciar la clase, que chequee si existe el archivo (llamemoslo productos.json) pueden usar fsExistsSync
+// A) Si no existe, lo crea, junto con un array vacio
+// B) Si existe, lee lo que hay en el archivo, lo parsea a json y lo graba en el array dentro de la clase. (Estas tres cosas pasan en el constructor)
+
 // Creación de la clase ProductManager
 class ProductManager {
 
+    products = new Array()
+
     constructor (path) { 
         this.path = path
+        if (fs.existsSync(path)) {
+            this.products = JSON.parse(fs.readFileSync(path, 'utf-8'))
+            console.log("Archivo existente")
+        } else {
+            fs.writeFileSync(path, '[]')
+            console.log("Archivo creado")
+        }
     }
 
     // Método para obtener todos los productos del array de productos
     getProducts = async() =>{
-        try{
-            // Verificación de que el archivo exista
-            const data = await fs.promises.readFile(this.path, 'utf-8')
-            const products = JSON.parse(data)
-            return products
-        }
-        catch(error){
-            // Si el archivo no existe, se crea uno vacío
-            await fs.promises.writeFile(this.path, '[]')
-            const products = []
-            return console.log(products)
-        }
-    }  
+        const products = await fs.promises.readFile(this.path, 'utf-8')
+        // console.log(products)
+        return JSON.parse(products)
+    }
     
     // Método para agregar productos al array de productos
     addProduct = async (title, description, price, tumbnail, code, stock, offer) => {
@@ -79,7 +83,7 @@ class ProductManager {
         const prodById = products.find((prod) => prod.id === id)
 
         prodById
-        ? products.splice(prodById, 1) && console.log(`${prodById.title} eliminado`)
+        ? products.splice(products.indexOf(prodById), 1) && console.log(`${prodById.title} eliminado`) 
         : console.log("No se encuentra el producto seleccionado")
 
         await fs.promises.writeFile(this.path, JSON.stringify(products))
@@ -91,7 +95,7 @@ class ProductManager {
         const prodById = products.find((prod) => prod.id === id)
         
         prodById
-        ? {...prodById, ...pair} && console.log(`${prodById.title} actualizado`)
+        ? {...prodById, ...pair} && console.log(`${prodById.title} actualizado`) // no se si acá debería utilizar Objectc.asigns en vez de spread
         : console.log("No se encuentra el producto seleccionado")
 
         await fs.promises.writeFile(this.path, JSON.stringify(products))
@@ -101,17 +105,15 @@ class ProductManager {
 // Testeando funcionamiento
 async function test() {
     const manager = new ProductManager('./products.json')
-    await manager.getProducts()
+    // await manager.addProduct('Producto 1', 'Descripción del producto 15', 100, 'imagen1.jpg', 'ABC1', 10, true)
     // await manager.addProduct('Producto 2', 'Descripción del producto 15', 100, 'imagen1.jpg', 'ABC2', 10, true)
     // await manager.getProducts()
-    // await manager.addProduct('Producto 2', 'Descripción del producto 15', 100, 'imagen1.jpg', 'ABC2', 10, true)
     // await manager.addProduct('Producto 3', 'Descripción del producto 15', 100, 'imagen1.jpg', 'ABC3', 10, true)
     // await manager.addProduct('Producto 4', 'Descripción del producto 15', 100, 'imagen1.jpg', 'ABC4', 10, true)
-
     // await manager.getProductByID(1)
     // await manager.deleteProductById(2)
-    await manager.updateProduct(1, {title : 'Producto 1 modificado'})
     // await manager.getProductByID(2)
+    // await manager.updateProduct(1, {title : 'Producto 1 modificado'})
 }
 
 test()
