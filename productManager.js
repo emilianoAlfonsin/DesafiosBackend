@@ -95,7 +95,7 @@ class ProductManager {
         const prodById = products.find((prod) => prod.id === id)
         
         prodById
-        ? {...prodById, ...pair} && console.log(`${prodById.title} actualizado`) // no se si acá debería utilizar Objectc.asigns en vez de spread
+        ? Object.assign(prodById, pair) && console.log(`${prodById.title} actualizado`)
         : console.log("No se encuentra el producto seleccionado")
 
         await fs.promises.writeFile(this.path, JSON.stringify(products))
