@@ -1,11 +1,11 @@
-const fs = require('fs')
+import fs from 'fs'
 
 // 1) Al instanciar la clase, que chequee si existe el archivo (llamemoslo productos.json) pueden usar fsExistsSync
 // A) Si no existe, lo crea, junto con un array vacio
 // B) Si existe, lee lo que hay en el archivo, lo parsea a json y lo graba en el array dentro de la clase. (Estas tres cosas pasan en el constructor)
 
 // Creación de la clase ProductManager
-class ProductManager {
+export default class ProductManager {
 
     products = new Array()
 
@@ -67,7 +67,7 @@ class ProductManager {
 
 
     // Método para obtener un producto del array de productos por su id
-    getProductByID = async (id) => {
+    getProductById = async (id) => {
         const products = await this.getProducts()
         const prodById = products.find((prod) => prod.id == id)
         prodById 
@@ -90,12 +90,12 @@ class ProductManager {
     }
 
     // Método para actualizar un producto del array de productos por su id y sobreescribiendo el JSON con el nuevo producto modificado.
-    updateProduct = async (id, pair ) => {
+    updateProduct = async (id, keyValue ) => {
         const products = await this.getProducts()
         const prodById = products.find((prod) => prod.id === id)
         
         prodById
-        ? Object.assign(prodById, pair) && console.log(`${prodById.title} actualizado`)
+        ? Object.assign(prodById, keyValue) && console.log(`${prodById.title} actualizado`)
         : console.log("No se encuentra el producto seleccionado")
 
         await fs.promises.writeFile(this.path, JSON.stringify(products))
@@ -103,17 +103,18 @@ class ProductManager {
 
 }
 // Testeando funcionamiento
-async function test() {
-    const manager = new ProductManager('./products.json')
+// async function test() {
+    // const manager = new ProductManager('./products.json')
     // await manager.addProduct('Producto 1', 'Descripción del producto 15', 100, 'imagen1.jpg', 'ABC1', 10, true)
     // await manager.addProduct('Producto 2', 'Descripción del producto 15', 100, 'imagen1.jpg', 'ABC2', 10, true)
     // await manager.getProducts()
     // await manager.addProduct('Producto 3', 'Descripción del producto 15', 100, 'imagen1.jpg', 'ABC3', 10, true)
     // await manager.addProduct('Producto 4', 'Descripción del producto 15', 100, 'imagen1.jpg', 'ABC4', 10, true)
-    // await manager.getProductByID(1)
+    // await manager.getProductById(1)
     // await manager.deleteProductById(2)
-    // await manager.getProductByID(2)
+    // await manager.getProductById(2)
     // await manager.updateProduct(1, {title : 'Producto 1 modificado'})
-}
+// }
 
-test()
+// test()
+
