@@ -4,7 +4,7 @@ import ProductManager from "./productManager.js"
 
 const app = express()
 const port = 8080
-const productManager = new ProductManager()
+const productManager = new ProductManager('./products.json')
 
 app.use(express.urlencoded({encoded:true}))
 

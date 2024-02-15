@@ -2,7 +2,7 @@
     {
         "id": 1,
         "title": "Producto 1",
-        "description": "Descripción del producto 15",
+        "description": "Descripción del producto 1",
         "price": 100,
         "tumbnail": "imagen1.jpg",
         "code": "ABC1",
@@ -20,9 +20,9 @@
         "offer": true
     },
     {
-        "id": 6,
-        "title": "Producto 6",
-        "description": "Descripción del producto 6",
+        "id": 3,
+        "title": "Producto 3",
+        "description": "Descripción del producto 3",
         "price": 100,
         "tumbnail": "imagen1.jpg",
         "code": "ABC3",
