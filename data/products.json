@@ -7,7 +7,7 @@
         "tumbnail": "imagen1.jpg",
         "code": "ABC1",
         "stock": 10,
-        "offer": true
+        "status": true
     },
     {
         "id": 2,
@@ -17,7 +17,7 @@
         "tumbnail": "imagen1.jpg",
         "code": "ABC2",
         "stock": 10,
-        "offer": true
+        "status": true
     },
     {
         "id": 3,
@@ -27,7 +27,7 @@
         "tumbnail": "imagen1.jpg",
         "code": "ABC3",
         "stock": 10,
-        "offer": true
+        "status": true
     },
     {
         "id": 4,
@@ -37,7 +37,7 @@
         "tumbnail": "imagen1.jpg",
         "code": "ABC4",
         "stock": 10,
-        "offer": true
+        "status": true
     },
     {
         "id": 5,
@@ -47,7 +47,7 @@
         "tumbnail": "imagen1.jpg",
         "code": "ABC5",
         "stock": 10,
-        "offer": true
+        "status": true
     },
     {
         "id": 6,
@@ -57,6 +57,6 @@
         "tumbnail": "imagen1.jpg",
         "code": "ABC6",
         "stock": 10,
-        "offer": true
+        "status": true
     }
 ]
