@@ -3,9 +3,8 @@ import { parse } from 'path'
 
 export default class CartManager {
 
-    cart = new Array()
-
     constructor(path) {
+        this.carts = []
         this.path = path
         if (!fs.existsSync(path)) {
             fs.writeFileSync(path, '[]')
@@ -78,29 +77,29 @@ export default class CartManager {
         carts.splice(cartIndex, 1)
         console.log(`Carrito ${id} eliminado`)
 
-        await fs.promises.writeFile(this.path, JSON.stringify(carts))
+        await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 4))
     }
 
     // Método para eliminar un producto del carrito seleccionado.
-    deleteProductFromCart = async(cid, pid) =>{
+    //deleteProductFromCart = async(cid, pid) =>{
         //a desarrollar
-    }
+    //}
 
     // Método para actualizar la cantidad de un producto en un carrito.
-    updateProductFromCart = async(cid, pid, quantity) =>{
-        const carts = await this.getCarts()
-        const cartById = await this.getCartById(cid)
+    // updateProductFromCart = async(cid, pid, quantity) =>{
+    //     const carts = await this.getCarts()
+    //     const cartById = await this.getCartById(cid)
+    //     const prodId = parseInt(pid)
+    //     if (!cartById) throw new Error("No se encuentra el carrito seleccionado")
 
-        if (!cartById) throw new Error("No se encuentra el carrito seleccionado")
+    //     const product = cartById.products.findIndex(product => product.id === prodId)
 
-        const product = cartById.products.find(product => product.id === pid)
+    //     if (product === -1) throw new Error("No se encuentra el producto seleccionado")
 
-        if (!product) throw new Error("No se encuentra el producto seleccionado")
+    //     product.quantity = parseInt(quantity)
 
-        product.quantity = quantity
-
-        console.log(`Cantidad del producto ${pid} en el carrito ${cid} actualizada a ${quantity}`)
-        await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 4))
-    }
+    //     console.log(`Cantidad del producto ${pid} en el carrito ${cid} actualizada a ${quantity}`)
+    //     await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 4))
+    // }
 
 }
