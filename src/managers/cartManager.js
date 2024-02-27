@@ -44,35 +44,14 @@ export default class CartManager {
 
     // Método para agregar un producto al carrito seleccionado desde products.json
     addProductToCart = async(cid, pid) =>{ 
-        // busqueda de carrito por id, si no lo encuentra lo crea
-        // const allCarts = await this.getCarts()
-        // const cartId = parseInt(cid)
-        // const cart = allCarts.findIndex(cart => cart.id === cartId)
-        // if (cart === -1) cart = await this.addCart()
-
-        // busqueda de producto por id en el carrito
-        // const prodId = parseInt(pid)
-        // const productInCart = cart.products.find(product => product.id === prodId) 
-
-        // si existe el producto, le suma 1 a la cantidad, si no existe lo crea.
-        // !productInCart
-        // ? cart.products.push({id: pid, quantity: 1})
-        // : cart.products[productInCart].quantity++
-
-        // Obtener todos los carritos, actualizar el carrito específico y escribir los carritos actualizados en el archivo.
-        // const updatedCarts = allCarts.map(c=> c.id === cid ? cart : c)
-        // await fs.promises.writeFile(this.path, JSON.stringify(updatedCarts, null, 4))
-
-        // return cart
-
-        // Busqueda de carrito por id, si no lo encuentra lo crea
+        // Busqueda de todos los carritos y el carrito seleccionado.
         const allCarts = await this.getCarts()
         const cartId = parseInt(cid)
         const cartIndex = allCarts.findIndex(cart => cart.id === cartId)
         
         const cart = allCarts[cartIndex]
 
-        // Busqueda de producto por id en el carrito
+        // Busqueda de producto por id en el carrito.
         const prodId = parseInt(pid)
         const productIndex = cart.products.findIndex(product => product.id === prodId)
 
@@ -91,7 +70,8 @@ export default class CartManager {
     // Método para eliminar un carrito del array de carritos.
     deleteCartById = async(id) =>{
         const carts = await this.getCarts()
-        const cartIndex = carts.findIndex(cart => cart.id === id)
+        const cartId = parseInt(id)
+        const cartIndex = carts.findIndex(cart => cart.id === cartId)
 
         if (cartIndex === -1) throw new Error("No se encuentra el carrito seleccionado")
 
