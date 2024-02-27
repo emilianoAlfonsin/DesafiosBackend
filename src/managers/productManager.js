@@ -3,12 +3,11 @@ import fs from 'fs'
 // Creación de la clase ProductManager.
 export default class ProductManager {
 
-    products = new Array()
-
     constructor (path) { 
+        this.products = []
         this.path = path
         if (!fs.existsSync(path)) {
-            fs.writeFileSync(path, '[]')
+            fs.writeFileSync(path, JSON.stringify(this.products, null, 4))
             console.log("Archivo creado")
         }
     }
@@ -80,19 +79,19 @@ export default class ProductManager {
     }
 
     // Método para actualizar un producto del array de productos por su id y sobreescribiendo el JSON con el nuevo producto modificado.
-    updateProduct = async (id, keyValue ) => {
-        if (!keyValue) throw new Error("Por favor, verifica que todos los campos del producto estén completos")
-        
-        const products = await this.getProducts()
-        const prodById = await this.getProductById(id)
-        console.log(prodById)
-        if (prodById === -1) throw new Error("No se encuentra el producto seleccionado")
+    updateProduct = async (id, updatedFields ) => {
+        const products = await this.getProducts();
+        const productById= products.find(prod => prod.id === id);
 
-        Object.assign(products[prodById], keyValue) 
-        console.log(`${prodById.title} actualizado`)
-        
+        if (productById) throw new Error("Producto no encontrado")
+
+        const updatedProduct = { ...products[productById], ...updatedFields }
+        products[productById] = updatedProduct
+
         await fs.promises.writeFile(this.path, JSON.stringify(products, null, 4))
-        return prodById
+
+        console.log(`${updatedProduct.title} actualizado`)
+        return updatedProduct
     }
 }
 

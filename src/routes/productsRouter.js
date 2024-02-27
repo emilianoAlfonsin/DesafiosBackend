@@ -54,7 +54,7 @@ productRouter.put('/:pid/', async (req, res) => {
             return
         }
         const updatedProduct = await productManager.updateProduct(req.params.pid, req.body)
-        res.json({ success: 'Producto actualizado correctamente', product: updatedProduct })
+        res.status(200).json({ success: 'Producto actualizado correctamente', product: updatedProduct })
     } catch (error) {
         console.error('Error al actualizar el producto:', error)
         res.status(500).json({ error: 'Ocurrió un error al actualizar el producto' })
@@ -64,7 +64,6 @@ productRouter.put('/:pid/', async (req, res) => {
 // Eliminar un producto mediante su Id. [Requerida]
 productRouter.delete('/:pid/', async (req, res) => {
     try{
-        const product = await productManager.getProductById(req.params.pid)
         await productManager.deleteProductById(req.params.pid)
         res.json("Producto eliminado")
     } catch (error) {
