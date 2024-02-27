@@ -1,4 +1,5 @@
-import fs from 'fs';
+import fs from 'fs'
+import { parse } from 'path'
 
 export default class CartManager {
 
@@ -44,20 +45,44 @@ export default class CartManager {
     // Método para agregar un producto al carrito seleccionado desde products.json
     addProductToCart = async(cid, pid) =>{ 
         // busqueda de carrito por id, si no lo encuentra lo crea
-        let cart = await this.getCartById(cid) 
-        if (!cart) cart = await this.addCart()
+        // const allCarts = await this.getCarts()
+        // const cartId = parseInt(cid)
+        // const cart = allCarts.findIndex(cart => cart.id === cartId)
+        // if (cart === -1) cart = await this.addCart()
 
         // busqueda de producto por id en el carrito
-        const productInCart = cart.products.find(product => product.id === pid) 
+        // const prodId = parseInt(pid)
+        // const productInCart = cart.products.find(product => product.id === prodId) 
 
         // si existe el producto, le suma 1 a la cantidad, si no existe lo crea.
-        productInCart
-        ? cart.products[productInCart].quantity++
-        : cart.products.push({id: pid, quantity: 1})
+        // !productInCart
+        // ? cart.products.push({id: pid, quantity: 1})
+        // : cart.products[productInCart].quantity++
 
         // Obtener todos los carritos, actualizar el carrito específico y escribir los carritos actualizados en el archivo.
+        // const updatedCarts = allCarts.map(c=> c.id === cid ? cart : c)
+        // await fs.promises.writeFile(this.path, JSON.stringify(updatedCarts, null, 4))
+
+        // return cart
+
+        // Busqueda de carrito por id, si no lo encuentra lo crea
         const allCarts = await this.getCarts()
-        const updatedCarts = allCarts.map(c=> c.id === cid ? cart : c)
+        const cartId = parseInt(cid)
+        const cartIndex = allCarts.findIndex(cart => cart.id === cartId)
+        
+        const cart = allCarts[cartIndex]
+
+        // Busqueda de producto por id en el carrito
+        const prodId = parseInt(pid)
+        const productIndex = cart.products.findIndex(product => product.id === prodId)
+
+        // Si existe el producto, le suma 1 a la cantidad, si no existe lo crea.
+        productIndex !== -1
+        ? cart.products[productIndex].quantity++
+        : cart.products.push({ id: pid, quantity: 1 })
+
+        // Obtener todos los carritos, actualizar el carrito específico y escribir los carritos actualizados en el archivo.
+        const updatedCarts = allCarts.map(c => c.id === cid ? cart : c)
         await fs.promises.writeFile(this.path, JSON.stringify(updatedCarts, null, 4))
 
         return cart
@@ -66,11 +91,11 @@ export default class CartManager {
     // Método para eliminar un carrito del array de carritos.
     deleteCartById = async(id) =>{
         const carts = await this.getCarts()
-        const cartIndex = carts.findIndex(cart => cart.id === id);
+        const cartIndex = carts.findIndex(cart => cart.id === id)
 
         if (cartIndex === -1) throw new Error("No se encuentra el carrito seleccionado")
 
-        carts.splice(cartIndex, 1);
+        carts.splice(cartIndex, 1)
         console.log(`Carrito ${id} eliminado`)
 
         await fs.promises.writeFile(this.path, JSON.stringify(carts))

@@ -80,9 +80,9 @@ export default class ProductManager {
 
     // Método para actualizar un producto del array de productos por su id y sobreescribiendo el JSON con el nuevo producto modificado.
     updateProduct = async (id, updatedFields ) => {
-        const products = await this.getProducts();
-        const prodId = parseInt(id);
-        const productIndex= products.findIndex(prod => prod.id === prodId);
+        const products = await this.getProducts()
+        const prodId = parseInt(id)
+        const productIndex= products.findIndex(prod => prod.id === prodId)
 
         if (productIndex === -1) throw new Error("Producto no encontrado")
 
