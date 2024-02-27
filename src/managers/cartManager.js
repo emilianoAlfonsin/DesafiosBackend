@@ -52,12 +52,12 @@ export default class CartManager {
 
         // Busqueda de producto por id en el carrito.
         const prodId = parseInt(pid)
-        const productIndex = cart.products.findIndex(product => product.id === prodId)
+        const productIndex = cart.products.findIndex(prod => prod.id === prodId)
 
         // Si existe el producto, le suma 1 a la cantidad, si no existe lo crea.
-        productIndex !== -1
-        ? cart.products[productIndex].quantity++
-        : cart.products.push({ id: pid, quantity: 1 })
+        productIndex === -1 
+        ? cart.products.push({id: prodId, quantity: 1}) 
+        : cart.products[productIndex].quantity++
 
         // Obtener todos los carritos, actualizar el carrito específico y escribir los carritos actualizados en el archivo.
         const updatedCarts = allCarts.map(c => c.id === cid ? cart : c)
@@ -83,7 +83,7 @@ export default class CartManager {
     // Método para eliminar un producto del carrito seleccionado.
     //deleteProductFromCart = async(cid, pid) =>{
         //a desarrollar
-    //}
+    //
 
     // Método para actualizar la cantidad de un producto en un carrito.
     // updateProductFromCart = async(cid, pid, quantity) =>{
