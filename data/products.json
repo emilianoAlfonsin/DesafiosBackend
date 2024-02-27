@@ -11,7 +11,7 @@
     },
     {
         "id": 2,
-        "title": "Producto 2",
+        "title": "modificado",
         "description": "Descripción del producto 2",
         "price": 100,
         "tumbnail": "imagen1.jpg",
