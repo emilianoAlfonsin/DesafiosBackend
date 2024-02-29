@@ -2,7 +2,7 @@
   "name": "desafio-01",
   "version": "1.0.0",
   "description": "",
-  "main": "productManager.js",
+  "main": "app.js",
   "type": "module",
   "scripts": {
     "start": "nodemon ./src/app.js"

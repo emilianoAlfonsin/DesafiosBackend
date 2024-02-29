@@ -55,7 +55,6 @@ export default class ProductManager {
         return product
     }
 
-
     // Método para obtener un producto del array de productos por su Id.
     getProductById = async (id) => {
         const products = await this.getProducts()
@@ -95,6 +94,8 @@ export default class ProductManager {
         return updatedProduct
     }
 }
+
+
 
 // Testeando funcionamiento
 // async function test() {
