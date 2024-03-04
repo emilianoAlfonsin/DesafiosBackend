@@ -30,28 +30,9 @@ const server = app.listen(port, () => {
 })
 const io = new Server(server)
 
-// io.on('connection', socket => {
-//     socket.on('message', data => {
-//         console.log(data)
-//     })
-    // socket.emit('message', 'Hola desde el servidor')
-    // io.on('connection', socket => {
-    //     console.log('Cliente conectado')
-    // })
-    
-    // socket.on('newProduct', async (product) => {
-    //     try {
-    //         // Agregar el nuevo producto utilizando la clase ProductManager
-    //         await productManager.addProduct(product.title, product.description, product.price, product.thumbnail, product.stock, product.status)
-    //         // Emitir un mensaje de confirmación al cliente si lo deseas
-    //         socket.emit('productAdded', product)
-    //     } catch (error) {
-    //         console.error('Error al agregar el producto:', error)
-    //         // Emitir un mensaje de error al cliente
-    //         socket.emit('productError', { error: 'Error al agregar el producto' })
-    //     }
-    // })
-// })
+io.on('connection', socket => {
+    console.log('Conectado')
+})
 
 app.use('/api/products/', productRouter)
 
