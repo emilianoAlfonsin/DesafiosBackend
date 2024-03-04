@@ -6,10 +6,11 @@ import __dirname from "./utils.js"
 import handlebars from "express-handlebars"
 import { Server } from "socket.io"
 import viewsRouter from "./routes/viewsRouter.js"
+import * as socket from 'socket.io'
 
 
 const app = express()
-const port = 8080
+const PORT = 8080
 
 
 // Midlewares
@@ -24,14 +25,19 @@ app.engine('handlebars', handlebars.engine())
 app.set('view engine', 'handlebars')
 
 
-
-const server = app.listen(port, () => {
-    console.log(`Server corriendo en el puerto ${port}`)
+const server = app.listen(PORT, () => {
+    console.log(`Server corriendo en el puerto ${PORT}`)
 })
 const io = new Server(server)
 
 io.on('connection', socket => {
     console.log('Conectado')
+    
+    socket.emit('productList', getProducts)
+
+    socket.on('addProduct', async(newProduct) => {
+        await product.addProduct(newProduct)
+    })
 })
 
 app.use('/api/products/', productRouter)
