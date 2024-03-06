@@ -20,8 +20,8 @@ export default class ProductManager {
     }
     
     // Método para agregar productos al array de productos.
-    addProduct = async (title, description, price, thumbnail, code, stock, offer) => {
-        if (!title || !description || !price || !thumbnail || !code || !stock || !offer) {
+    addProduct = async (title, description, price, thumbnail, code, stock, status) => {
+        if (!title || !description || !price || !thumbnail || !code || !stock || !status) {
             throw new Error("Por favor, verifica que todos los campos del producto estén completos")
         }
 
@@ -44,7 +44,7 @@ export default class ProductManager {
             thumbnail,
             code,
             stock,
-            offer
+            status
         }
 
         // Agregar el producto al array de productos y sobreescribir el JSON.

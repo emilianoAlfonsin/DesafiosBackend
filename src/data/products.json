@@ -48,5 +48,25 @@
         "code": "ABC5",
         "stock": 10,
         "status": true
+    },
+    {
+        "id": 6,
+        "title": "Producto 6",
+        "description": "Descripción del producto 6",
+        "price": "100",
+        "thumbnail": "imagen 6",
+        "code": "ABC6",
+        "stock": "10",
+        "status": "true"
+    },
+    {
+        "id": 7,
+        "title": "Producto 7",
+        "description": "Descripción del producto 7",
+        "price": "100",
+        "thumbnail": "imagen 7",
+        "code": "ABC7",
+        "stock": "10",
+        "status": "true"
     }
 ]
