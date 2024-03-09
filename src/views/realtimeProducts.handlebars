@@ -22,19 +22,10 @@
 
     <h2>Lista de Productos</h2>
     <ul id="productList">
-        <!-- Lista de productos -->
-        {{#each products}}
-        <li>
-            {{this.title}}: {{this.description}},
-            Precio: {{this.price}}, 
-            Imagen: {{this.thumbnail}}, 
-            Código: {{this.code}}, 
-            Stock: {{this.stock}}, 
-            Estado: {{this.status}}
-        </li>
-        {{/each}}
+        
     </ul>
 </div>
+
 
 <script src="/socket.io/socket.io.js"></script>;
 

@@ -1,5 +1,5 @@
 import express from "express"
-import path from "path"
+import path, { dirname } from "path"
 import cartRouter from "./routes/cartRouter.js"
 import productRouter from "./routes/productsRouter.js"
 import __dirname from "./utils.js"
@@ -31,20 +31,21 @@ const server = app.listen(PORT, () => {
     console.log(`Server corriendo en el puerto ${PORT}`)
 })
 const io = new Server(server)
-const manager = new ProductManager('./data/products.json')
+const manager = new ProductManager("./data/products.json")
+let getProducts = await manager.getProducts()
 
 io.on('connection', socket => {
     console.log('Conectado')
-    
-    socket.emit('productList', manager.getProducts())
-    
-    
-    socket.on('newProduct', async(product) => {
-        console.log(product)
-        await manager.addProduct(product.title, product.description, product.price, product.thumbnail, product.code, product.stock, product.status)
-        io.emit('productList', manager.getProducts())
-    })
 
+    socket.emit('initialProductList', getProducts)
+    
+    socket.on('newProduct', async (product) => {
+        await manager.addProduct(product.title, product.description, product.price, product.thumbnail, product.code, product.stock, product.status)
+        console.log("Servidor/evento newProduuct:", product)
+        
+        socket.emit('productList', await manager.getProducts())
+    })
+    
     // socket.on('deleteProduct', data => {
     //     manager.deleteProduct(data)
     //     io.emit('productList', manager.getProducts())

@@ -15,7 +15,7 @@ export default class ProductManager {
     // Método para obtener todos los productos del array de productos.
     getProducts = async() =>{
         const products = await fs.promises.readFile(this.path, 'utf-8')
-        //console.log(products)
+        // console.log("Manager",products)
         return JSON.parse(products)
     }
     
