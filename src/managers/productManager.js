@@ -68,13 +68,16 @@ export default class ProductManager {
     // Método para eliminar un producto del array de productos por su Id.
     deleteProductById = async (id) => {
         const products = await this.getProducts()
-        const prodById = await this.getProductById(id)
+        const prodId = parseInt(id)
+        const productIndex = products.findIndex(prod => prod.id === prodId)
 
-        if (!prodById) throw new Error("No se encuentra el producto seleccionado")
+        if (productIndex === -1) throw new Error("Producto no encontrado")
 
-        products.splice(products.indexOf(prodById), 1)
-    
+        products.splice(productIndex, 1)
+
         await fs.promises.writeFile(this.path, JSON.stringify(products, null, 4))
+
+        console.log("Producto eliminado")
     }
 
     // Método para actualizar un producto del array de productos por su id y sobreescribiendo el JSON con el nuevo producto modificado.

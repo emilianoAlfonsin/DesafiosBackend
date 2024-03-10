@@ -43,14 +43,15 @@ io.on('connection', socket => {
         await manager.addProduct(product.title, product.description, product.price, product.thumbnail, product.code, product.stock, product.status)
         console.log("Servidor/evento newProduuct:", product)
         
-        socket.emit('productList', await manager.getProducts())
+        io.emit('productList', await manager.getProducts())
     })
     
-    // socket.on('deleteProduct', data => {
-    //     manager.deleteProduct(data)
-    //     io.emit('productList', manager.getProducts())
-    // })
+    socket.on('deleteProduct', async (productId) => {
+        await manager.deleteProductById(productId)
+        console.log("Servidor/evento deleteProduct:", productId)
 
+        io.emit('productList', await manager.getProducts())
+    })
 })
 
 app.use('/api/products/', productRouter)
