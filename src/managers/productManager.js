@@ -77,7 +77,7 @@ export default class ProductManager {
 
         await fs.promises.writeFile(this.path, JSON.stringify(products, null, 4))
 
-        console.log("Producto eliminado")
+        console.log(`Producto ${prodId} eliminado`)
     }
 
     // Método para actualizar un producto del array de productos por su id y sobreescribiendo el JSON con el nuevo producto modificado.

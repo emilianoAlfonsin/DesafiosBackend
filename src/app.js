@@ -37,7 +37,9 @@ let getProducts = await manager.getProducts()
 io.on('connection', socket => {
     console.log('Conectado')
 
-    socket.emit('initialProductList', getProducts)
+    socket.on('initialProducts', async()=>{
+        socket.emit('productList', await manager.getProducts())
+    })
     
     socket.on('newProduct', async (product) => {
         await manager.addProduct(product.title, product.description, product.price, product.thumbnail, product.code, product.stock, product.status)

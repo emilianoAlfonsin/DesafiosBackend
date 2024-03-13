@@ -2,19 +2,23 @@ const socket = io()
 const productList = document.getElementById("productList")
 const productForm = document.getElementById("productForm")
 
+document.addEventListener("DOMContentLoaded", () => {
+    socket.emit("initialProducts")
+})
 
 // Escuchar el evento "productList" del servidor
-socket.on("initialProductList", (products) => {
-    console.log("Lista de productos recibida:", products)
+socket.on("productList", (products) => {
+    console.log("Lista de productos: ", products)
     renderProducts(products)
 })
+
 
 // Manejar el envío del formulario
 productForm.addEventListener("submit", async (e) => {
     e.preventDefault()
     const formData = new FormData(productForm)
     const product = {}
-
+    
     for (const [key, value] of formData.entries()) {
         // Si el key es "status" cambia el valor a true o false, sino asigna el valor del input al objeto product
         product[key] = key === 'status' 
@@ -25,17 +29,12 @@ productForm.addEventListener("submit", async (e) => {
         ? parseFloat(value) 
         : value;
     }
-
+    
     // Emitir el nuevo producto al servidor para almacenarlo en products.json
     socket.emit("newProduct", product)
     console.log("Cliente/evento newProduct", product)
 })
 
-//Recibir el evento desde el servidor
-socket.on("productList", (products) => {
-    console.log("Lista de productos actualizada: ", products)
-    renderProducts(products)
-})
 
 // Función para renderizar la lista de productos en la página
 const renderProducts = (productsArray) => {
