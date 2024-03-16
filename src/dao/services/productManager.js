@@ -1,27 +1,52 @@
 import { productsModel } from "../models/productsModel"
 
-export default class ProductsDao {
+export default class ProductsManagerDao {
     constructor() {
         this.model = productsModel
     }
 
     async getProducts() {
-        return await this.model.find()
+        try {
+            return await this.model.find()
+        }
+        catch(error) {
+            console.error(error)
+        }
     }
 
     async getProductById(id) {
-        return await this.model.findById(id)
+        try {
+            return await this.model.findById(id)
+        }
+        catch (error) {
+            console.error("Producto no encontrado",error)
+        }
     }
 
     async addProduct(product) {
-        return await this.model.create(product)
+        try {
+            return await this.model.create(product)
+        }
+        catch (error) {
+            console.error("Error al agregar producto", error)
+        }
     }
 
     async updateProduct(id, product) {
-        return await this.model.findByIdAndUpdate({_id:id}, product)
+        try {
+            return await this.model.findByIdAndUpdate(id, product)
+        }
+        catch (error) {
+            console.error("Error al actualizar producto", error)
+        }
     }
 
     async deleteProductById(id) {
-        return await this.model.findByIdAndDelete({_id:id})
+        try {
+            return await this.model.findByIdAndDelete(id)
+        }
+        catch (error) {
+            console.error("Error al eliminar producto", error)
+        }
     } 
 }
