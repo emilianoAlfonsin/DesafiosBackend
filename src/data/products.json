@@ -38,15 +38,5 @@
         "code": "ABC4",
         "stock": 10,
         "status": true
-    },
-    {
-        "id": 5,
-        "title": "Producto 5",
-        "description": "Descripción del producto 5",
-        "price": 1,
-        "thumbnail": "imagen 5",
-        "code": "ABC5",
-        "stock": 10,
-        "status": "on"
     }
 ]

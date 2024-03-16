@@ -80,25 +80,55 @@ export default class CartManager {
     }
 
     // Método para eliminar un producto del carrito seleccionado.
-    //deleteProductFromCart = async(cid, pid) =>{
-        //a desarrollar
-    //
+    deleteProductFromCart = async(cid, pid) =>{
+        const carts = await this.getCarts()
+        const cartById = await this.getCartById(cid)
+        const prodId = parseInt(pid)
+        const productIndex = cartById.products.findIndex(product => product.id === prodId)
+
+        if (productIndex === -1) throw new Error("No se encuentra el producto seleccionado")
+
+        cartById.products.splice(productIndex, 1)
+
+        console.log(`Producto ${pid} eliminado del carrito ${cid}`)
+
+        await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 4))
+
+        // Actualizar el carrito después de eliminar el producto
+        const updatedCart = {
+            ...cartById,
+            products: cartById.products.length === 0 ? [] : cartById.products
+        }
+
+        // Si el carrito está vacío, lo eliminamos.
+        if (updatedCart.products.length === 0) await this.deleteCartById(cid)
+
+        // Retornar el carrito actualizado y el estado de la operación
+        return { 
+            success: true,
+            cart: updatedCart
+        }
+    }
 
     // Método para actualizar la cantidad de un producto en un carrito.
-    // updateProductFromCart = async(cid, pid, quantity) =>{
-    //     const carts = await this.getCarts()
-    //     const cartById = await this.getCartById(cid)
-    //     const prodId = parseInt(pid)
-    //     if (!cartById) throw new Error("No se encuentra el carrito seleccionado")
+    updateProductQuantity = async(cid, pid, quantity) =>{
+        const carts = await this.getCarts()
+        const cartById = await this.getCartById(cid)
 
-    //     const product = cartById.products.findIndex(product => product.id === prodId)
-
-    //     if (product === -1) throw new Error("No se encuentra el producto seleccionado")
-
-    //     product.quantity = parseInt(quantity)
-
-    //     console.log(`Cantidad del producto ${pid} en el carrito ${cid} actualizada a ${quantity}`)
-    //     await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 4))
-    // }
+        if (!cartById) throw new Error(`No se encuentra el carrito con ID ${cid}`)
+    
+        const productIndex = cartById.products.findIndex(product => product.id === parseInt(pid));
+    
+        if (productIndex === -1) throw new Error(`No se encuentra el producto con ID ${pid} en el carrito con ID ${cid}`)
+    
+        // Accede al objeto del producto y actualiza su cantidad
+        cartById.products[productIndex].quantity = parseInt(quantity)
+    
+        console.log(`Cantidad del producto ${pid} en el carrito ${cid} actualizada a ${quantity}`)
+        await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 4))
+    
+        // Retornar el estado de la operación.
+        return { success: true }
+    }
 
 }
