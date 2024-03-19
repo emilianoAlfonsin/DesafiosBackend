@@ -1,3 +1,4 @@
+import mongoose from "mongoose"
 import cartsModel from "../models/cartsModel"
 
 export default class CartsManagerDao {
@@ -32,37 +33,46 @@ export default class CartsManagerDao {
         }
     }
 
-    async addProductToCart(id, product) {
+    async addProductToCart(cid, pid) {
         try {
-            return await this.carts.findByIdAndUpdate(id, {$push: {products: product}})
-        }
-        catch (error) {
-            console.error("No se pudo agregar el producto al carrito", error)
-        }
+            // Verificación de que el pid es un id válido en la colección de productos.
+            if (!mongoose.Types.ObjectId.isValid(pid)) throw new Error("El ID del producto no es válido")
+            // El método push agrega un elemento al final del array.
+        return await this.carts.findByIdAndUpdate(cid, {$push: {products: pid}})
     }
-
-    async deleteCartById(id) {
-        try {
-            return await this.carts.findByIdAndDelete(id)
-        }
-        catch (error) {
-            console.error("No se pudo eliminar el carrito", error)
-        }
+    catch (error) {
+        console.error("No se pudo agregar el producto al carrito", error)
     }
+}
 
-    async deleteProductFromCart(id, productId) {
-        try {
-            return await this.carts.findByIdAndUpdate(id, {$pull: {products: {_id: productId}}})
-        }
-        catch (error) {
-            console.error("No se pudo eliminar el producto del carrito", error)
-        }
+async deleteCartById(id) {
+    try {
+        return await this.carts.findByIdAndDelete(id)
     }
+    catch (error) {
+        console.error("No se pudo eliminar el carrito", error)
+    }
+}
 
-    async updateProductQuantity(id, productId, quantity) {
-        try {
-            return await this.carts.findByIdAndUpdate(id, {$set: {products: {_id: productId, quantity: quantity}}})
-        }
+async deleteProductFromCart(cid, pid) {
+    try {
+        //El método pull elimina un elemento del array que coincida con el valor especificado.
+        return await this.carts.findByIdAndUpdate(cid, {$pull: {products: {_id: pid}}})
+    }
+    catch (error) {
+        console.error("No se pudo eliminar el producto del carrito", error)
+    }
+}
+
+async updateProductQuantity(cid, pid, quantity) {
+    try {
+        // Verificación de que el pid es un id válido en la colección de productos.
+        if (!mongoose.Types.ObjectId.isValid(pid)) throw new Error("El ID del producto no es válido")
+        //El método set actualiza un elemento del array que coincida con el valor especificado.
+        return await this.carts.findOneAndUpdate(
+            {_id: cid, "products._id": pid},
+            {$set: {"products.$.quantity": parseInt(quantity)}})
+    }
         catch (error) {
             console.error("No se pudo actualizar la cantidad del producto", error)
         } 

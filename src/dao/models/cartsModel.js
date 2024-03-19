@@ -4,7 +4,7 @@ import { Schema } from "mongoose"
 const collection = "Carts"
 
 
-const cartsSchema = new Schema({
+const schema = new Schema({
 
     products: [
         {
@@ -20,5 +20,5 @@ const cartsSchema = new Schema({
     ],
 }) 
 
-const cartsModel = mongoose.model(collectionName, cartsSchema)
+const cartsModel = mongoose.model(collection, schema)
 export default cartsModel

@@ -16,7 +16,10 @@ export default class ProductsManagerDao {
 
     async getProductById(id) {
         try {
-            return await this.model.findById(id)
+            const product = await this.model.findById(id)
+            //Si el producto no existe, devuelve un mensaje de error. Si existe, devuelve el producto.
+            if (!product) throw new Error("Producto no encontrado")
+            return product
         }
         catch (error) {
             console.error("Producto no encontrado",error)
@@ -25,7 +28,8 @@ export default class ProductsManagerDao {
 
     async addProduct(product) {
         try {
-            return await this.model.create(product)
+            const newProduct = new this.model(product)
+            return await newProduct.save()  //Guarda el producto en la base de datos.
         }
         catch (error) {
             console.error("Error al agregar producto", error)
@@ -34,7 +38,10 @@ export default class ProductsManagerDao {
 
     async updateProduct(id, product) {
         try {
-            return await this.model.findByIdAndUpdate(id, product)
+            const updatedProduct = await this.model.findByIdAndUpdate(id, product, { new: true })//{ new: true } configuración para que retorne el documento actualizado.
+            //Si no existe, devuelve un mensaje de error. Si existe, devuelve el producto actualizado.
+            if (!updatedProduct) throw new Error("Producto no encontrado")
+            return updatedProduct  
         }
         catch (error) {
             console.error("Error al actualizar producto", error)
@@ -43,7 +50,10 @@ export default class ProductsManagerDao {
 
     async deleteProductById(id) {
         try {
-            return await this.model.findByIdAndDelete(id)
+            const deletedProduct = await this.model.findByIdAndDelete(id)
+            //Si no existe, devuelve un mensaje de error. Si existe, devuelve el producto eliminado.
+            if (!deletedProduct) throw new Error("Producto no encontrado")
+            return deletedProduct  //Devuelve el producto eliminado.
         }
         catch (error) {
             console.error("Error al eliminar producto", error)
