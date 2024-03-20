@@ -1,31 +1,33 @@
 import express from "express"
-import path, { dirname } from "path"
-import cartRouter from "./routes/cartRouter.js"
-import productRouter from "./routes/productsRouter.js"
+import mongoose from "mongoose"
+import path from "path"
 import __dirname from "./utils.js"
 import handlebars from "express-handlebars"
 import { Server } from "socket.io"
+import cartRouter from "./routes/cartRouter.js"
+import productRouter from "./routes/productsRouter.js"
 import viewsRouter from "./routes/viewsRouter.js"
-import * as socket from 'socket.io'
-import ProductManager from "./managers/productManager.js"
-import mongoose from "mongoose"
+import ProductsManagerDao from "./dao/services/productManager.js"
 
 
 const app = express()
 const PORT = process.env.PORT || 8080
 
+// Configuración de Handlebars y vistas
+app.set('views', path.join(__dirname+'/views'))
+app.engine('handlebars', handlebars.engine())
+app.set('view engine', 'handlebars')
 
 // Midlewares
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
-app.set('views', path.join(__dirname+'/views'))
+
+//Configuración de arcivos estáticos
 app.use(express.static(path.join(__dirname+'/public')))
-app.engine('handlebars', handlebars.engine())
-app.set('view engine', 'handlebars')
 
 // Configurar la conexión a MongoDB.
 const conectMongoDB = async() => {
-    const DB_URL = 'mongodb+srv://127.0.0.1:27017/ecommerce?retryWrites=true&w=majority'
+    const DB_URL = 'mongodb://localhost:27017/ecommerce'
     try {                       
         await mongoose.connect(DB_URL)
         console.log("Conectado a MongoDB")
@@ -37,14 +39,21 @@ const conectMongoDB = async() => {
 
 conectMongoDB()
 
+// Configurar las rutas.
+app.use('/api/products/', productRouter)
+app.use('/api/carts/', cartRouter)
+app.use(viewsRouter)
+
+//Inicialización del server y socket.io
 const server = app.listen(PORT, () => {
     console.log(`Server corriendo en el puerto ${PORT}`)
 })
 
 const io = new Server(server)
-const manager = new ProductManager("./data/products.json")
+const manager = new ProductsManagerDao()
 let getProducts = await manager.getProducts()
 
+// Manejo de eventos de socket.io
 io.on('connection', socket => {
     console.log('Conectado')
 
@@ -66,9 +75,3 @@ io.on('connection', socket => {
         io.emit('productList', await manager.getProducts())
     })
 })
-
-app.use('/api/products/', productRouter)
-
-app.use('/api/carts/', cartRouter)
-
-app.use(viewsRouter)

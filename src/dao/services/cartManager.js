@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 import cartsModel from "../models/cartsModel"
 
-export default class CartsManagerDao {
+export default class CartsManagerMongo {
     constructor() {
         this.carts = cartsModel
     }

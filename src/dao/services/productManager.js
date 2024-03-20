@@ -1,4 +1,4 @@
-import { productsModel } from "../models/productsModel"
+import productsModel from "../models/productsModel.js"
 
 export default class ProductsManagerDao {
     constructor() {
