@@ -3,7 +3,6 @@ import { Schema } from "mongoose"
 
 const collection = "Carts"
 
-
 const schema = new Schema({
 
     products: [

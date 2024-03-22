@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { Schema } from "mongoose";
 
 const collection = "Products"
+
 const schema = new Schema({
     title: {
         type: String,

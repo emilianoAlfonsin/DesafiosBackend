@@ -1,13 +1,13 @@
 import { Router } from "express"
-import CartManager from "../managers/cartManager.js"
+import CartsManagerMongo from "../dao/services/cartManager.js"
 
 const cartRouter = Router()
-const cartManager = new CartManager('./data/carts.json')
+const cartManager = new CartsManagerMongo()
 
-// Crear un nuevo carrito y agregar productos al carrito. [Requerida]
+// Crear un nuevo carrito. [Requerida]
 cartRouter.post('/', async (req, res) => {
     try {
-        const newCart = await cartManager.addCart()
+        const newCart = await cartManager.createCart()
         res.status(200).json(newCart)
     } catch (error) {
         console.error("Error al agregar el carrito:", error.message)

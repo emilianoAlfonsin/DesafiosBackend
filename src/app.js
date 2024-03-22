@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname+'/public')))
 
 // Configurar la conexión a MongoDB.
 const conectMongoDB = async() => {
-    const DB_URL = 'mongodb://localhost:27017/ecommerce'
+    const DB_URL = 'mongodb+srv://emilianoa83:Coder2024@cluster0.3rp6pnj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
     try {                       
         await mongoose.connect(DB_URL)
         console.log("Conectado a MongoDB")
@@ -51,7 +51,6 @@ const server = app.listen(PORT, () => {
 
 const io = new Server(server)
 const manager = new ProductsManagerDao()
-let getProducts = await manager.getProducts()
 
 // Manejo de eventos de socket.io
 io.on('connection', socket => {
@@ -62,7 +61,7 @@ io.on('connection', socket => {
     })
     
     socket.on('newProduct', async (product) => {
-        await manager.addProduct(product.title, product.description, product.price, product.thumbnail, product.code, product.stock, product.status)
+        await manager.addProduct(product)
         console.log("Servidor/evento newProduuct:", product)
         
         io.emit('productList', await manager.getProducts())

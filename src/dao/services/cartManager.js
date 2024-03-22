@@ -1,5 +1,5 @@
-import mongoose from "mongoose"
-import cartsModel from "../models/cartsModel"
+import cartsModel from "../models/cartsModel.js"
+import { isValidObjectId } from "./utils.js"
 
 export default class CartsManagerMongo {
     constructor() {
@@ -17,16 +17,19 @@ export default class CartsManagerMongo {
 
     async getCartById(id) {
         try {
-            return await this.carts.findById(id)
+            const cart = await this.carts.findById(id)
+            if (!cart) throw new Error("Carrito no encontrado")
+            return cart
         } 
         catch (error) {
             console.error("No se pudo encontrar el carrito",error)
         }
     }
 
-    async addCart() {
+    async createCart() {
         try {
-            return await this.carts.create({})
+            const newCart = await this.carts.create({})
+            return newCart._id.toString()// Retorna el id del carrito creado convertido a string
         }
         catch (error) {
             console.error("No se pudo agregar el carrito", error)
@@ -35,47 +38,58 @@ export default class CartsManagerMongo {
 
     async addProductToCart(cid, pid) {
         try {
-            // Verificación de que el pid es un id válido en la colección de productos.
-            if (!mongoose.Types.ObjectId.isValid(pid)) throw new Error("El ID del producto no es válido")
-            // El método push agrega un elemento al final del array.
-        return await this.carts.findByIdAndUpdate(cid, {$push: {products: pid}})
-    }
-    catch (error) {
-        console.error("No se pudo agregar el producto al carrito", error)
-    }
-}
+            if (!isValidObjectId(cid)) throw new Error("El ID del carrito no es válido")
+            if (!isValidObjectId(pid)) throw new Error("El ID del producto no es válido")
+            
+            //Buscar el carrito, si no existe, crearlo.
+            // let cart = await this.carts.findById(cid)
+            // if (!cart) {
+            //     cart = await this.carts.create({ _id: cid, products: [] })
+            // }
 
-async deleteCartById(id) {
-    try {
-        return await this.carts.findByIdAndDelete(id)
-    }
-    catch (error) {
-        console.error("No se pudo eliminar el carrito", error)
-    }
-}
-
-async deleteProductFromCart(cid, pid) {
-    try {
-        //El método pull elimina un elemento del array que coincida con el valor especificado.
-        return await this.carts.findByIdAndUpdate(cid, {$pull: {products: {_id: pid}}})
-    }
-    catch (error) {
-        console.error("No se pudo eliminar el producto del carrito", error)
-    }
-}
-
-async updateProductQuantity(cid, pid, quantity) {
-    try {
-        // Verificación de que el pid es un id válido en la colección de productos.
-        if (!mongoose.Types.ObjectId.isValid(pid)) throw new Error("El ID del producto no es válido")
-        //El método set actualiza un elemento del array que coincida con el valor especificado.
-        return await this.carts.findOneAndUpdate(
-            {_id: cid, "products._id": pid},
-            {$set: {"products.$.quantity": parseInt(quantity)}})
-    }
-        catch (error) {
-            console.error("No se pudo actualizar la cantidad del producto", error)
+            // Buscar el carrito, si no lo encuentra lanza error.
+            const cart = await this.carts.findById(cid)
+            if (!cart) throw new Error("Carrito no encontrado")
+            
+            //Buscar el producto, si lo encuentra le suma uno a la cantidad. Si no lo encuentra le asigna quantity = 1
+            const existingProductIndex = cart.products.findIndex(product => product._id.equals(pid))
+            if (existingProductIndex !== -1) {
+                cart.products[existingProductIndex].quantity++
+                return await cart.save()
+            } else {
+                cart.products.push({_id: pid, quantity: 1})
+                return await cart.save()
+            }
         } 
+        catch (error) {
+            console.error("No se pudo agregar el producto al carrito", error)
+            throw error
+        }
+    }
+    
+    async deleteCartById(id) {
+        try {
+            if (!isValidObjectId(id)) throw new Error("El ID del carrito no es válido")
+            const cart = await this.carts.findById(id)
+            if (!cart) throw new Error("Carrito no encontrado")
+            return await this.carts.findByIdAndDelete(id)
+        }
+        catch (error) {
+            console.error("No se pudo eliminar el carrito", error)
+            throw error
+        }
+    }
+
+    async deleteProductFromCart(cid, pid) {
+        try {
+            if (!isValidObjectId(cid)) throw new Error("El ID del carrito no es válido")
+            if (!isValidObjectId(pid)) throw new Error("El ID del producto no es válido")
+            //El método pull elimina un elemento del array que coincida con el valor especificado.
+            return await this.carts.findByIdAndUpdate(cid, { $pull: {products: { _id: pid } }})
+        }
+        catch (error) {
+            console.error("No se pudo eliminar el producto del carrito", error)
+        }
     }
 }
 
