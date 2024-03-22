@@ -1,5 +1,5 @@
 import cartsModel from "../models/cartsModel.js"
-import { isValidObjectId } from "./utils.js"
+import { isValidObjectId } from "../../utils.js"
 
 export default class CartsManagerMongo {
     constructor() {
