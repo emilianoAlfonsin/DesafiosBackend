@@ -13,7 +13,7 @@ window.onload = () => {
         confirmButtonText: 'Ingresar'
     }).then(result => {
         user = result.value
-        socket.emit('newUser', user)
+        if (user) socket.emit('newUser', user)
     })
 }
 
@@ -26,10 +26,18 @@ chatbox.addEventListener('keyup', e => {
     }
 })
 
-socket.on('logs', data => {
-    let messages = ''
-    data.forEach(message => {
-        messages += `${message.user}: ${message.message} <br>`
+socket.on('error', (error) =>
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.message || 'Ha ocurrido un error'
     })
-    log.innerHTML = messages
+)
+
+socket.on('messageLogs', data => {
+    const lastMessage = data[data.length - 1]
+    const messageElement = document.createElement('div')
+    messageElement.classList.add('alert', 'alert-primary', 'mb-2')
+    messageElement.textContent = `${lastMessage.user}: ${lastMessage.message}`
+    log.appendChild(messageElement)
 })

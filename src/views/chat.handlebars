@@ -1,12 +1,14 @@
-<div>
-    <h1>Chat</h1>
-    <input id="chatbox">
-    {{#each msg as |obj|}}
-    {{obj.socketid}}: {{obj.message}}
-    {{/each}}
-    <p id="log"></p>
+<div class="container d-flex flex-column" style="min-height: 100vh;">
+    <div id="log" class="list-group flex-grow-1">
+        {{#each msg as |obj|}}
+        <div class="list-group-item">
+            <strong>{{obj.socketid}}:</strong> {{obj.message}}
+        </div>
+        {{/each}}
+    </div>
+    <input id="chatbox" class="form-control mb-3" placeholder="Escribe tu mensaje">
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="/src/public/js/chat.js"></script>
+<script src="/js/chat.js"></script>
