@@ -1,10 +1,6 @@
 <div class="container d-flex flex-column" style="min-height: 100vh;">
+    <h2>Chat</h2>
     <div id="log" class="list-group flex-grow-1">
-        {{#each msg as |obj|}}
-        <div class="list-group-item">
-            <strong>{{obj.socketid}}:</strong> {{obj.message}}
-        </div>
-        {{/each}}
     </div>
     <input id="chatbox" class="form-control mb-3" placeholder="Escribe tu mensaje">
 </div>

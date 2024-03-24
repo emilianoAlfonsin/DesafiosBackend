@@ -19,11 +19,27 @@ window.onload = () => {
 
 const chatbox = document.getElementById('chatbox')
 const log = document.getElementById('log')
+
 chatbox.addEventListener('keyup', e => {
     if (e.key === 'Enter') {
-        socket.emit('message', { user, message: e.target.value })
-        e.target.value = ''
+        socket.emit('messageLogs', { user, message: chatbox.value })
+        chatbox.value = ''
     }
+})
+
+socket.on('messageLogs', data => {
+    console.log('Mensajes recibidos en el cliente:', data);
+    // Limpiar el contenido del div de registro (log)
+    log.innerHTML = ''
+    
+    // Iterar sobre todos los mensajes recibidos y agregarlos al div de registro
+    data.forEach(message => {
+        console.log('mensaje enviado al dom', message)
+        const messageElement = document.createElement('div')
+        messageElement.classList.add('alert', 'alert-primary', 'mb-2')
+        messageElement.innerHTML = `<strong>${message.user}:</strong> ${message.message}`
+        log.appendChild(messageElement)
+    })
 })
 
 socket.on('error', (error) =>
@@ -33,11 +49,3 @@ socket.on('error', (error) =>
         text: error.message || 'Ha ocurrido un error'
     })
 )
-
-socket.on('messageLogs', data => {
-    const lastMessage = data[data.length - 1]
-    const messageElement = document.createElement('div')
-    messageElement.classList.add('alert', 'alert-primary', 'mb-2')
-    messageElement.textContent = `${lastMessage.user}: ${lastMessage.message}`
-    log.appendChild(messageElement)
-})

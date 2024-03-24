@@ -126,8 +126,9 @@ io.on('connection', socket => {
         io.emit('productList', await productManager.getProducts())
     })
 
-    socket.on('message', async (data) =>{
+    socket.on('messageLogs', async (data) =>{
         console.log("Servidor/evento message:", data)
         await messagesManager.addMessage(data)
+        io.emit('messageLogs', await messagesManager.getAllMessages())
     })
 })
