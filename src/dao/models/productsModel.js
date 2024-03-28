@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
 
-const collection = "Products"
+const productsCollection = "Products"
 
 const schema = new Schema({
     title: {
@@ -35,5 +35,6 @@ const schema = new Schema({
     }
 })
 
-const productsModel = mongoose.model(collection, schema)
+const productsModel = mongoose.model(productsCollection, schema)
 export default productsModel
+

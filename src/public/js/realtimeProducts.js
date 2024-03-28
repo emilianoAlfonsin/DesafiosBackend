@@ -61,7 +61,7 @@ const deleteProductForm = document.getElementById("deleteProductForm")
 deleteProductForm.addEventListener("submit", async (e) => {
     e.preventDefault()
     const formData = new FormData(deleteProductForm)
-    const productId = parseInt(formData.get("productId"))
+    const productId = formData.get("productId")
     
     socket.emit("deleteProduct", productId)
     console.log("Cliente/evento deleteProduct", productId)

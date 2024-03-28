@@ -6,7 +6,7 @@ const __dirname = dirname(__filename)
 
 export default __dirname
 
-// Validación de mongoose
+// Validación en mongoose de id 
 import mongoose from "mongoose"
 
 export function isValidObjectId(id) {

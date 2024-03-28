@@ -1,6 +1,8 @@
 import mongoose from "mongoose"
 import { Schema } from "mongoose"
 
+
+
 const collection = "Carts"
 
 const schema = new Schema({
@@ -8,16 +10,21 @@ const schema = new Schema({
     products: [
         {
             product: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "products",
+                type: Schema.Types.ObjectId,
+                ref: "Products"
             },
             quantity: {
                 type: Number,
-                required: true,
+                default: 1
             },
         },
     ],
 }) 
+
+//Middleware
+// schema.pre("find", function () {
+//     this.populate("products.product")
+// })
 
 const cartsModel = mongoose.model(collection, schema)
 export default cartsModel

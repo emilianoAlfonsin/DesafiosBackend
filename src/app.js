@@ -1,5 +1,4 @@
 import express from "express"
-import mongoose from "mongoose"
 import path from "path"
 import __dirname from "./utils.js"
 import handlebars from "express-handlebars"
@@ -7,9 +6,9 @@ import { Server } from "socket.io"
 import cartRouter from "./routes/cartRouter.js"
 import productRouter from "./routes/productsRouter.js"
 import viewsRouter from "./routes/viewsRouter.js"
-import ProductsManagerDao from "./dao/services/productManager.js"
-import productsModel from "./dao/models/productsModel.js"
-import MessagesManagerDao from "./dao/services/messagesManager.js"
+import ProductsManagerMongo from "./dao/services/productManager.js"
+import MessagesManagerMongo from "./dao/services/messagesManager.js"
+import conectMongoDB from "./config/db.config.js"
 
 
 const app = express()
@@ -27,69 +26,6 @@ app.use(express.urlencoded({extended:true}))
 //Configuración de arcivos estáticos
 app.use(express.static(path.join(__dirname+'/public')))
 
-// Configurar la conexión a MongoDB.
-const conectMongoDB = async() => {
-    const DB_URL = 'mongodb+srv://emilianoa83:Coder2024@cluster0.3rp6pnj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
-    try {                       
-        await mongoose.connect(DB_URL)
-        // await productsModel.insertMany(
-        //     [
-        //         {
-        //             title: "Producto 1",
-        //             description: "Descripción del producto 1",
-        //             price: 100,
-        //             thumbnail: "xxxxx.jpg",
-        //             code: "ABC1",
-        //             stock: 10,
-        //             status: true
-        //         },
-        //         {
-        //             title: "Producto 2",
-        //             description: "Descripción del producto 2",
-        //             price: 100,
-        //             thumbnail: "xxxxx.jpg",
-        //             code: "ABC2",
-        //             stock: 10,
-        //             status: true
-        //         },
-        //         {
-        //             title: "Producto 3",
-        //             description: "Descripción del producto 3",
-        //             price: 100,
-        //             thumbnail: "xxxxx.jpg",
-        //             code: "ABC3",
-        //             stock: 10,
-        //             status: true
-        //         },
-        //         {
-        //             title: "Producto 4",
-        //             description: "Descripción del producto 4",
-        //             price: 100,
-        //             thumbnail: "xxxxx.jpg",
-        //             code: "ABC4",
-        //             stock: 10,
-        //             status: true
-        //         },
-        //         {
-        //             title: "Producto 5",
-        //             description: "Descripción del producto 5",
-        //             price: 100,
-        //             thumbnail: "xxxxx.jpg",
-        //             code: "ABC5",
-        //             stock: 10,
-        //             status: true
-        //         }
-        //     ]
-        // )
-        console.log("Conectado a MongoDB")
-    } catch (error) {
-        console.log("No se pudo conectar a la DB",error)
-        process.exit() // Detener la ejecución del servidor si no se puede conectar a la DB.
-    }
-}
-
-conectMongoDB()
-
 // Configurar las rutas.
 app.use('/api/products/', productRouter)
 app.use('/api/carts/', cartRouter)
@@ -100,9 +36,13 @@ const server = app.listen(PORT, () => {
     console.log(`Server corriendo en el puerto ${PORT}`)
 })
 
+//Conección con el servidor de MongoDB.
+conectMongoDB()
+
 const io = new Server(server)
-const productManager = new ProductsManagerDao()
-const messagesManager = new MessagesManagerDao()
+//Instanciar los managers
+const productManager = new ProductsManagerMongo()
+const messagesManager = new MessagesManagerMongo()
 
 // Manejo de eventos de socket.io
 io.on('connection', socket => {

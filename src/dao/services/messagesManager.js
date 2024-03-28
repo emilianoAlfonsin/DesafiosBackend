@@ -1,6 +1,6 @@
 import messageModel from "../models/messagesModel.js"
 
-export default class MessagesManagerDao {
+export default class MessagesManagerMongo {
     constructor() {
         this.model = messageModel
     }

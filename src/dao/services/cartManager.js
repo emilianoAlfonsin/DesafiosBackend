@@ -1,4 +1,6 @@
 import cartsModel from "../models/cartsModel.js"
+
+// Metodo de validación de id existente en la DB.
 import { isValidObjectId } from "../../utils.js"
 
 export default class CartsManagerMongo {
@@ -6,18 +8,22 @@ export default class CartsManagerMongo {
         this.carts = cartsModel
     }
 
+    // Devolver todos los carritos.
     async getCarts() {
         try {
-            return await this.carts.find()
+            const carts = await this.carts.find()
+            console.log(JSON.stringify(carts, null, "\t"))
+            return carts
         } 
         catch (error) {
             console.error(error)
         }
     }
 
+    // Devolver un carrito por su id.
     async getCartById(id) {
         try {
-            const cart = await this.carts.findById(id)
+            const cart = await this.carts.findById(id).populate("products.product")
             if (!cart) throw new Error("Carrito no encontrado")
             return cart
         } 
@@ -26,6 +32,7 @@ export default class CartsManagerMongo {
         }
     }
 
+    // Crear un carrito. 
     async createCart() {
         try {
             const newCart = await this.carts.create({})
@@ -36,6 +43,7 @@ export default class CartsManagerMongo {
         }
     }
 
+    // Agregar un producto al carrito.
     async addProductToCart(cid, pid) {
         try {
             if (!isValidObjectId(cid)) throw new Error("El ID del carrito no es válido")
@@ -57,7 +65,7 @@ export default class CartsManagerMongo {
                 cart.products[existingProductIndex].quantity++
                 return await cart.save()
             } else {
-                cart.products.push({_id: pid, quantity: 1})
+                cart.products.push({_id: pid, quantity: 1, product: pid})
                 return await cart.save()
             }
         } 
@@ -67,6 +75,7 @@ export default class CartsManagerMongo {
         }
     }
     
+    // Eliminar un carrito por su id.
     async deleteCartById(id) {
         try {
             if (!isValidObjectId(id)) throw new Error("El ID del carrito no es válido")
@@ -80,6 +89,7 @@ export default class CartsManagerMongo {
         }
     }
 
+    // Eliminar un producto del carrito.
     async deleteProductFromCart(cid, pid) {
         try {
             if (!isValidObjectId(cid)) throw new Error("El ID del carrito no es válido")
@@ -89,6 +99,39 @@ export default class CartsManagerMongo {
         }
         catch (error) {
             console.error("No se pudo eliminar el producto del carrito", error)
+        }
+    }
+
+    // Actualizar solo la cantidad del producto.
+    async updateProductQuantity(cid, pid, quantity) {
+        try {
+            if (!isValidObjectId(cid)) throw new Error("El ID del carrito no es válido")
+            if (!isValidObjectId(pid)) throw new Error("El ID del producto no es válido")
+            return await this.carts.updateOne({ _id: cid, "products._id": pid }, { $set: { "products.$.quantity": quantity } })
+        }
+        catch (error) {
+            console.error("No se pudo actualizar la cantidad del producto", error)
+        }
+    }
+
+    //Actualizar la lista de productos del carrito con un array de productos.
+    async updateCartProducts(cid, products) {
+        try {
+            if (!isValidObjectId(cid)) throw new Error("El ID del carrito no es válido")
+            if(products.length === 0) throw new Error("La lista de productos no puede estar vacía")
+
+            products.forEach(product => {
+                if (!isValidObjectId(product.product)) throw new Error("El ID del producto no es válido")
+                if (typeof product.quantity !== "number" || product.quantity < 1) throw new Error("La cantidad debe ser un número mayor a 0")
+            })
+
+            const updatedProducts = {$set: {products: products}}// Uso $set para actualizar solo el campo products y no todo el documento.
+
+            const updatedCart = await this.carts.findByIdAndUpdate(cid, updatedProducts, {new: true})
+            return updatedCart.products.length > 0 ? updatedCart : null // Retorna null si la lista de productos del carrito está vacía.
+        }
+        catch (error) {
+            console.error("No se pudo actualizar la lista de productos del carrito", error)
         }
     }
 }
