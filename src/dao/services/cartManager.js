@@ -117,6 +117,7 @@ export default class CartsManagerMongo {
     //Actualizar la lista de productos del carrito con un array de productos.
     async updateCartProducts(cid, products) {
         try {
+            // console.log(products)
             if (!isValidObjectId(cid)) throw new Error("El ID del carrito no es válido")
             if(products.length === 0) throw new Error("La lista de productos no puede estar vacía")
 

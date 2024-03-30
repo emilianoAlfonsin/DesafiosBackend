@@ -50,9 +50,13 @@ cartRouter.post('/:cid/products/:pid', async (req, res) => {
 })
 
 //Actualizar un carrito con un array de productos.
-cartRouter.put('/:cid', async (req, res) => {
+cartRouter.put('/:cid/', async (req, res) => {
     try {
-        const cart = await cartManager.updateCartProducts(req.params.cid, req.body.products)
+        // const cartId = req.params.cid
+        // console.log(cartId)
+        // const products = req.body // Array de productos a agregar al carrito.
+        // console.log(products)
+        const cart = await cartManager.updateCartProducts(req.params.cid, req.body)
         res.status(200).json(cart)
     } catch (error) {
         console.error("Error al actualizar el carrito:", error.message)
