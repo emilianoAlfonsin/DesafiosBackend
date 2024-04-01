@@ -1,21 +1,64 @@
 import { Router } from "express"
 import ProductsManagerMongo from "../dao/services/productManager.js"
+import productsModel from "../dao/models/productsModel.js"
 
 const productRouter = Router()
 const productManager = new ProductsManagerMongo()
 
-// Obtener todos los productos.
+// Obtener todos los productos. FileSystem
+// productRouter.get('/', async (req, res) => {
+//     try{
+//         const products = await productManager.getProducts()
+//         const limit = req.query.limit
+//         limit > 0
+//         ? res.json(products.slice(0, limit))
+//         : res.json(products)
+//     } catch (error) {
+//         console.error(error)
+//         res.status(500).json({ error: 'Eror al obtener los productos' })
+//         return
+//     }
+// })
+
 productRouter.get('/', async (req, res) => {
     try{
-        const products = await productManager.getProducts()
-        const limit = req.query.limit
-        limit > 0
-        ? res.json(products.slice(0, limit))
-        : res.json(products)
-    } catch (error) {
+        const page = parseInt(req.query.page) || 1
+        const limit = parseInt(req.query.limit) || 5
+        const sort = req.query.sort 
+
+        const options = {
+            page,
+            limit,
+            lean: true
+        }
+
+        // Condiciones de ordenamiento "sort"
+        if (sort === 'asc' || sort === 'desc') {
+            options.sort = { price: sort === 'asc' ? 1 : -1 }
+        }
+        console.log(options);
+        // Condiciones de filtro "query"
+        const {category, status} = req.query
+        const query = {}
+        category && (query.category = category)
+        status && (query.status = status)
+
+        const result = await productsModel.paginate(query, options)
+
+        result.isValid = page >= 1 && page <= result.totalPages
+        result.nextLink = result.hasNextPage
+            ? `/api/products?page=${page + 1}&limit=${limit}`
+            : null
+        result.prevLink = result.hasPrevPage
+            ? `/api/products?page=${page - 1}&limit=${limit}`
+            : null
+
+        console.log(result.isValid);
+        res.render('products', result)
+    }
+    catch (error) {
         console.error(error)
-        res.status(500).json({ error: 'Eror al obtener los productos' })
-        return
+        res.status(500).json({ error: 'Error al obtener los productos' })
     }
 })
 

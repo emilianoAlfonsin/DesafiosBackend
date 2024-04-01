@@ -39,7 +39,7 @@ cartRouter.post('/', async (req, res) => {
     }
 })
 // Agregar un producto al carrito por su id. 
-cartRouter.post('/:cid/products/:pid', async (req, res) => {
+cartRouter.post('/:cid/products/:pid/', async (req, res) => {
     try {
         const cart = await cartManager.addProductToCart(req.params.cid, req.params.pid)
         res.status(200).json(cart)
@@ -65,7 +65,7 @@ cartRouter.put('/:cid/', async (req, res) => {
 })
 
 //Actualizar solo la cantidad del producto.
-cartRouter.put('/:cid/products/:pid', async (req, res) => {
+cartRouter.put('/:cid/products/:pid/', async (req, res) => {
     try {
         const cart = await cartManager.updateProductQuantity(req.params.cid, req.params.pid, req.body.quantity)
         res.status(200).json(cart)
@@ -98,7 +98,7 @@ cartRouter.delete('/:cid/products/:pid', async (req, res) => {
 })
 
 //Eliminar un producto del carrito por su id.
-cartRouter.delete('/:cid/products/:pid', async (req, res) => {
+cartRouter.delete('/:cid/products/:pid/', async (req, res) => {
     try {
         const cart = await cartManager.deleteProductFromCart(req.params.cid, req.params.pid)
         res.status(200).json(cart)
@@ -107,5 +107,17 @@ cartRouter.delete('/:cid/products/:pid', async (req, res) => {
         res.status(500).json({ error: "Error al eliminar el producto del carrito" })
     }
 })
+
+//Eliminar todos los productos del carrito.
+cartRouter.delete('/:cid/products/', async (req, res) => {
+    try {
+        const cart = await cartManager.deleteAllProductsFromCart(req.params.cid)
+        res.status(200).json(cart)
+    } catch (error) {
+        console.error("Error al eliminar todos los productos del carrito:", error.message)
+        res.status(500).json({ error: "Error al eliminar todos los productos del carrito" })
+    }
+})
+
 
 export default cartRouter

@@ -74,33 +74,6 @@ export default class CartsManagerMongo {
             throw error
         }
     }
-    
-    // Eliminar un carrito por su id.
-    async deleteCartById(id) {
-        try {
-            if (!isValidObjectId(id)) throw new Error("El ID del carrito no es válido")
-            const cart = await this.carts.findById(id)
-            if (!cart) throw new Error("Carrito no encontrado")
-            return await this.carts.findByIdAndDelete(id)
-        }
-        catch (error) {
-            console.error("No se pudo eliminar el carrito", error)
-            throw error
-        }
-    }
-
-    // Eliminar un producto del carrito.
-    async deleteProductFromCart(cid, pid) {
-        try {
-            if (!isValidObjectId(cid)) throw new Error("El ID del carrito no es válido")
-            if (!isValidObjectId(pid)) throw new Error("El ID del producto no es válido")
-            //El método pull elimina un elemento del array que coincida con el valor especificado.
-            return await this.carts.findByIdAndUpdate(cid, { $pull: {products: { _id: pid } }})
-        }
-        catch (error) {
-            console.error("No se pudo eliminar el producto del carrito", error)
-        }
-    }
 
     // Actualizar solo la cantidad del producto.
     async updateProductQuantity(cid, pid, quantity) {
@@ -135,5 +108,44 @@ export default class CartsManagerMongo {
             console.error("No se pudo actualizar la lista de productos del carrito", error)
         }
     }
+        
+    // Eliminar un carrito por su id.
+    async deleteCartById(id) {
+        try {
+            if (!isValidObjectId(id)) throw new Error("El ID del carrito no es válido")
+            const cart = await this.carts.findById(id)
+            if (!cart) throw new Error("Carrito no encontrado")
+            return await this.carts.findByIdAndDelete(id)
+        }
+        catch (error) {
+            console.error("No se pudo eliminar el carrito", error)
+            throw error
+        }
+    }
+
+    // Eliminar un producto del carrito.
+    async deleteProductFromCart(cid, pid) {
+        try {
+            if (!isValidObjectId(cid)) throw new Error("El ID del carrito no es válido")
+            if (!isValidObjectId(pid)) throw new Error("El ID del producto no es válido")
+            //El método pull elimina un elemento del array que coincida con el valor especificado.
+            return await this.carts.findByIdAndUpdate(cid, { $pull: {products: { _id: pid } }})
+        }
+        catch (error) {
+            console.error("No se pudo eliminar el producto del carrito", error)
+        }
+    }
+
+    // Eliminar todos los productos del carrito.
+    async deleteAllProductsFromCart(cid) {
+        try {
+            if (!isValidObjectId(cid)) throw new Error("El ID del carrito no es válido")
+            return await this.carts.findByIdAndUpdate(cid, { $set: { products: [] }})
+        }
+        catch (error) {
+            console.error("No se pudo eliminar todos los productos del carrito", error)
+        }
+    }
+
 }
 

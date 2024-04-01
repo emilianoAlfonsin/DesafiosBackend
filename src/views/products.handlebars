@@ -1,0 +1,31 @@
+
+{{#if isValid}}
+    <h1>Productos</h1>
+    <hr>
+    <div class="list-group">
+        {{#each docs}}
+            <div class="list-group-item">
+                <h5>{{this.title}}</h5>
+                <div>
+                    <p>{{this.description}}</p>
+                    <p>Precio: {{this.price}}</p>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+    <hr>
+    <div class="m-3 justify-center">
+    {{#if hasPrevPage}}
+        <a href={{this.prevLink}} class="btn btn-secondary d-inline p-2">Anterior</a>
+    {{/if}}
+    
+    <p class="d-inline p-2">  {{this.page}}  </p>
+    
+    {{#if hasNextPage}}
+        <a href={{this.nextLink}} class="btn btn-secondary d-inline p-2">Siguiente</a>
+    {{/if}} 
+</div>
+{{else}}
+    <h2>No se encuentran productos para mostrar</h2>
+{{/if}}
+
