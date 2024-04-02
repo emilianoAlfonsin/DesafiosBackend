@@ -34,6 +34,10 @@ const schema = new Schema({
     status: {
         type: Boolean,
         required: true  
+    },
+    category: {
+        type: String,
+        required: true
     }
 })
 

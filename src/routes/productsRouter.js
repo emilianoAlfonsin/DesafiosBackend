@@ -46,15 +46,26 @@ productRouter.get('/', async (req, res) => {
         const result = await productsModel.paginate(query, options)
 
         result.isValid = page >= 1 && page <= result.totalPages
+
+        // Generar enlaces de paginación "nextLink" y "prevLink"
+        let nextPageUrl = `/api/products?page=${page + 1}&limit=${limit}`
+        req.query.sort && (nextPageUrl += `&sort=${sort}`)
+        req.query.category && (nextPageUrl += `&category=${category}`)
+        req.query.status && (nextPageUrl += `&status=${status}`)
         result.nextLink = result.hasNextPage
-            ? `/api/products?page=${page + 1}&limit=${limit}`
+            ? nextPageUrl
             : null
+
+        let prevPageUrl = `/api/products?page=${page - 1}&limit=${limit}`
+        req.query.sort && (prevPageUrl += `&sort=${sort}`)
+        req.query.category && (prevPageUrl += `&category=${category}`)
+        req.query.status && (prevPageUrl += `&status=${status}`)
         result.prevLink = result.hasPrevPage
-            ? `/api/products?page=${page - 1}&limit=${limit}`
+            ? prevPageUrl
             : null
 
         console.log(result.isValid);
-        res.render('products', result)
+        res.status(200).render('products', result)
     }
     catch (error) {
         console.error(error)
@@ -70,7 +81,7 @@ productRouter.get('/:pid/', async (req, res) => {
             res.status(404).json({ error: 'Producto no encontrado' })
             return
         }
-        res.json(product)
+        res.status(200).json(product)
     } catch (error) {  
         console.error(error)
         res.status(500).json({ error: 'Error al obtener el producto' })

@@ -4,7 +4,6 @@ import CartsManagerMongo from "../dao/services/cartManager.js"
 const cartRouter = Router()
 const cartManager = new CartsManagerMongo()
 
-
 // Obtener todos los carritos.
 cartRouter.get('/', async (req, res) => {
     try {
@@ -21,11 +20,11 @@ cartRouter.get('/:cid/', async (req, res) => {
     try {
         const cart = await cartManager.getCartById(req.params.cid)
         if (!cart) return res.status(404).json({ error: "El carrito no se encontró" })
-        res.status(200).json(cart)
-} catch (error) {
-    console.error("Error al obtener el carrito:", error.message)
-    res.status(500).json({ error: "Error al obtener el carrito" })
-}
+        res.status(200).render('cart', { cart: cart })
+    } catch (error) {
+        console.error("Error al obtener el carrito:", error.message)
+        res.status(500).json({ error: "Error al obtener el carrito" })
+    }
 })
 
 // Crear un nuevo carrito. 

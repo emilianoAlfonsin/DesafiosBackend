@@ -21,10 +21,5 @@ const schema = new Schema({
     ],
 }) 
 
-//Middleware
-// schema.pre("find", function () {
-//     this.populate("products.product")
-// })
-
 const cartsModel = mongoose.model(collection, schema)
 export default cartsModel

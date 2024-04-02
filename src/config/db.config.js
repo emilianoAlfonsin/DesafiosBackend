@@ -16,7 +16,8 @@ const conectMongoDB = async() => {
         //             thumbnail: "xxxxx.jpg",
         //             code: "ABC1",
         //             stock: 10,
-        //             status: true
+        //             status: true,
+        //             category: "remeras"
         //         },
         //         {
         //             title: "Producto 2",
@@ -25,7 +26,8 @@ const conectMongoDB = async() => {
         //             thumbnail: "xxxxx.jpg",
         //             code: "ABC2",
         //             stock: 10,
-        //             status: true
+        //             status: true,
+        //             category: "remeras"
         //         },
         //         {
         //             title: "Producto 3",
@@ -34,7 +36,8 @@ const conectMongoDB = async() => {
         //             thumbnail: "xxxxx.jpg",
         //             code: "ABC3",
         //             stock: 10,
-        //             status: true
+        //             status: true,
+        //             category: "pantalones"
         //         },
         //         {
         //             title: "Producto 4",
@@ -43,7 +46,8 @@ const conectMongoDB = async() => {
         //             thumbnail: "xxxxx.jpg",
         //             code: "ABC4",
         //             stock: 10,
-        //             status: true
+        //             status: true,
+        //             category: "pantalones"
         //         },
         //         {
         //             title: "Producto 5",
@@ -52,7 +56,8 @@ const conectMongoDB = async() => {
         //             thumbnail: "xxxxx.jpg",
         //             code: "ABC5",
         //             stock: 10,
-        //             status: true
+        //             status: true,
+        //             category: "remeras"
         //         },
         //         {
         //             title: "Producto 6",
@@ -61,7 +66,8 @@ const conectMongoDB = async() => {
         //             thumbnail: "xxxxx.jpg",
         //             code: "ABC6",
         //             stock: 10,
-        //             status: true
+        //             status: true,
+        //             category: "pantalones"
         //         },
         //         {
         //             title: "Producto 7",
@@ -70,7 +76,8 @@ const conectMongoDB = async() => {
         //             thumbnail: "xxxxx.jpg",
         //             code: "ABC7",
         //             stock: 10,
-        //             status: true
+        //             status: true,
+        //             category: "pantalones"
         //         },
         //         {
         //             title: "Producto 8",
@@ -79,7 +86,8 @@ const conectMongoDB = async() => {
         //             thumbnail: "xxxxx.jpg",
         //             code: "ABC8",
         //             stock: 10,
-        //             status: true
+        //             status: true,
+        //             category: "pantalones"
         //         },
         //         {
         //             title: "Producto 9",
@@ -88,7 +96,8 @@ const conectMongoDB = async() => {
         //             thumbnail: "xxxxx.jpg",
         //             code: "ABC9",
         //             stock: 10,
-        //             status: true
+        //             status: true,
+        //             category: "pantalones"
         //         },
         //         {
         //             title: "Producto 10",
@@ -97,7 +106,8 @@ const conectMongoDB = async() => {
         //             thumbnail: "xxxxx.jpg",
         //             code: "ABC10",
         //             stock: 10,
-        //             status: true
+        //             status: true,
+        //             category: "remeras"
         //         },
         //         {
         //             title: "Producto 11",
@@ -106,7 +116,8 @@ const conectMongoDB = async() => {
         //             thumbnail: "xxxxx.jpg",
         //             code: "ABC11",
         //             stock: 10,
-        //             status: true
+        //             status: true,
+        //             category: "zapatillas"
         //         },
         //         {
         //             title: "Producto 12",
@@ -115,7 +126,8 @@ const conectMongoDB = async() => {
         //             thumbnail: "xxxxx.jpg",
         //             code: "ABC12",
         //             stock: 10,
-        //             status: true
+        //             status: true,
+        //             category: "remeras"
         //         },
         //         {
         //             title: "Producto 13",
@@ -124,7 +136,8 @@ const conectMongoDB = async() => {
         //             thumbnail: "xxxxx.jpg",
         //             code: "ABC13",
         //             stock: 10,
-        //             status: true
+        //             status: true,
+        //             category: "zapatillas"
         //         },
         //         {
         //             title: "Producto 14",
@@ -133,7 +146,8 @@ const conectMongoDB = async() => {
         //             thumbnail: "xxxxx.jpg",
         //             code: "ABC14",
         //             stock: 10,
-        //             status: true
+        //             status: true,
+        //             category: "remeras"
         //         },
         //         {
         //             title: "Producto 15",
@@ -142,7 +156,8 @@ const conectMongoDB = async() => {
         //             thumbnail: "xxxxx.jpg",
         //             code: "ABC15",
         //             stock: 10,
-        //             status: true
+        //             status: true,
+        //             category: "remeras"
         //         },
         //         {
         //             title: "Producto 16",
@@ -151,7 +166,8 @@ const conectMongoDB = async() => {
         //             thumbnail: "xxxxx.jpg",
         //             code: "ABC16",
         //             stock: 10,
-        //             status: true
+        //             status: true,
+        //             category: "zapatillas"
         //         }
         //     ]
         // )
