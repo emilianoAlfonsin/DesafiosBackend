@@ -29,7 +29,7 @@ productRouter.get('/', async (req, res) => {
         const options = {
             page,
             limit,
-            lean: true
+            lean: true 
         }
 
         // Condiciones de ordenamiento "sort"

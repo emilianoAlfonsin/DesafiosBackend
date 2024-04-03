@@ -5,11 +5,13 @@
     <div class="list-group">
         {{#each docs}}
             <div class="list-group-item">
-                <h5>{{this.title}}</h5>
-                <div>
-                    <p>{{this.description}}</p>
-                    <p>Precio: {{this.price}}</p>
-                </div>
+                <a href="#">
+                    <h5>{{this.title}}</h5>
+                    <div>
+                        <p>{{this.description}}</p>
+                        <p>Precio: {{this.price}}</p>
+                    </div>
+                </a>
             </div>
         {{/each}}
     </div>

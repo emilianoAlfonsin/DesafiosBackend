@@ -19,6 +19,7 @@ cartRouter.get('/', async (req, res) => {
 cartRouter.get('/:cid/', async (req, res) => {
     try {
         const cart = await cartManager.getCartById(req.params.cid)
+        console.log(cart);
         if (!cart) return res.status(404).json({ error: "El carrito no se encontró" })
         res.status(200).render('cart', { cart: cart })
     } catch (error) {

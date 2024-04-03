@@ -25,7 +25,9 @@ export default class CartsManagerMongo {
         try {
             const cart = await this.carts.findById(id).populate("products.product")
             if (!cart) throw new Error("Carrito no encontrado")
-            return cart
+            const populatedCart = cart.toObject()
+            // console.log(JSON.stringify(populatedCart, null, "\t"))
+            return populatedCart
         } 
         catch (error) {
             console.error("No se pudo encontrar el carrito",error)
