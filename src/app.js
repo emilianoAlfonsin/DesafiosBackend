@@ -25,6 +25,8 @@ app.use(express.urlencoded({extended:true}))
 
 //Configuración de arcivos estáticos
 app.use(express.static(path.join(__dirname+'/public')))
+app.use('/assets', express.static(path.join(__dirname, 'public', 'assets')))
+
 
 // Configurar las rutas.
 app.use('/api/products/', productRouter)

@@ -81,7 +81,7 @@ productRouter.get('/:pid/', async (req, res) => {
             res.status(404).json({ error: 'Producto no encontrado' })
             return
         }
-        res.status(200).json(product)
+        res.status(200).render('productDetails', product)
     } catch (error) {  
         console.error(error)
         res.status(500).json({ error: 'Error al obtener el producto' })

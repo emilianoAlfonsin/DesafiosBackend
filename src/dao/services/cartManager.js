@@ -25,7 +25,7 @@ export default class CartsManagerMongo {
         try {
             const cart = await this.carts.findById(id).populate("products.product")
             if (!cart) throw new Error("Carrito no encontrado")
-            const populatedCart = cart.toObject()
+            const populatedCart = cart.toObject() // Convierte un documento de mongoose a un objeto plano para manipularlo con Js.
             // console.log(JSON.stringify(populatedCart, null, "\t"))
             return populatedCart
         } 
