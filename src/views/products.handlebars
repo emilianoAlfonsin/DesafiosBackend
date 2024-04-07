@@ -3,9 +3,9 @@
     <h1>Productos</h1>
     <hr>
     <div class="list-group">
-        {{#each docs}}
+        {{#each products}}
             <div class="list-group-item">
-                <a href="/api/products/{{this._id}}">
+                <a href="/products/{{this._id}}">
                     <h5>{{this.title}}</h5>
                 </a>
                 <div>
@@ -18,13 +18,13 @@
     <hr>
     <div class="m-3 justify-center">
     {{#if hasPrevPage}}
-        <a href={{this.prevLink}} class="btn btn-secondary d-inline p-2">Anterior</a>
+        <a href={{prevPageUrl}} class="btn btn-secondary d-inline p-2">Anterior</a>
     {{/if}}
     
     <p class="d-inline p-2">  {{this.page}}  </p>
     
     {{#if hasNextPage}}
-        <a href={{this.nextLink}} class="btn btn-secondary d-inline p-2">Siguiente</a>
+        <a href={{nextPageUrl}} class="btn btn-secondary d-inline p-2">Siguiente</a>
     {{/if}} 
 </div>
 {{else}}

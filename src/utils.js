@@ -12,3 +12,16 @@ import mongoose from "mongoose"
 export function isValidObjectId(id) {
     return mongoose.Types.ObjectId.isValid(id)
 }
+
+
+// Función para generar el enlace de paginación
+export function generatePaginationLink(page, limit, sort, category, status, pageExists) {
+    if (!pageExists) return null;
+
+    let link = `/products?page=${page}&limit=${limit}`;
+    if (sort) link += `&sort=${sort}`;
+    if (category) link += `&category=${category}`;
+    if (status) link += `&status=${status}`;
+    return link;
+}
+

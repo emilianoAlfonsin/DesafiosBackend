@@ -5,14 +5,49 @@ export default class ProductsManagerMongo {
         this.model = productsModel
     }
 
-    async getProducts() {
+    // async getProducts() {
+    //     try {
+    //         return await this.model.find()
+    //     }
+    //     catch(error) {
+    //         console.error(error)
+    //     }
+    // }
+
+    async getProducts(params) {
         try {
-            return await this.model.find()
-        }
-        catch(error) {
+            const {
+                limit,
+                page,
+                sort,
+                category,
+                status
+            } = params
+    
+            //Condiciones de paginación.
+            const options = {}
+            options.limit = limit
+            options.skip = (page - 1) * limit
+            options.lean = true
+    
+            //Condiciones de ordenamiento.
+            if (sort && (sort === 'asc' || sort === 'desc')) {
+                options.sort = { price: sort === 'asc' ? 1 : -1 }
+            }
+    
+            //Condiciones de filtro query.
+            const query = {}
+            if (category) query.category = category
+            if (status) query.status = status
+    
+            const result = await this.model.paginate(query, options)
+            return result
+        } catch (error) {
             console.error(error)
+            throw new Error('Error al obtener los productos')
         }
     }
+    
 
     async getProductById(id) {
         try {
