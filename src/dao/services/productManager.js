@@ -17,8 +17,8 @@ export default class ProductsManagerMongo {
     async getProducts(params) {
         try {
             const {
-                limit,
-                page,
+                limit = 10,
+                page = 1,
                 sort,
                 category,
                 status
@@ -37,8 +37,8 @@ export default class ProductsManagerMongo {
     
             //Condiciones de filtro query.
             const query = {}
-            if (category) query.category = category
-            if (status) query.status = status
+            category && (query.category = category)
+            status && (query.status = status)
     
             const result = await this.model.paginate(query, options)
             return result

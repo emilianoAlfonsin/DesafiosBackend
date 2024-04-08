@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import ProductsManagerMongo from '../dao/services/productManager.js'
-import productsModel from '../dao/models/productsModel.js'
 import CartsManagerMongo from '../dao/services/cartManager.js'
 import { generatePaginationLink } from '../utils.js'
 
@@ -76,7 +75,7 @@ viewsRouter.get('/chat', (req, res) => {
 viewsRouter.get('/products/', async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1
-        const limit = parseInt(req.query.limit) || 5
+        const limit = parseInt(req.query.limit) || 10
         const sort = req.query.sort
         const category = req.query.category
         const status = req.query.status
@@ -89,15 +88,17 @@ viewsRouter.get('/products/', async (req, res) => {
             ... (status && {status}) 
         }
 
-        const { products, totalPages, hasNextPage, hasPrevPage } = await productManager.getProducts(params)
+        const { docs, totalPages, hasNextPage, hasPrevPage } = await productManager.getProducts(params)
         console.log(params)
+
         // Generar enlaces de paginación "nextLink" y "prevLink"
         const nextPageUrl = generatePaginationLink(page + 1, limit, {sort, category, status}, hasNextPage, )
         const prevPageUrl = generatePaginationLink(page - 1, limit, {sort, category, status}, hasPrevPage)
-        console.log(products)
-        const isValid = products.length > 0
+
+        const isValid = page >= 1 && page <= totalPages
+
         // Enviar la respuesta con el formato requerido
-        res.status(200).render('products', { products, totalPages, prevPageUrl, nextPageUrl, isValid })
+        res.status(200).render('products', { products : docs, totalPages, prevPageUrl, nextPageUrl, isValid })
     } catch (error) {
         console.error(error)
         res.status(500).json({ error: 'Error al obtener los productos' })

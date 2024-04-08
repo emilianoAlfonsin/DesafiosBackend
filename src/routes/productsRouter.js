@@ -4,14 +4,12 @@ import ProductsManagerMongo from "../dao/services/productManager.js"
 const productRouter = Router()
 const productManager = new ProductsManagerMongo()
 
-// Obtener todos los productos. FileSystem
+// Obtener todos los productos. (paginado)
 productRouter.get('/', async (req, res) => {
     try{
-        const products = await productManager.getProducts()
-        const limit = req.query.limit
-        limit > 0
-        ? res.json(products.slice(0, limit))
-        : res.json(products)
+        const products = await productManager.getProducts(req.query)
+        
+        res.status(200).send({status: 'success', payload: products})
     } catch (error) {
         console.error(error)
         res.status(500).json({ error: 'Eror al obtener los productos' })
