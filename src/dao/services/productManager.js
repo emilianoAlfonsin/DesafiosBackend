@@ -25,11 +25,8 @@ export default class ProductsManagerMongo {
             } = params
     
             //Condiciones de paginación.
-            const options = {}
-            options.limit = limit
-            options.skip = (page - 1) * limit
-            options.lean = true
-    
+            const options = {limit, page, lean : true}
+
             //Condiciones de ordenamiento.
             if (sort && (sort === 'asc' || sort === 'desc')) {
                 options.sort = { price: sort === 'asc' ? 1 : -1 }
@@ -39,9 +36,12 @@ export default class ProductsManagerMongo {
             const query = {}
             category && (query.category = category)
             status && (query.status = status)
-    
+
+            
+            //Consulta a la base de datos. Retorna un objeto con los productos y la información de paginación.
             const result = await this.model.paginate(query, options)
-            return result
+
+            return result  //Devuelve los productos y la información de paginación.
         } catch (error) {
             console.error(error)
             throw new Error('Error al obtener los productos')

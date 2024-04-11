@@ -1,4 +1,3 @@
-
 {{#if isValid}}
     <h1>Productos</h1>
     <hr>
@@ -17,17 +16,16 @@
     </div>
     <hr>
     <div class="m-3 justify-center">
-    {{#if hasPrevPage}}
-        <a href={{prevPageUrl}} class="btn btn-secondary d-inline p-2">Anterior</a>
-    {{/if}}
-    
-    <p class="d-inline p-2">  {{this.page}}  </p>
-    
-    {{#if hasNextPage}}
-        <a href={{nextPageUrl}} class="btn btn-secondary d-inline p-2">Siguiente</a>
-    {{/if}} 
-</div>
+        {{#if prevPageUrl}}
+            <a href="{{prevPageUrl}}" class="btn btn-secondary d-inline p-2">Anterior</a>
+        {{/if}}
+        
+        <p class="d-inline p-2">  {{page}}  </p>
+        
+        {{#if nextPageUrl}}
+            <a href="{{nextPageUrl}}" class="btn btn-secondary d-inline p-2">Siguiente</a>
+        {{/if}} 
+    </div>
 {{else}}
     <h2>No se encuentran productos para mostrar</h2>
 {{/if}}
-

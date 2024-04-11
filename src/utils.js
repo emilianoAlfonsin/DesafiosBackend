@@ -15,13 +15,12 @@ export function isValidObjectId(id) {
 
 
 // Función para generar el enlace de paginación
-export function generatePaginationLink(page, limit, sort, category, status, pageExists) {
-    if (!pageExists) return null;
+export function generatePaginationLink(page, limit, sort, category, status) {
 
-    let link = `/products?page=${page}&limit=${limit}`;
-    if (sort) link += `&sort=${sort}`;
-    if (category) link += `&category=${category}`;
-    if (status) link += `&status=${status}`;
+    let link = `/products?page=${page}&limit=${limit}`
+    sort && (link += `&sort=${sort}`)
+    category && (link += `&category=${category}`)
+    status && (link += `&status=${status}`)
     return link;
 }
 

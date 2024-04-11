@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import ProductsManagerMongo from '../dao/services/productManager.js'
 import CartsManagerMongo from '../dao/services/cartManager.js'
-import { generatePaginationLink } from '../utils.js'
+
 
 const viewsRouter = Router()
 const productManager = new ProductsManagerMongo()
@@ -19,59 +19,6 @@ viewsRouter.get('/chat', (req, res) => {
     res.render('chat')
 })
 
-// viewsRouter.get('/products/', async (req, res) => {
-//     try{
-//         const page = parseInt(req.query.page) || 1
-//         const limit = parseInt(req.query.limit) || 5
-//         const sort = req.query.sort 
-
-//         const options = {
-//             page,
-//             limit,
-//             lean: true 
-//         }
-
-//         // Condiciones de ordenamiento "sort"
-//         if (sort === 'asc' || sort === 'desc') {
-//             options.sort = { price: sort === 'asc' ? 1 : -1 }
-//         }
-//         console.log(options)
-//         // Condiciones de filtro "query"
-//         const {category, status} = req.query
-//         const query = {}
-//         category && (query.category = category)
-//         status && (query.status = status)
-
-//         const result = await productsModel.paginate(query, options)
-
-//         result.isValid = page >= 1 && page <= result.totalPages
-
-//         // Generar enlaces de paginación "nextLink" y "prevLink"
-//         let nextPageUrl = `/products?page=${page + 1}&limit=${limit}`
-//         req.query.sort && (nextPageUrl += `&sort=${sort}`)
-//         req.query.category && (nextPageUrl += `&category=${category}`)
-//         req.query.status && (nextPageUrl += `&status=${status}`)
-//         result.nextLink = result.hasNextPage
-//             ? nextPageUrl
-//             : null
-
-//         let prevPageUrl = `/products?page=${page - 1}&limit=${limit}`
-//         req.query.sort && (prevPageUrl += `&sort=${sort}`)
-//         req.query.category && (prevPageUrl += `&category=${category}`)
-//         req.query.status && (prevPageUrl += `&status=${status}`)
-//         result.prevLink = result.hasPrevPage
-//             ? prevPageUrl
-//             : null
-
-//         console.log(result.isValid);
-//         res.status(200).render('products', result)
-//     }
-//     catch (error) {
-//         console.error(error)
-//         res.status(500).json({ error: 'Error al obtener los productos' })
-//     }
-// })
-
 viewsRouter.get('/products/', async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1
@@ -80,30 +27,58 @@ viewsRouter.get('/products/', async (req, res) => {
         const category = req.query.category
         const status = req.query.status
 
+        if (isNaN(page) || isNaN(limit) || page <= 0 || limit <= 0) {
+            throw new Error('Los parámetros de paginación son inválidos')
+        }
+
         const params = { 
             page, 
             limit, 
-            ... (sort && {sort}), 
-            ... (category && {category}), 
-            ... (status && {status}) 
+            sort, 
+            category, 
+            status 
         }
 
-        const { docs, totalPages, hasNextPage, hasPrevPage } = await productManager.getProducts(params)
-        console.log(params)
+        const productsData = await productManager.getProducts(params)
+        console.log(productsData)
 
-        // Generar enlaces de paginación "nextLink" y "prevLink"
-        const nextPageUrl = generatePaginationLink(page + 1, limit, {sort, category, status}, hasNextPage, )
-        const prevPageUrl = generatePaginationLink(page - 1, limit, {sort, category, status}, hasPrevPage)
+        // Generar enlaces de paginación "prevLink" y "nextLink"
+        let prevPageUrl = productsData.hasPrevPage ? `/products?page=${page - 1}&limit=${limit}` : null
+        let nextPageUrl = productsData.hasNextPage ? `/products?page=${page + 1}&limit=${limit}` : null
 
-        const isValid = page >= 1 && page <= totalPages
+        if (sort) {
+            prevPageUrl && (prevPageUrl += `&sort=${sort}`)
+            nextPageUrl && (nextPageUrl += `&sort=${sort}`)
+        }
+
+        if (category) {
+            prevPageUrl && (prevPageUrl += `&category=${category}`)
+            nextPageUrl && (nextPageUrl += `&category=${category}`)
+        }
+
+        if (status) {
+            prevPageUrl && (prevPageUrl += `&status=${status}`)
+            nextPageUrl && (nextPageUrl += `&status=${status}`)
+        }
+
+        // Verificar si hay productos en la página actual 
+        const isValid = productsData.docs.length > 0
 
         // Enviar la respuesta con el formato requerido
-        res.status(200).render('products', { products : docs, totalPages, prevPageUrl, nextPageUrl, isValid })
+        res.status(200).render('products', { 
+            products: productsData.docs, 
+            totalPages: productsData.totalPages, 
+            page: productsData.page,
+            prevPageUrl,
+            nextPageUrl,
+            isValid
+        })
     } catch (error) {
-        console.error(error)
+        console.error(error);
         res.status(500).json({ error: 'Error al obtener los productos' })
     }
 })
+
 
 
 viewsRouter.get('/products/:pid', async (req, res) => {
