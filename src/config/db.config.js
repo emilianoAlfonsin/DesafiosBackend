@@ -4,7 +4,7 @@ import productsModel from "../dao/models/productsModel.js"
 const DB_URL = 'mongodb+srv://emilianoa83:Coder2024@cluster0.3rp6pnj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 
 // Configurar la conexión a MongoDB.
-const conectMongoDB = async() => {
+export async function conectMongoDB() {
     try {                       
         await mongoose.connect(DB_URL)
         // await productsModel.insertMany(
@@ -178,4 +178,4 @@ const conectMongoDB = async() => {
     }
 }
 
-export default conectMongoDB
+export default DB_URL

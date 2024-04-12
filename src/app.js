@@ -1,7 +1,7 @@
 import cartRouter from "./routes/cartRouter.js"
 import productRouter from "./routes/productsRouter.js"
 import viewsRouter from "./routes/viewsRouter.js"
-import conectMongoDB from "./config/db.config.js"
+import {conectMongoDB} from "./config/db.config.js"
 import initializeSocket from "./socket/socketManager.js"
 import serverConfig from "./config/server.config.js"
 
@@ -9,6 +9,7 @@ import serverConfig from "./config/server.config.js"
 const PORT = process.env.PORT || 8080
 
 const app = serverConfig()
+
 
 // Configurar las rutas.
 app.use('/api/products/', productRouter)

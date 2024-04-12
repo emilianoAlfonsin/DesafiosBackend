@@ -2,6 +2,9 @@ import express from 'express'
 import path from 'path'
 import handlebars from 'express-handlebars'
 import __dirname from '../utils.js'
+import session from "express-session"
+import MongoStore from "connect-mongo"
+import DB_URL from './db.config.js'
 
 const serverConfig = () => {
     const app = express()
@@ -17,6 +20,20 @@ const serverConfig = () => {
 
     // Configuración de rutas.
     app.use(express.static(path.join(__dirname, 'public')))
+
+    app.use(session({
+        store: MongoStore.create({
+            mongoUrl: DB_URL,
+            ttl: 3600
+            }),
+        secret: 'secret',
+        resave: false,
+        saveUninitialized: false
+        })
+    )
+
+
+
 
     return app
 }
