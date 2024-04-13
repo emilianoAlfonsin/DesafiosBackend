@@ -1,0 +1,39 @@
+<h1>Registro de Usuario</h1>
+
+<div class="container-md d-flex justify-center" style="max-width: 560px;">
+    <div class="col-md">
+        <form action="/api/session/register" method="POST" id="register-form">
+            <div class="row m-3">
+                <label for="first_name" class="form-label">Nombre</label>
+                <input type="text" id="first_name" name="first_name" required>
+            </div>
+
+            <div class="row m-3">
+                <label for="last_name" class="form-label">Apellido</label>
+                <input type="text" id="last_name" name="last_name" required>
+            </div>
+
+            <div class="row m-3">
+                <label for="email" class="form-label">Correo electrónico</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="row m-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <div class="row m-3">
+                <label for="age" class="form-label">Edad</label>
+                <input type="number" id="age" name="age" required>
+            </div>
+
+            <div class="row m-3">
+                <button type="submit" class="btn btn-success">Registrarme</button>
+                <a href="/">Incia sesión</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/js/register.js"></script>

@@ -17,7 +17,6 @@ productRouter.get('/', async (req, res) => {
     }
 })
 
-    
 // Obtener un producto por su Id. [Requerida]
 productRouter.get('/:pid/', async (req, res) => {
     try{

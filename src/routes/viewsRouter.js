@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import ProductsManagerMongo from '../dao/services/productManager.js'
 import CartsManagerMongo from '../dao/services/cartManager.js'
+import { auth } from '../middlewares/auth.js'
 
 
 const viewsRouter = Router()
@@ -9,6 +10,10 @@ const cartManager = new CartsManagerMongo()
 
 viewsRouter.get('/', async (req, res) => {
     res.render('index')
+})
+
+viewsRouter.get('/register', (req, res) => {
+    res.render('register')
 })
 
 viewsRouter.get('/realtimeproducts', (req, res) => {
@@ -78,8 +83,6 @@ viewsRouter.get('/products/', async (req, res) => {
         res.status(500).json({ error: 'Error al obtener los productos' })
     }
 })
-
-
 
 viewsRouter.get('/products/:pid', async (req, res) => {
     try{
