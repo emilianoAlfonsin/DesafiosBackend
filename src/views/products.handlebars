@@ -1,5 +1,13 @@
+<div class="container text-center">
+    <h2>Bienvenido!</h2>
+    <p>Usuario: {{user.first_name}} {{user.last_name}}</p>
+    <p>Edad: {{user.age}}</p>
+    <p>Rol: {{user.role}}</p>
+</div>
+<hr>
+
 {{#if isValid}}
-    <h1>Productos</h1>
+    <h3>Productos</h3>
     <hr>
     <div class="list-group">
         {{#each products}}

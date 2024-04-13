@@ -12,19 +12,19 @@ viewsRouter.get('/', async (req, res) => {
     res.render('index')
 })
 
-viewsRouter.get('/register', (req, res) => {
+viewsRouter.get('/register', async (req, res) => {
     res.render('register')
 })
 
-viewsRouter.get('/realtimeproducts', (req, res) => {
+viewsRouter.get('/realtimeproducts', auth, async(req, res) => {
     res.render('realtimeProducts')
 })
 
-viewsRouter.get('/chat', (req, res) => {
+viewsRouter.get('/chat', auth, async (req, res) => {
     res.render('chat')
 })
 
-viewsRouter.get('/products/', async (req, res) => {
+viewsRouter.get('/products/', auth, async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1
         const limit = parseInt(req.query.limit) || 10
@@ -76,7 +76,8 @@ viewsRouter.get('/products/', async (req, res) => {
             page: productsData.page,
             prevPageUrl,
             nextPageUrl,
-            isValid
+            isValid,
+            user: req.session.user
         })
     } catch (error) {
         console.error(error);
@@ -84,7 +85,7 @@ viewsRouter.get('/products/', async (req, res) => {
     }
 })
 
-viewsRouter.get('/products/:pid', async (req, res) => {
+viewsRouter.get('/products/:pid', auth, async (req, res) => {
     try{
         const product = await productManager.getProductById(req.params.pid)
         if (!product) return res.status(404).json({ error: "El producto no se encontró" })
@@ -95,7 +96,7 @@ viewsRouter.get('/products/:pid', async (req, res) => {
     }
 })
 
-viewsRouter.get('/carts/:cid', async (req, res) => {
+viewsRouter.get('/carts/:cid', auth, async (req, res) => {
     try{
         const cart = await cartManager.getCartById(req.params.cid)
         if (!cart) return res.status(404).json({ error: "El carrito no se encontró" })
