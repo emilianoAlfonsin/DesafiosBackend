@@ -1,6 +1,6 @@
 import { Router } from "express"
 import userModel from "../dao/models/userModel.js"
-import { hashPassword } from "../utils.js"
+import { hashPassword, isValidPassword} from "../utils.js"
 import bcrypt from "bcrypt"
 
 const sessionRouter = Router()
@@ -85,10 +85,28 @@ sessionRouter.get("/logout/", async (req, res) => {
         } else {
             res
             .status(200)
-            .send({ status: "success", message: "Sesión cerrada correctamente" })
+            // .send({ status: "success", message: "Sesión cerrada correctamente" })
             .redirect("/")
         }
     })
+})
+
+sessionRouter.put("/restorePassword", async (req, res) => {
+    const { email, password } = req.body
+    console.log("Solicitud de PUT recibida en /restorePassword")
+
+    !email || !password && res.status(400).send({ status: "error", message: "Todos los campos son obligatorios" })
+
+    const user = await userModel.findOne({ email })
+    !user && res.status(404).send({ status: "error", message: "Error de autenticación" })
+
+    const newwPassword = hashPassword(password)
+
+    const result = await userModel.updateOne({ email }, { password: newwPassword })
+    console.log("Contraseña restaurada correctamente:", result)
+
+
+    res.status(200).send({ status: "success", message: "Contraseña restaurada correctamente" })
 })
 
 export default sessionRouter

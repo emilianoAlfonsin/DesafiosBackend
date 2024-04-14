@@ -16,6 +16,10 @@ viewsRouter.get('/register', async (req, res) => {
     res.render('register')
 })
 
+viewsRouter.get('/restorePassword', async (req, res) => {
+    res.render('restorePassword')
+})
+
 viewsRouter.get('/realtimeproducts', auth, async(req, res) => {
     res.render('realtimeProducts')
 })
