@@ -65,19 +65,28 @@ sessionRouter.post("/login/", async (req, res) => {
             role: user.role
         }
     
-        res.status(200).send({ status: "success", message: "Usuario logueado correctamente", payload: req.session.user })
+        res
+        .status(200)
+        .send({ status: "success", message: "Usuario logueado correctamente", payload: req.session.user })
     } catch(error){
         console.log(error)
-        res.status(500).send({ status: "error", message: "Error al loguear el usuario" })
+        res
+        .status(500)
+        .send({ status: "error", message: "Error al loguear el usuario" })
     }
 })
 
 sessionRouter.get("/logout/", async (req, res) => {
     req.session.destroy(err => {
         if (err) {
-            res.status(500).send({ status: "error", message: "Error al cerrar sesión" })
+            res
+            .status(500)
+            .send({ status: "error", message: "Error al cerrar sesión" })
         } else {
-            res.status(200).send({ status: "success", message: "Sesión cerrada correctamente" })
+            res
+            .status(200)
+            .send({ status: "success", message: "Sesión cerrada correctamente" })
+            .redirect("/")
         }
     })
 })
