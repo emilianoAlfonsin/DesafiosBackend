@@ -9,6 +9,8 @@ import cartRouter from "../routes/cartRouter.js"
 import productRouter from "../routes/productRouter.js"
 import viewsRouter from "../routes/viewsRouter.js"
 import sessionRouter from "../routes/sessionRouter.js"
+import passport from "passport"
+import initializePassport from "./config/passport.config.js"
 
 const serverConfig = () => {
     const app = express()
@@ -31,6 +33,11 @@ const serverConfig = () => {
         saveUninitialized: false
         })
     )
+
+    //Configuración de passport.
+    initializePassport()
+    app.use(passport.initialize())
+    app.use(passport.session())
 
     console.log("Configurando las rutas...")
     // Configuración de rutas.
