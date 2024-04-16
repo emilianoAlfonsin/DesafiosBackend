@@ -10,7 +10,7 @@ import productRouter from "../routes/productRouter.js"
 import viewsRouter from "../routes/viewsRouter.js"
 import sessionRouter from "../routes/sessionRouter.js"
 import passport from "passport"
-import initializePassport from "./config/passport.config.js"
+import initializePassport from "./passport.config.js"
 
 const serverConfig = () => {
     const app = express()

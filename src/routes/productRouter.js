@@ -17,7 +17,7 @@ productRouter.get('/', async (req, res) => {
     }
 })
 
-// Obtener un producto por su Id. [Requerida]
+// Obtener un producto por su Id. 
 productRouter.get('/:pid/', async (req, res) => {
     try{
         const product = await productManager.getProductById(req.params.pid)
@@ -33,7 +33,7 @@ productRouter.get('/:pid/', async (req, res) => {
     }
 })
 
-// Agregar un nuevo producto. [Requerida]
+// Agregar un nuevo producto. 
 productRouter.post('/', async (req, res) => {
     try{
         const product = req.body
@@ -45,7 +45,7 @@ productRouter.post('/', async (req, res) => {
     }
 })
 
-// Actualizar producto. [Requerida]
+// Actualizar producto.
 productRouter.put('/:pid/', async (req, res) => {
     try {
         const updatedProduct = await productManager.updateProduct(req.params.pid, req.body)
@@ -61,7 +61,7 @@ productRouter.put('/:pid/', async (req, res) => {
     }
 })
 
-// Eliminar un producto mediante su Id. [Requerida]
+// Eliminar un producto mediante su Id. 
 productRouter.delete('/:pid/', async (req, res) => {
     try{
         const deletedProduct = await productManager.deleteProductById(req.params.pid)

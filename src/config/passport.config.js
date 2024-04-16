@@ -1,9 +1,8 @@
 import passport from "passport"
 import local from "passport-local"
 
-import { UserModel } from "../models/user.model.js"
-import { createHash, isValidPassword } from "../utils.js"
-import e from "express"
+import UserModel  from "../dao/models/userModel.js"
+import { hashPassword, isValidPassword } from "../utils.js"
 
 const LocalStrategy = local.Strategy
 
@@ -27,7 +26,7 @@ const initializePassport = () => {
                         last_name,
                         email,
                         age,
-                        password: createHash(password),
+                        password: hashPassword(password),
                     }
 
                     const result = await UserModel.create(newUser)

@@ -82,7 +82,25 @@ export default class CartsManagerMongo {
         try {
             if (!isValidObjectId(cid)) throw new Error("El ID del carrito no es válido")
             if (!isValidObjectId(pid)) throw new Error("El ID del producto no es válido")
-            return await this.carts.updateOne({ _id: cid, "products._id": pid }, { $set: { "products.$.quantity": quantity } })
+            console.log("cid:", cid, " pid:" , pid , " quantity:" , quantity)
+            
+            const cart = await this.carts.findById(cid)
+            if (!cart) throw new Error("Carrito no encontrado")
+
+            const productIndex = cart.products.findIndex( product => product.product.equals(pid))
+            productIndex === -1 
+                ? cart = await this.carts.findByIdAndUpdate(
+                    cid, 
+                    {$push: {products: {_id: pid, quantity: quantity, product: pid}}}, 
+                    {new: true}
+                    )
+                : cart.products[productIndex].quantity = quantity
+
+            return await cart.save()
+
+            // const updatedCart = await this.carts.updateOne({ _id: cid, "products.product": pid }, { $set: { "products.$.quantity": quantity } })
+            // console.log(updatedCart)
+            // return updatedCart.modifiedCount > 0 ? updatedCart : null // Retorna null si no se encontró el producto en el carrito.
         }
         catch (error) {
             console.error("No se pudo actualizar la cantidad del producto", error)
