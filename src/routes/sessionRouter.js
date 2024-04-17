@@ -47,15 +47,21 @@ sessionRouter.post("/login/", async (req, res) => {
         console.log("Solicitud de POST recibida en /login")
 
         // Validar campos obligatorios
-        !email || !password && res.status(400).send({ status: "error", message: "Todos los campos son obligatorios" })
+        if (!email || !password) {
+            return res.status(400).send({ status: "error", message: "Todos los campos son obligatorios" })
+        }
         
         // Validar email
         const user = await userModel.findOne({ email })
-        !user && res.status(404).send({ status: "error", message: "Error de autenticación" })
+        if (!user){
+            return res.status(404).send({ status: "error", message: "Error de autenticación" })
+        }
 
         // Validar contraseña
         const validatedPassword = await bcrypt.compare(password, user.password)
-        !validatedPassword && res.status(404).send({ status: "error", message: "Error de autenticación" })
+        if (!validatedPassword) {
+            return res.status(400).send({ status: "error", message: "Error de autenticación" })
+        }
 
         req.session.user = {
             first_name: user.first_name,
