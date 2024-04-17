@@ -24,7 +24,7 @@ const sessionRouter = Router()
 
 //     // Determinar el rol del usuario según su email
 //     let role = 'user'
-//     email === "admin@mail.com" && (role = 'admin')
+//     email === "adminCoder@coder.com" && (role = 'admin')
 
 //     const newUser = { 
 //         first_name, 
@@ -42,6 +42,7 @@ const sessionRouter = Router()
 
 // })
 
+
 sessionRouter.post("/register", passport.authenticate("register", { failureRedirect: "/failregister" }), async (req, res) => {
     res.status(201).send({ status: "success", message: "Usuario registrado correctamente" })
 })
@@ -57,15 +58,21 @@ sessionRouter.get("/failregister", (req, res) => {
 //         console.log("Solicitud de POST recibida en /login")
 
 //         // Validar campos obligatorios
-//         !email || !password && res.status(400).send({ status: "error", message: "Todos los campos son obligatorios" })
+//         if (!email || !password) {
+//             return res.status(400).send({ status: "error", message: "Todos los campos son obligatorios" })
+//         }
         
 //         // Validar email
 //         const user = await userModel.findOne({ email })
-//         !user && res.status(404).send({ status: "error", message: "Error de autenticación" })
+//         if (!user){
+//             return res.status(404).send({ status: "error", message: "Error de autenticación" })
+//         }
 
 //         // Validar contraseña
 //         const validatedPassword = await bcrypt.compare(password, user.password)
-//         !validatedPassword && res.status(404).send({ status: "error", message: "Error de autenticación" })
+//         if (!validatedPassword) {
+//             return res.status(400).send({ status: "error", message: "Error de autenticación" })
+//         }
 
 //         req.session.user = {
 //             first_name: user.first_name,
