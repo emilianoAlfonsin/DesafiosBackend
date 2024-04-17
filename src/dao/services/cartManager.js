@@ -148,14 +148,10 @@ export default class CartsManagerMongo {
         try {
             if (!isValidObjectId(cid)) throw new Error("El ID del carrito no es válido")
             if (!isValidObjectId(pid)) throw new Error("El ID del producto no es válido")
-            //El método pull elimina un elemento del array que coincida con el valor especificado.
             console.log(cid, pid)
             
-            //Elimina uno de la cantidad porque solo le envío el id global del producto
+            //Elimina uno de la cantidad
             const updatedCart = await this.carts.findByIdAndUpdate(cid, { $pull: {products: { product: pid } }})
-
-            //Elimina el total de la cantidad del producto.
-            // const updatedCart = await this.carts.findByIdAndUpdate(cid, { $pullAll: [{products: [{ product: pid }] }]})
 
             return updatedCart
         }
