@@ -98,7 +98,7 @@ export default class CartsManagerMongo {
 
             return await cart.save()
 
-            // const updatedCart = await this.carts.updateOne({ _id: cid, "products.product": pid }, { $set: { "products.$.quantity": quantity } })
+            // const updatedCart = await this.carts.updateOne({ _id: cid, "products._id": pid }, { $set: { "products.$.quantity": quantity } })
             // console.log(updatedCart)
             // return updatedCart.modifiedCount > 0 ? updatedCart : null // Retorna null si no se encontró el producto en el carrito.
         }
@@ -149,7 +149,15 @@ export default class CartsManagerMongo {
             if (!isValidObjectId(cid)) throw new Error("El ID del carrito no es válido")
             if (!isValidObjectId(pid)) throw new Error("El ID del producto no es válido")
             //El método pull elimina un elemento del array que coincida con el valor especificado.
-            return await this.carts.findByIdAndUpdate(cid, { $pull: {products: { _id: pid } }})
+            console.log(cid, pid)
+            
+            //Elimina uno de la cantidad porque solo le envío el id global del producto
+            const updatedCart = await this.carts.findByIdAndUpdate(cid, { $pull: {products: { product: pid } }})
+
+            //Elimina el total de la cantidad del producto.
+            // const updatedCart = await this.carts.findByIdAndUpdate(cid, { $pullAll: [{products: [{ product: pid }] }]})
+
+            return updatedCart
         }
         catch (error) {
             console.error("No se pudo eliminar el producto del carrito", error)

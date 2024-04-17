@@ -76,14 +76,15 @@ cartRouter.put('/:cid/products/:pid/', async (req, res) => {
 })
 
 // Eliminar un carrito por su id.
-cartRouter.delete('/:cid/', async (req, res) => {
-    try {
-        await cartManager.deleteCartById(req.params.cid);
-        res.status(200).json({ message: "Carrito eliminado correctamente" });
-    } catch (error) {
-        console.error("Error al eliminar el carrito:", error.message);
-        res.status(500).json({ error: "Error al eliminar el carrito" });
-    }
+// cartRouter.delete('/:cid/', async (req, res) => {
+//     try {
+//         await cartManager.deleteCartById(req.params.cid);
+//         res.status(200).json({ message: "Carrito eliminado correctamente" });
+//     } catch (error) {
+//         console.error("Error al eliminar el carrito:", error.message);
+//         res.status(500).json({ error: "Error al eliminar el carrito" });
+//     }
+// })
 
 // eliminar un producto del carrito por su id.
 cartRouter.delete('/:cid/products/:pid', async (req, res) => {
@@ -95,7 +96,7 @@ cartRouter.delete('/:cid/products/:pid', async (req, res) => {
         res.status(500).json({ error: "Error al eliminar el producto del carrito" });
     }
 })
-})
+
 
 //Eliminar un producto del carrito por su id.
 cartRouter.delete('/:cid/products/:pid/', async (req, res) => {
@@ -109,7 +110,7 @@ cartRouter.delete('/:cid/products/:pid/', async (req, res) => {
 })
 
 //Eliminar todos los productos del carrito.
-cartRouter.delete('/:cid/products/', async (req, res) => {
+cartRouter.delete('/:cid/', async (req, res) => {
     try {
         const cart = await cartManager.deleteAllProductsFromCart(req.params.cid)
         res.status(200).json(cart)
