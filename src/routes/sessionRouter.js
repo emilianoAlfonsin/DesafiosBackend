@@ -23,7 +23,7 @@ sessionRouter.post("/register", async (req, res) => {
 
     // Determinar el rol del usuario según su email
     let role = 'user'
-    email === "admin@mail.com" && (role = 'admin')
+    email === "adminCoder@coder.com" && (role = 'admin')
 
     const newUser = { 
         first_name, 

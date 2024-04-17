@@ -20,5 +20,8 @@ form.addEventListener('submit', (e) => {
     .then((result) => result.json())
     .then((json) => {
         console.log(json)
+        // Verificar si el registro fue exitoso
+        if (json.status === "success") {
+            window.location.replace('/')}
     })
 })
