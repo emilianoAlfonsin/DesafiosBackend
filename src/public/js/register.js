@@ -17,11 +17,22 @@ form.addEventListener('submit', (e) => {
             'Content-Type': 'application/json'
         }
     })
-    .then((result) => result.json())
+    .then((result) => {
+        if (!result.ok) throw new Error('Error en la solicitud de registro')
+        return result.json()
+    })
     .then((json) => {
         console.log(json)
         // Verificar si el registro fue exitoso
         if (json.status === "success") {
-            window.location.replace('/')}
+            window.location.replace('/')
+        } else {
+            console.log(json.message)
+            alert('Error en el registro', json.message)
+        }
+    })
+    .catch((error) => {
+        console.error('Error en la solicitud de registro:', error)
+        alert('Error en el registro', error.message)
     })
 })

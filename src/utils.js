@@ -20,6 +20,6 @@ export function hashPassword(password) {
 }
 
 //Validación de contraseñas
-export function isValidPassword(password, user) {
-    return bcrypt.compareSync(password, user.password)
+export function isValidPassword(password, hashedPassword) {
+    return bcrypt.compareSync(password, hashedPassword)
 }

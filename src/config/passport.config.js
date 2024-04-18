@@ -21,18 +21,21 @@ const initializePassport = () => {
                         return done(null, false)
                     }
 
+                    let role = email === "adminCoder@coder.com" ? "admin" : "user"
+
                     const newUser = {
                         first_name,
                         last_name,
                         email,
                         age,
                         password: hashPassword(password),
+                        role
                     }
 
                     const result = await UserModel.create(newUser)
                     return done(null, result)
                 } catch (error) {
-                return done("Error creating user")
+                    return done("Error al registrar el usuario")
                 }
             }
         )
@@ -50,7 +53,7 @@ const initializePassport = () => {
                         return done(null, false)
                     }
 
-                    if (!isValidPassword(user, password)) {
+                    if (!isValidPassword(password, user.password)) {
                         console.log("Contraseña incorrecta")
                         return done(null, false)
                     }

@@ -17,10 +17,7 @@ form.addEventListener('submit', async (e) => {
         
         if (response.status === 200) {
             window.location.replace('/products')
-        } else {
-            const responseData = await response.json()
-            throw new Error(responseData.message)
-        }
+        } 
     } catch (error) {
         console.error('Error en la solicitud de inicio de sesión:', error)
         errorMessage.textContent = error.message
