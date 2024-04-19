@@ -15,9 +15,15 @@ form.addEventListener('submit', async (e) => {
             }
         })
         
+        const json = await response.json()
+
         if (response.status === 200) {
             window.location.replace('/products')
-        } 
+        } else {
+            console.log('Error en la solicitud de inicio de sesión')
+            errorMessage.textContent = json.message
+            errorMessage.style.display = 'block' // Mostrar el mensaje de error
+        }
     } catch (error) {
         console.error('Error en la solicitud de inicio de sesión:', error)
         errorMessage.textContent = error.message

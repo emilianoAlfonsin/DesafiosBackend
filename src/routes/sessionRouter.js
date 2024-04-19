@@ -43,11 +43,11 @@ const sessionRouter = Router()
 // })
 
 
-sessionRouter.post("/register", passport.authenticate("register", { failureRedirect: "/failregister" }), async (req, res) => {
+sessionRouter.post("/register/", passport.authenticate("register", { failureRedirect: "/failregister" }), async (req, res) => {
     res.status(201).send({ status: "success", message: "Usuario registrado correctamente" })
 })
 
-sessionRouter.get("/failregister", (req, res) => {
+sessionRouter.get("/failregister/", (req, res) => {
     console.log("error");
     res.status(400).send({ status: "error", message: "Error al registrar el usuario" })
 })
@@ -93,7 +93,7 @@ sessionRouter.get("/failregister", (req, res) => {
 //     }
 // })
 
-sessionRouter.post("/login/", passport.authenticate("login", { failureRedirect: "/faillogin" }), async (req, res) => {
+sessionRouter.post("/login/", passport.authenticate("login", { failureRedirect: "/api/session/faillogin/" }), async (req, res) => {
     !req.user && res.status(404).send({ status: "error", message: "Error de autenticación" })
     req.session.user = {
         first_name: req.user.first_name,
@@ -105,17 +105,17 @@ sessionRouter.post("/login/", passport.authenticate("login", { failureRedirect: 
     res.status(200).send({ status: "success", message: "Usuario logueado correctamente", payload: req.user })
 })
 
-sessionRouter.get("/faillogin", (req, res) => {
+sessionRouter.get("/faillogin/", (req, res) => {
     console.log("error");
-    res.status(400).send({ status: "error", message: "Error al loguear el usuario" })
+    res.status(404).send({ status: "error", message: "Error al loguear el usuario" })
 })
 
-sessionRouter.get("/github" , passport.authenticate("github", { scope: ["user:email"] }),
+sessionRouter.get("/github/" , passport.authenticate("github", { scope: ["user:email"] }),
     async (req, res) => {
         console.log("Solicitud de GET recibida en /github")
 })
 
-sessionRouter.get("/githubcallback", passport.authenticate("github", { failureRedirect: "/" }),
+sessionRouter.get("/githubcallback/", passport.authenticate("github", { failureRedirect: "/" }),
     async (req, res) => {
         console.log("Solicitud de GET recibida en /githubcallback")
         req.session.user = {
