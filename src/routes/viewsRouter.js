@@ -49,7 +49,7 @@ viewsRouter.get('/products/', auth, async (req, res) => {
         }
 
         const productsData = await productManager.getProducts(params)
-        console.log(productsData)
+        // console.log(productsData)
 
         // Generar enlaces de paginación "prevLink" y "nextLink"
         let prevPageUrl = productsData.hasPrevPage ? `/products?page=${page - 1}&limit=${limit}` : null

@@ -1,5 +1,6 @@
 import passport from "passport"
 import local from "passport-local"
+import GitHubStrategy from "passport-github2"
 
 import UserModel  from "../dao/models/userModel.js"
 import { hashPassword, isValidPassword } from "../utils.js"
@@ -7,6 +8,8 @@ import { hashPassword, isValidPassword } from "../utils.js"
 const LocalStrategy = local.Strategy
 
 const initializePassport = () => {
+
+    // Estrategia local de registro de usuarios.
     passport.use(
         "register",
         new LocalStrategy(
@@ -41,6 +44,7 @@ const initializePassport = () => {
         )
     )
 
+    // Estrategia local de login de usuarios.
     passport.use(
         "login",
         new LocalStrategy(
@@ -66,6 +70,43 @@ const initializePassport = () => {
         )
     )    
 
+    // Estrategia de GitHub.
+    passport.use(
+        "github",
+        new GitHubStrategy(
+            {
+                clientID: "Iv1.47d8f43adbe04b52",
+                clientSecret: "652bab73dd9cf76aaa83a294af19c8e8f32b907d",
+                callbackURL: "http://localHost:8080/api/session/githubcallback",
+            },
+            async (accessToken, refreshToken, profile, done) => {
+                try {
+                    const user = await UserModel.findOne({ email: profile._json.email })
+                    if (user) {
+                        console.log("El usuario ya existe")
+                        return done(null, user)
+                    }
+
+                    const newUser = {
+                        first_name: profile._json.name,
+                        last_name: "",
+                        email: profile._json.email,
+                        age: 18,
+                        password: "",
+                        role: "user"
+                    }
+
+                    const result = await UserModel.create(newUser)
+                    return done(null, result)
+                } catch (error) {
+                    return done(error)
+                }
+            }
+        )
+    )
+
+
+    // Serializacion y deserializacion de usuarios.
     passport.serializeUser ( (user, done) => {
         done(null, user._id)
     })
