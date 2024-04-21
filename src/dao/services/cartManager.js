@@ -164,7 +164,13 @@ export default class CartsManagerMongo {
     async deleteAllProductsFromCart(cid) {
         try {
             if (!isValidObjectId(cid)) throw new Error("El ID del carrito no es válido")
-            return await this.carts.findByIdAndUpdate(cid, { $set: { products: [] }})
+            const emptyCart = await this.carts.findOneAndUpdate(
+                { _id: cid },
+                { $set: { products: [] } },
+                { new: true, upsert: false })
+                // Upsert = false, evita crear el documento si no existe.
+                // New = true, retorna el documento actualizado.
+            return emptyCart
         }
         catch (error) {
             console.error("No se pudo eliminar todos los productos del carrito", error)

@@ -113,6 +113,7 @@ cartRouter.delete('/:cid/products/:pid/', async (req, res) => {
 cartRouter.delete('/:cid/', async (req, res) => {
     try {
         const cart = await cartManager.deleteAllProductsFromCart(req.params.cid)
+        console.log("router",cart)
         res.status(200).json(cart)
     } catch (error) {
         console.error("Error al eliminar todos los productos del carrito:", error.message)
