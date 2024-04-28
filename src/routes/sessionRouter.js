@@ -163,4 +163,11 @@ sessionRouter.put("/restorePassword", async (req, res) => {
     res.status(200).send({ status: "success", message: "Contraseña restaurada correctamente" })
 })
 
+sessionRouter.get("/current", (req, res) => {
+    console.log("Solicitud de GET recibida en /current")
+    req.session.user 
+        ? res.send({ status: "success", message: "Usuario logueado correctamente", payload: req.session.user }) 
+        : res.send({ status: "error", message: "Usuario no logueado" })
+})
+
 export default sessionRouter
