@@ -5,6 +5,8 @@ import GitHubStrategy from "passport-github2"
 import UserModel  from "../dao/models/userModel.js"
 import { hashPassword, isValidPassword } from "../utils.js"
 
+import CartsManagerMongo from "../dao/services/cartManager.js"
+
 const LocalStrategy = local.Strategy
 
 const initializePassport = () => {
@@ -23,6 +25,9 @@ const initializePassport = () => {
                         console.log("El ususario ya existe")
                         return done(null, false)
                     }
+                    // Instancio la clase dentro del método para que se cree un carrito al crear el usuario.
+                    const cartManager = new CartsManagerMongo()
+                    const cart = await cartManager.createCart()
 
                     let role = email === "adminCoder@coder.com" ? "admin" : "user"
 
@@ -32,6 +37,7 @@ const initializePassport = () => {
                         email,
                         age,
                         password: hashPassword(password),
+                        cart: cart,
                         role
                     }
 
