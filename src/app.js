@@ -1,8 +1,9 @@
 import {conectMongoDB} from "./config/db.config.js"
 import initializeSocket from "./socket/socketManager.js"
 import serverConfig from "./config/server.config.js"
+import { environment } from "./config/environment.config.js"
 
-const PORT = process.env.PORT || 8080
+const PORT = environment.port
 
 const app = serverConfig()
 

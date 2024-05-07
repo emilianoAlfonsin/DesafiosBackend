@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
+import { environment } from "./environment.config"
 
-
-const DB_URL = 'mongodb+srv://emilianoa83:Coder2024@cluster0.3rp6pnj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+const DB_URL = environment.mongo_url
 
 // Configurar la conexión a MongoDB.
 export async function conectMongoDB() {
