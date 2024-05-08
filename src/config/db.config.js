@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { environment } from "./environment.config"
+import { environment } from "./environment.config.js"
 
 const DB_URL = environment.mongo_url
 

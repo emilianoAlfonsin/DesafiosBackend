@@ -1,14 +1,14 @@
 import { Server } from "socket.io"
-import ProductsManagerMongo from "../dao/services/productManager.js"
-import MessagesManagerMongo from "../dao/services/messagesManager.js"
+import ProductsService from "../dao/services/product.service.js"
+import MessagesService from "../dao/services/messages.service.js"
 
 const initializeSocket = (server) => {
 
     const io = new Server(server)
 
     //Instanciar los managers
-    const productManager = new ProductsManagerMongo()
-    const messagesManager = new MessagesManagerMongo()
+    const productManager = new ProductsService()
+    const messagesManager = new MessagesService()
     
     // Manejo de eventos de socket.io
     io.on('connection', socket => {

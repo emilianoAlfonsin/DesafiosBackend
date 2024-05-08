@@ -5,7 +5,7 @@ import GitHubStrategy from "passport-github2"
 import UserModel  from "../dao/models/userModel.js"
 import { hashPassword, isValidPassword } from "../utils.js"
 
-import CartsManagerMongo from "../dao/services/cartManager.js"
+import CartService from "../dao/services/cart.service.js"
 
 const LocalStrategy = local.Strategy
 
@@ -26,7 +26,7 @@ const initializePassport = () => {
                         return done(null, false)
                     }
                     // Instancio la clase dentro del método para que se cree un carrito al crear el usuario.
-                    const cartManager = new CartsManagerMongo()
+                    const cartManager = new CartService()
                     const cart = await cartManager.createCart()
 
                     let role = email === "adminCoder@coder.com" ? "admin" : "user"

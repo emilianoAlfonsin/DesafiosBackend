@@ -3,7 +3,7 @@ import cartsModel from "../models/cartsModel.js"
 // Metodo de validación de id existente en la DB.
 import { isValidObjectId } from "../../utils.js"
 
-export default class CartsManagerMongo {
+export default class CartService {
     constructor() {
         this.carts = cartsModel
     }

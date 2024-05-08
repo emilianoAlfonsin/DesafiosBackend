@@ -1,6 +1,6 @@
 import messageModel from "../models/messagesModel.js"
 
-export default class MessagesManagerMongo {
+export default class MessagesService {
     constructor() {
         this.model = messageModel
     }

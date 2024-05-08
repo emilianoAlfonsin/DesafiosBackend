@@ -1,12 +1,12 @@
 import { Router } from 'express'
-import ProductsManagerMongo from '../dao/services/productManager.js'
-import CartsManagerMongo from '../dao/services/cartManager.js'
+import ProductsService from '../dao/services/product.service.js'
+import CartService from '../dao/services/cart.service.js'
 import { auth } from '../middlewares/auth.js'
 
 
 const viewsRouter = Router()
-const productManager = new ProductsManagerMongo()
-const cartManager = new CartsManagerMongo()
+const productManager = new ProductsService()
+const cartManager = new CartService()
 
 viewsRouter.get('/', async (req, res) => {
     res.render('index')
