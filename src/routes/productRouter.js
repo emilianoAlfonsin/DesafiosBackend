@@ -1,80 +1,22 @@
 import { Router } from "express"
-import ProductsService from "../dao/services/product.service.js"
+import ProductController from "../dao/controllers/product.controller.js"
 
 const productRouter = Router()
-const productManager = new ProductsService()
+const productController = new ProductController()
 
 // Obtener todos los productos. (paginado)
-productRouter.get('/', async (req, res) => {
-    try{
-        const products = await productManager.getProducts(req.query)
-        
-        res.status(200).send({status: 'success', payload: products})
-    } catch (error) {
-        console.error(error)
-        res.status(500).json({ error: 'Eror al obtener los productos' })
-        return
-    }
-})
+productRouter.get('/', productController.getProducts)
 
 // Obtener un producto por su Id. 
-productRouter.get('/:pid/', async (req, res) => {
-    try{
-        const product = await productManager.getProductById(req.params.pid)
-        if (!product) {
-            res.status(404).json({ error: 'Producto no encontrado' })
-            return
-        }
-        res.status(200).json(product)
-    } catch (error) {  
-        console.error(error)
-        res.status(500).json({ error: 'Error al obtener el producto' })
-        return
-    }
-})
+productRouter.get('/:pid/', productController.getProductById)
 
 // Agregar un nuevo producto. 
-productRouter.post('/', async (req, res) => {
-    try{
-        const product = req.body
-        await productManager.addProduct(product)
-        res.status(201).json({ success: `${product.title} agregado correctamente.` })
-    } catch (error) {
-        console.error(error)
-        res.status(500).json({ error: 'Error al agregar el producto' })
-    }
-})
+productRouter.post('/', productController.addProduct)
 
 // Actualizar producto.
-productRouter.put('/:pid/', async (req, res) => {
-    try {
-        const updatedProduct = await productManager.updateProduct(req.params.pid, req.body)
-        if (!updatedProduct) {
-            // Si no se encuentra el producto devuelve un código de estado 404
-            res.status(404).json({ error: 'Producto no encontrado' })
-            return
-        }
-        res.status(200).json({ success: 'Producto actualizado correctamente', product: updatedProduct })
-    } catch (error) {
-        console.error('Error al actualizar el producto:', error)
-        res.status(500).json({ error: 'Ocurrió un error al actualizar el producto' })
-    }
-})
+productRouter.put('/:pid/', productController.updateProduct)
 
 // Eliminar un producto mediante su Id. 
-productRouter.delete('/:pid/', async (req, res) => {
-    try{
-        const deletedProduct = await productManager.deleteProductById(req.params.pid)
-        if (!deletedProduct) {
-            res.status(404).json({ error: 'Producto no encontrado' })
-            return
-        }
-        res.status(200).json({ success: `Producto ${deletedProduct} eliminado correctamente` })
-    } catch (error) {
-        console.error(error)
-        res.status(500).json({ error: 'Error al eliminar el producto' })
-        return       
-    }
-})
+productRouter.delete('/:pid/', productController.deleteProduct)
 
 export default productRouter
