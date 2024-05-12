@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import ViewsController from '../dao/controllers/views.controller.js'
+import ViewsController from '../controllers/views.controller.js'
 import { auth } from '../middlewares/auth.js'
 
 

@@ -1,5 +1,5 @@
-import CartService from "../services/cart.service.js"
-import ProductsService from "../services/product.service.js"
+import CartService from "../dao/services/cart.service.js"
+import ProductsService from "../dao/services/product.service.js"
 
 const cartService = new CartService()
 const productService = new ProductsService()

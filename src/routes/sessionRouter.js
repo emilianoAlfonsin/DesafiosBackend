@@ -1,10 +1,62 @@
 import { Router } from "express"
-import userModel from "../dao/models/userModel.js"
-import { hashPassword, isValidPassword} from "../utils.js"
-import bcrypt from "bcrypt"
 import passport from "passport"
+import SessionController from "../controllers/session.controller.js"
 
 const sessionRouter = Router()
+const sessionController = new SessionController()
+
+sessionRouter.post(
+    "/register/",
+    passport.authenticate("register",{ failureRedirect: "/failregister" }),
+    sessionController.registerUser
+)
+
+sessionRouter.get(
+    "/failregister/", 
+    sessionController.failRegisterUser
+)
+
+sessionRouter.post(
+    "/login/", 
+    passport.authenticate("login", { failureRedirect: "/api/session/faillogin/" })
+    ,sessionController.loginUser
+)
+
+sessionRouter.get(
+    "/faillogin/", 
+    sessionController.failLoginUser
+)
+
+sessionRouter.get(
+    "/github/", 
+    passport.authenticate("github", { scope: ["user:email"] }), 
+    sessionController.github
+)
+
+sessionRouter.get(
+    "/githubcallback/", 
+    passport.authenticate("github", { failureRedirect: "/" }), 
+    sessionController.githubCallback
+)
+
+sessionRouter.get(
+    "/logout/", 
+    sessionController.logoutUser
+)
+
+sessionRouter.put(
+    "/restorePassword",
+    sessionController.restorePassword
+)
+
+sessionRouter.get(
+    "/current", 
+    sessionController.currentUser
+)
+
+export default sessionRouter
+
+
 
 // sessionRouter.post("/register", async (req, res) => {
 //     console.log("Solicitud de POST recibida en /register")
@@ -41,16 +93,6 @@ const sessionRouter = Router()
 //     res.status(201).send({ status: "success", message: "Usuario registrado correctamente", payload: result })
 
 // })
-
-
-sessionRouter.post("/register/", passport.authenticate("register", { failureRedirect: "/failregister" }), async (req, res) => {
-    res.status(201).send({ status: "success", message: "Usuario registrado correctamente" })
-})
-
-sessionRouter.get("/failregister/", (req, res) => {
-    console.log("error");
-    res.status(400).send({ status: "error", message: "Error al registrar el usuario" })
-})
 
 // sessionRouter.post("/login/", async (req, res) => {
 //     try{
@@ -92,82 +134,3 @@ sessionRouter.get("/failregister/", (req, res) => {
 //         .send({ status: "error", message: "Error al loguear el usuario" })
 //     }
 // })
-
-sessionRouter.post("/login/", passport.authenticate("login", { failureRedirect: "/api/session/faillogin/" }), async (req, res) => {
-    !req.user && res.status(404).send({ status: "error", message: "Error de autenticación" })
-    req.session.user = {
-        first_name: req.user.first_name,
-        last_name: req.user.last_name,
-        email: req.user.email,
-        age: req.user.age,
-        role: req.user.role
-    }
-    res.status(200).send({ status: "success", message: "Usuario logueado correctamente", payload: req.user })
-})
-
-sessionRouter.get("/faillogin/", (req, res) => {
-    console.log("error");
-    res.status(404).send({ status: "error", message: "Error al loguear el usuario" })
-})
-
-sessionRouter.get("/github/" , passport.authenticate("github", { scope: ["user:email"] }),
-    async (req, res) => {
-        console.log("Solicitud de GET recibida en /github")
-})
-
-sessionRouter.get("/githubcallback/", passport.authenticate("github", { failureRedirect: "/" }),
-    async (req, res) => {
-        console.log("Solicitud de GET recibida en /githubcallback")
-        req.session.user = {
-            first_name: req.user.first_name,
-            last_name: req.user.last_name,
-            email: req.user.email,
-            age: req.user.age,
-            role: req.user.role
-        }
-        console.log(req.session.user)
-        res.redirect("/products")
-})
-
-
-sessionRouter.get("/logout/", async (req, res) => {
-    req.session.destroy(err => {
-        if (err) {
-            res
-            .status(500)
-            .send({ status: "error", message: "Error al cerrar sesión" })
-        } else {
-            res
-            .status(200)
-            // .send({ status: "success", message: "Sesión cerrada correctamente" })
-            .redirect("/")
-        }
-    })
-})
-
-sessionRouter.put("/restorePassword", async (req, res) => {
-    const { email, password } = req.body
-    console.log("Solicitud de PUT recibida en /restorePassword")
-
-    !email || !password && res.status(400).send({ status: "error", message: "Todos los campos son obligatorios" })
-
-    const user = await userModel.findOne({ email })
-    !user && res.status(404).send({ status: "error", message: "Error de autenticación" })
-
-    const newwPassword = hashPassword(password)
-
-    const result = await userModel.updateOne({ email }, { password: newwPassword })
-    console.log("Contraseña restaurada correctamente:", result)
-
-
-    res.status(200).send({ status: "success", message: "Contraseña restaurada correctamente" })
-})
-
-sessionRouter.get("/current", (req, res) => {
-    console.log("Solicitud de GET recibida en /current")
-    req.session.user 
-        ? res.send({ status: "success", message: "Usuario logueado correctamente", payload: req.session.user }) 
-        : res.send({ status: "error", message: "Usuario no logueado" })
-})
-
-export default sessionRouter
