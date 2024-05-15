@@ -5,7 +5,6 @@ const cartService = new CartService()
 export default class CartController {
     // static #instance
     constructor(){
-
     }
 
     // static getInstance() {

@@ -14,6 +14,7 @@ export default class ProductsService {
     //     }
     // }
 
+    // Obtiene todos los productos de la base de datos y los pagina.
     async getProducts(params) {
         try {
             const {
@@ -37,7 +38,6 @@ export default class ProductsService {
             category && (query.category = category)
             status && (query.status = status)
 
-            
             //Consulta a la base de datos. Retorna un objeto con los productos y la información de paginación.
             const result = await this.model.paginate(query, options)
 
@@ -49,6 +49,7 @@ export default class ProductsService {
     }
     
 
+    //Obtiene un producto por su id.
     async getProductById(id) {
         try {
             const product = await this.model.findById(id)
@@ -61,6 +62,7 @@ export default class ProductsService {
         }
     }
 
+    //Agregar un nuevo producto.
     async addProduct(product) {
         try {
             const newProduct = new this.model(product)
@@ -71,6 +73,7 @@ export default class ProductsService {
         }
     }
 
+    //Actualizar un producto.
     async updateProduct(id, product) {
         try {
             const updatedProduct = await this.model.findByIdAndUpdate(id, product, { new: true })//{ new: true } configuración para que retorne el documento actualizado.
@@ -83,6 +86,7 @@ export default class ProductsService {
         }
     }
 
+    //Eliminar un producto.
     async deleteProductById(id) {
         try {
             const deletedProduct = await this.model.findByIdAndDelete(id)

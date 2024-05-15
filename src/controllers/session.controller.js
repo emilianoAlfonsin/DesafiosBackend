@@ -3,16 +3,15 @@ import { hashPassword } from "../utils.js"
 
 export default class SessionController {
     
-    async registerUser(){
-        
-        async (req, res) => {
-            res.status(201).send({ 
-                status: "success",
-                message: "Usuario registrado correctamente" 
-            })
-        }
+    // Registro de usuarios.
+    async registerUser(req, res){
+        res.status(201).send({ 
+            status: "success",
+            message: "Usuario registrado correctamente" 
+        })
     }
 
+    // Error al registrar usuario.
     async failRegisterUser(req, res){
         res.status(400).send({
             status: "error",
@@ -20,6 +19,7 @@ export default class SessionController {
         })
     }
 
+    // Login de usuarios.
     async loginUser(req, res){
         !req.user && res.status(404).send({ status: "error", message: "Error de autenticación" })
         req.session.user = {
@@ -32,6 +32,7 @@ export default class SessionController {
         res.status(200).send({ status: "success", message: "Usuario logueado correctamente", payload: req.user })
     }
 
+    // Error al loguear usuario.
     async failLoginUser(req, res){
         res.status(404).send({ 
             status: "error", 
@@ -39,10 +40,12 @@ export default class SessionController {
         })
     }
 
+    // Manejar la solicitud de inicio de sesión con github.
     async github(req, res){
         console.log("Solicitud de GET recibida en /github")
     }
 
+    // Manejar la respuesta de github
     async githubCallback(req, res){
         console.log("Solicitud de GET recibida en /githubcallback")
         req.session.user = {
@@ -56,6 +59,7 @@ export default class SessionController {
         res.redirect("/products")
     }
 
+    // Logout de usuarios.
     async logoutUser(req, res){
         req.session.destroy(err => {
             if (err) {
@@ -71,6 +75,7 @@ export default class SessionController {
         })
     }
 
+    // Restaurar el password de un usuario.
     async restorePassword(req, res){
         const { email, password } = req.body
         console.log("Solicitud de PUT recibida en /restorePassword")

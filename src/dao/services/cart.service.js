@@ -152,7 +152,6 @@ export default class CartService {
             
             //Elimina uno de la cantidad
             const updatedCart = await this.carts.findByIdAndUpdate(cid, { $pull: {products: { product: pid } }})
-
             return updatedCart
         }
         catch (error) {

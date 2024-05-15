@@ -17,6 +17,6 @@ productRouter.post('/', productController.addProduct)
 productRouter.put('/:pid/', productController.updateProduct)
 
 // Eliminar un producto mediante su Id. 
-productRouter.delete('/:pid/', productController.deleteProduct)
+productRouter.delete('/:pid/', productController.deleteProductById)
 
 export default productRouter

@@ -6,26 +6,32 @@ const productService = new ProductsService()
 
 export default class ViewsController{
 
+    // Renderizado de vista de inicio
     async renderIndex(req, res){
         res.render('index')
     }
 
+    // Renderizador de vista de registro
     async renderRegister(req,res){
         res.render('register')
     }
 
+    // Renderizador de vista de reatauración de password
     async renderRestorePassword(req, res){
         res.render('restorePassword')
     }
 
+    // Renderizador de vista de realtime products
     async renderRealtimeProducts(req, res){
         res.render('realtimeProducts')
     }
 
+    // Renderizador de vista de chat
     async renderChat(req, res){
         res.render('chat')
     }
 
+    // Renderizador de vista de productos
     async renderProducts(req, res){
         try {
             const page = parseInt(req.query.page) || 1
@@ -87,6 +93,7 @@ export default class ViewsController{
         }
     }
 
+    // Renderizador de vista de detalle de prducto
     async renderProductDetails(req, res){
         try {
             const productId = req.params.pid
@@ -101,6 +108,7 @@ export default class ViewsController{
         }
     }
 
+    // Renderizador de vista de carrito
     async renderCartById(req, res){
         try {
             const cartId = req.params.cid

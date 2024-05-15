@@ -64,9 +64,9 @@ export default class ProductController {
     }
 
     //Eliminar un producto.
-    async deleteProduct(req, res) {
+    async deleteProductById(req, res) {
         try{
-            const product = await productService.deleteProduct(req.params.id)
+            const product = await productService.deleteProductById(req.params.id)
             if(!product){
                 res.status(404).json({error: 'Producto no encontrado'})
                 return

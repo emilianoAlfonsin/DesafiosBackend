@@ -5,50 +5,59 @@ import SessionController from "../controllers/session.controller.js"
 const sessionRouter = Router()
 const sessionController = new SessionController()
 
+// Ruta para registrar un usuario.
 sessionRouter.post(
     "/register/",
     passport.authenticate("register",{ failureRedirect: "/failregister" }),
     sessionController.registerUser
 )
 
+// Ruta para obtener un usuario.
 sessionRouter.get(
     "/failregister/", 
     sessionController.failRegisterUser
 )
 
+// Ruta para loguear un usuario.
 sessionRouter.post(
     "/login/", 
     passport.authenticate("login", { failureRedirect: "/api/session/faillogin/" })
     ,sessionController.loginUser
 )
 
+// Ruta que retorna un mensaje de error de login.
 sessionRouter.get(
     "/faillogin/", 
     sessionController.failLoginUser
 )
 
+// Ruta para loguear un usuario con GitHub.
 sessionRouter.get(
     "/github/", 
     passport.authenticate("github", { scope: ["user:email"] }), 
     sessionController.github
 )
 
+// Ruta para loguear un usuario con GitHub.
 sessionRouter.get(
     "/githubcallback/", 
     passport.authenticate("github", { failureRedirect: "/" }), 
     sessionController.githubCallback
 )
 
+// Ruta de logout de usuario.
 sessionRouter.get(
     "/logout/", 
     sessionController.logoutUser
 )
 
+// Ruta para restaurar el password de un usuario.
 sessionRouter.put(
     "/restorePassword",
     sessionController.restorePassword
 )
 
+// Ruta para obtener el usuario actualmente logueado.
 sessionRouter.get(
     "/current", 
     sessionController.currentUser
