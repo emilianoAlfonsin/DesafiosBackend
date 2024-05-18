@@ -76,6 +76,8 @@ export default class ViewsController{
     
             // Verificar si hay productos en la página actual 
             const isValid = productsData.docs.length > 0
+
+            // console.log(productsData.docs)
     
             // Enviar la respuesta con el formato requerido
             res.status(200).render('products', { 

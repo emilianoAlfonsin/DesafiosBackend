@@ -12,7 +12,8 @@ viewsRouter.get('/register', viewsController.renderRegister)
 
 viewsRouter.get('/restorePassword', viewsController.renderRestorePassword)
 
-viewsRouter.get('/realtimeproducts', auth, viewsController.renderRealtimeProducts)
+// esta ruta no debería tener funcionalidad en el estado actual del proyecto.
+// viewsRouter.get('/realtimeproducts', auth, viewsController.renderRealtimeProducts)
 
 viewsRouter.get('/chat', auth, viewsController.renderChat)
 

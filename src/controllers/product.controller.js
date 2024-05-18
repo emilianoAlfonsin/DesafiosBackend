@@ -6,31 +6,52 @@ export default class ProductController {
 
 //Obtener los productos (paginado)
     async getProducts(req, res) {
-        try{
+        try {
             const products = await productService.getProducts(req.query)
-            res.status(200).json(products)
-        }
-        catch(error){
+            if (!products.docs.length) {
+                return res.status(404).json({
+                    status: "failure",
+                    errorCode: "NOT_FOUND",
+                    description: "No se encuentran productos para mostrar"
+                })
+            }
+            res.status(200).json({
+                status: "success",
+                payload: products
+            })
+        } catch (error) {
             console.error(error)
-            res.status(500).json({error: 'Error al obtener los productos'})
-            return
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al obtener los productos"
+            })
         }
     }
 
     //Obtener un producto por su id
     async getProductById(req, res) {
-        try{
-            const product = await productService.getProductById(req.params.id)
-            if(!product){
-                res.status(404).json({error: 'Producto no encontrado'})
+        try {
+            const product = await productService.getProductById(req.params.id);
+            if (!product) {
+                res.status(404).json({
+                    status: "failure",
+                    errorCode: "PRODUCT_NOT_FOUND",
+                    description: "Producto no encontrado"
+                })
                 return
             }
-            res.status(200).json(product)
-        }
-        catch(error){
-            console.error(error)
-            res.status(500).json({error: 'Error al obtener el producto'})
-            return
+            res.status(200).json({
+                status: "success",
+                payload: product
+            })
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al obtener el producto"
+            });
         }
     }
 
@@ -38,11 +59,21 @@ export default class ProductController {
     async addProduct(req, res) {
         try{
             const product = await productService.addProduct(req.body)
-            res.status(201).json({success: `${product.title} agregado correctamente.`})
+            res.status(201).json({
+                status: "success",
+                payload: {
+                    message: `${product.title} agregado correctamente.`,
+                    product: product
+                }
+            })
         }
         catch(error){
             console.error(error)
-            res.status(500).json({error: 'Error al agregar el producto'})
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al agregar el producto"
+            })
         }
     }
 
@@ -52,14 +83,27 @@ export default class ProductController {
             const product = await productService.updateProduct(req.params.id, req.body)
             if(!product){
                 // Si no se encuentra el producto devuelve un código de estado 404
-                res.status(404).json({error: 'Producto no encontrado'})
-                return
+                return res.status(404).json({
+                    status: "failure",
+                    errorCode: "NOT_FOUND",
+                    description: "Producto no encontrado"
+                })
             }
-            res.status(200).json({success: `${product.title} actualizado correctamente.`})
+            res.status(200).json({
+                status: "success",
+                payload: {
+                    message: `${product.title} actualizado correctamente.`,
+                    product: product
+                }
+            })
         }
         catch(error){
             console.error(error)
-            res.status(500).json({error: 'Error al actualizar el producto'})
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al actualizar el producto"
+            })
         }
     }
 
@@ -68,14 +112,27 @@ export default class ProductController {
         try{
             const product = await productService.deleteProductById(req.params.id)
             if(!product){
-                res.status(404).json({error: 'Producto no encontrado'})
-                return
+                return res.status(404).json({
+                    status: "failure",
+                    errorCode: "NOT_FOUND",
+                    description: "Producto no encontrado"
+                })
             }
-            res.status(200).json({success: `${product.title} eliminado correctamente.`})
+            res.status(200).json({
+                status: "success",
+                payload: {
+                    message: `${product.title} eliminado correctamente.`,
+                    product: product
+                }
+            })
         }
         catch(error){
             console.error(error)
-            res.status(500).json({error: 'Error al eliminar el producto'})
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al actualizar el producto"
+            })
         }
     }
 }
