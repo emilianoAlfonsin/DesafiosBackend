@@ -80,12 +80,13 @@ export default class SessionController {
                 last_name: req.user.last_name,
                 email: req.user.email,
                 age: req.user.age,
-                role: req.user.role
-            };
-            console.log(req.session.user);
-            res.redirect("/products");
+                role: req.user.role,
+                carts: req.user.carts
+            }
+            console.log(req.session.user)
+            res.redirect("/products")
         } catch (error) {
-            console.error("Error en el callback de GitHub:", error.message);
+            console.error("Error en el callback de GitHub:", error.message)
             res.status(500).json({
                 status: "failure",
                 errorCode: "INTERNAL_SERVER_ERROR",

@@ -1,62 +1,43 @@
 import userModel from "../models/userModel.js"
 import { hashPassword } from "../../utils.js"
 import UserDTO from "../DTOs/user.dto.js"
+import SessionDTO from "../DTOs/session.dto.js"
 
 export default class SessionService {
     
     // Registro de usuarios.
     async registerUser(userData) {
-        try {
-            const newUser = new userModel(userData)
-            await newUser.save()
-            return { status: "success", message: "Usuario registrado correctamente" }
-        } catch (error) {
-            console.error("Error al registrar usuario:", error.message)
-            throw new Error("No se ha podido registrar el usuario")
-        }
+        const newUser = new userModel(userData);
+        await newUser.save()
+        return UserDTO.fromUser(newUser) // Devolver el DTO del usuario creado
     }
 
     // Login de usuarios.
     async loginUser(user) {
-        try {
-            const userDTO = UserDTO.fromUser(user)
-            return { status: "success", message: "Usuario logueado correctamente", payload: userDTO }
-        } catch (error) {
-            console.error("Error al loguear usuario:", error.message)
-            throw new Error("Error de autenticación")
-        }
+        const userDTO = UserDTO.fromUser(user)
+        return userDTO // Devolver el DTO del usuario
     }
 
     // Restaurar el password de un usuario.
     async restorePassword(email, password) {
-        try {
-            if (!email || !password) throw new Error("Todos los campos son obligatorios")
+        if (!email || !password) throw new Error("Todos los campos son obligatorios")
 
-            const user = await userModel.findOne({ email })
-            if (!user) throw new Error("Error de autenticación")
+        const user = await userModel.findOne({ email })
+        if (!user) throw new Error("Error de autenticación")
 
-            const newPassword = hashPassword(password)
-            await userModel.updateOne({ email }, { password: newPassword })
+        const newPassword = hashPassword(password)
+        await userModel.updateOne({ email }, { password: newPassword })
 
-            return { status: "success", message: "Contraseña restaurada correctamente" }
-        } catch (error) {
-            console.error("Error al restaurar la contraseña:", error.message)
-            throw new Error("Error al restaurar la contraseña")
-        }
+        return { email } // Devolver los datos necesarios
     }
 
     // Obtener usuario actual.
     async getCurrentUser(session) {
-        try {
-            if (session.user) {
-                const userDTO = UserDTO.fromUser(session.user)
-                return { status: "success", message: "Usuario logueado correctamente", payload: userDTO }
-            } else {
-                throw new Error("Usuario no logueado")
-            }
-        } catch (error) {
-            console.error("Error al obtener el usuario actual:", error.message)
-            throw new Error(error.message)
+        if (session.user) {
+            const sessionDTO = SessionDTO.fromUserDTO(session.user)
+            return sessionDTO // Devolver el DTO de la sesión
+        } else {
+            throw new Error("Usuario no logueado")
         }
     }
 }
