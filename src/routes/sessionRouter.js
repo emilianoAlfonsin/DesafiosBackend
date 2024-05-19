@@ -46,7 +46,7 @@ sessionRouter.get(
 )
 
 // Ruta de logout de usuario.
-sessionRouter.get(
+sessionRouter.post(
     "/logout/", 
     sessionController.logoutUser
 )
