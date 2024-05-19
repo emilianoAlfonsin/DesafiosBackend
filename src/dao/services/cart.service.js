@@ -1,4 +1,5 @@
 import cartsModel from "../models/cartsModel.js"
+import CartDTO from "../DTOs/carts.dto.js"
 
 // Metodo de validación de id existente en la DB.
 import { isValidObjectId } from "../../utils.js"
@@ -13,7 +14,7 @@ export default class CartService {
         try {
             const carts = await this.carts.find()
             console.log(JSON.stringify(carts, null, "\t"))
-            return carts
+            return CartDTO.fromCartDocuments(carts)
         } 
         catch (error) {
             console.error(error)
@@ -25,9 +26,9 @@ export default class CartService {
         try {
             const cart = await this.carts.findById(id).populate("products.product")
             if (!cart) throw new Error("Carrito no encontrado")
-            const populatedCart = cart.toObject() // Convierte un documento de mongoose a un objeto plano para manipularlo con Js.
+            // const populatedCart = cart.toObject() // Convierte un documento de mongoose a un objeto plano para manipularlo con Js.
             // console.log(JSON.stringify(populatedCart, null, "\t"))
-            return populatedCart
+            return CartDTO.fromCartDocument(cart)
         } 
         catch (error) {
             console.error("No se pudo encontrar el carrito",error)
@@ -65,11 +66,13 @@ export default class CartService {
             const existingProductIndex = cart.products.findIndex(product => product._id.equals(pid))
             if (existingProductIndex !== -1) {
                 cart.products[existingProductIndex].quantity++
-                return await cart.save()
             } else {
                 cart.products.push({_id: pid, quantity: 1, product: pid})
-                return await cart.save()
             }
+
+            await cart.save()
+
+            return CartDTO.fromCartDocument(cart)
         } 
         catch (error) {
             console.error("No se pudo agregar el producto al carrito", error)
@@ -96,7 +99,9 @@ export default class CartService {
                     )
                 : cart.products[productIndex].quantity = quantity
 
-            return await cart.save()
+            await cart.save()
+            
+            return CartDTO.fromCartDocument(cart) 
 
             // const updatedCart = await this.carts.updateOne({ _id: cid, "products._id": pid }, { $set: { "products.$.quantity": quantity } })
             // console.log(updatedCart)
@@ -122,7 +127,12 @@ export default class CartService {
             const updatedProducts = {$set: {products: products}}// Uso $set para actualizar solo el campo products y no todo el documento.
 
             const updatedCart = await this.carts.findByIdAndUpdate(cid, updatedProducts, {new: true})
-            return updatedCart.products.length > 0 ? updatedCart : null // Retorna null si la lista de productos del carrito está vacía.
+
+            if (updatedCart && updatedCart.products.length > 0) {
+                return CartDTO.fromCartDocument(updatedCart) 
+            } else {
+                return null // Retorna null si la lista de productos del carrito está vacía.
+            }
         }
         catch (error) {
             console.error("No se pudo actualizar la lista de productos del carrito", error)
@@ -135,7 +145,8 @@ export default class CartService {
             if (!isValidObjectId(id)) throw new Error("El ID del carrito no es válido")
             const cart = await this.carts.findById(id)
             if (!cart) throw new Error("Carrito no encontrado")
-            return await this.carts.findByIdAndDelete(id)
+            const deletedCart = await this.carts.findByIdAndDelete(id)
+            return CartDTO.fromCartDocument(deletedCart)
         }
         catch (error) {
             console.error("No se pudo eliminar el carrito", error)
@@ -152,7 +163,7 @@ export default class CartService {
             
             //Elimina uno de la cantidad
             const updatedCart = await this.carts.findByIdAndUpdate(cid, { $pull: {products: { product: pid } }})
-            return updatedCart
+            return CartDTO.fromCartDocument(updatedCart)
         }
         catch (error) {
             console.error("No se pudo eliminar el producto del carrito", error)
@@ -169,7 +180,7 @@ export default class CartService {
                 { new: true, upsert: false })
                 // Upsert = false, evita crear el documento si no existe.
                 // New = true, retorna el documento actualizado.
-            return emptyCart
+            return CartDTO.fromCartDocument(emptyCart)
         }
         catch (error) {
             console.error("No se pudo eliminar todos los productos del carrito", error)

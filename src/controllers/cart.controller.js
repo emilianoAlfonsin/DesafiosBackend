@@ -3,27 +3,24 @@ import CartService from "../dao/services/cart.service.js"
 const cartService = new CartService()
 
 export default class CartController {
-    // static #instance
     constructor(){
     }
-
-    // static getInstance() {
-    //     if (this.#instance) {
-    //         console.log("CartController ya instanciado")
-    //         return this.#instance
-    //     }
-    //     this.#instance = new CartService()
-    //     return this.#instance
-    // }
 
     // Obtener todos los carritos.
     async getCarts (req, res) {
         try {
             const carts = await cartService.getCarts()
-            res.status(200).json(carts)
+            res.status(200).json({
+                status: "success",
+                payload: carts
+            })
         } catch (error) {
             console.error("Error al obtener los carritos:", error.message)
-            res.status(500).json({ error: "Error al obtener los carritos" })
+            res.status(500).json({ 
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al obtener los carritos"
+            })
         }
     }
 
@@ -31,10 +28,18 @@ export default class CartController {
     async getCartById (req, res) {
         try {
             const cart = await cartService.getCartById(req.params.cid)
-            res.status(200).json(cart)
+            res.status(200).json({
+                status: "success",
+                payload: cart
+            })
         } catch (error) {
             console.error("Error al obtener el carrito:", error.message)
-            res.status(500).json({ error: "Error al obtener el carrito" })
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al obtener el carrito"
+            }
+            )
         }
     }
 
@@ -42,10 +47,17 @@ export default class CartController {
     async createCart (req, res) {
         try {
             const newCart = await cartService.createCart()
-            res.status(200).json(newCart)
+            res.status(200).json({
+                status: "success",
+                payload: newCart
+            })
         } catch (error) {
             console.error("Error al crear el carrito:", error.message)
-            res.status(500).json({ error: "Error al crear el carrito" })
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al crear el carrito"
+            })
         }
     }
 
@@ -53,10 +65,17 @@ export default class CartController {
     async addProductToCart (req, res) {
         try {
             const cart = await cartService.addProductToCart(req.params.cid, req.params.pid)
-            res.status(200).json(cart)
+            res.status(200).json({
+                status: "success",
+                payload: cart
+            })
         } catch (error) {
             console.error("Error al agregar el producto al carrito:", error.message)
-            res.status(500).json({ error: "Error al agregar el producto al carrito" })
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al agregar el producto al carrito"
+            })
         }
     }
 
@@ -64,10 +83,17 @@ export default class CartController {
     async updateCart (req, res) {
         try {
             const cart = await cartService.updateCart(req.params.cid, req.body)
-            res.status(200).json(cart)
+            res.status(200).json({
+                status: "success",
+                payload: cart
+            })
         } catch (error) {
             console.error("Error al actualizar el carrito:", error.message)
-            res.status(500).json({ error: "Error al actualizar el carrito" })
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al actualizar el carrito"
+            })
         }
     }
 
@@ -75,10 +101,17 @@ export default class CartController {
     async updateProductQuantity (req, res) {
         try {
             const cart = await cartService.updateProductQuantity(req.params.cid, req.params.pid, req.body.quantity)
-            res.status(200).json(cart)
+            res.status(200).json({
+                status: "success",
+                payload: cart
+            })
         } catch (error) {
             console.error("Error al actualizar la cantidad del producto:", error.message)
-            res.status(500).json({ error: "Error al actualizar la cantidad del producto" })
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al actualizar la cantidad del producto"
+            })
         }
     }
 
@@ -86,10 +119,17 @@ export default class CartController {
     async deleteProductFromCart (req, res) {
         try {
             const cart = await cartService.deleteProductFromCart(req.params.cid, req.params.pid)
-            res.status(200).json(cart)
+            res.status(200).json({
+                status: "success",
+                payload: cart
+            })
         } catch (error) {
             console.error("Error al eliminar el producto del carrito:", error.message)
-            res.status(500).json({ error: "Error al eliminar el producto del carrito" })
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al eliminar el producto del carrito"
+            })
         }
     }
 
@@ -97,10 +137,17 @@ export default class CartController {
     async deleteAllProductsFromCart (req, res) {
         try {
             const cart = await cartService.deleteAllProductsFromCart(req.params.cid)
-            res.status(200).json(cart)
+            res.status(200).json({
+                status: "success",
+                payload: cart
+            })
         } catch (error) {
             console.error("Error al eliminar todos los productos del carrito:", error.message)
-            res.status(500).json({ error: "Error al eliminar todos los productos del carrito" })
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al eliminar todos los productos del carrito"
+            })
         }
     }
 }
