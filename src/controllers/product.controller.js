@@ -31,8 +31,12 @@ export default class ProductController {
 
     //Obtener un producto por su id
     async getProductById(req, res) {
+        console.log("Parametro: ",req.params.pid)
         try {
-            const product = await productService.getProductById(req.params.id);
+            const productId = req.params.pid
+            console.log(`Buscando producto con id: ${productId}`)
+
+            const product = await productService.getProductById(productId)
             if (!product) {
                 res.status(404).json({
                     status: "failure",
@@ -46,7 +50,7 @@ export default class ProductController {
                 payload: product
             })
         } catch (error) {
-            console.error(error);
+            console.error(`Error al buscar el producto con id: ${req.params.id}`)
             res.status(500).json({
                 status: "failure",
                 errorCode: "INTERNAL_SERVER_ERROR",

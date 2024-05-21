@@ -11,7 +11,8 @@ export default class SessionController {
             const response = await sessionService.registerUser(req.body)
             res.status(201).json({
                 status: "success",
-                message: response
+                message: "Usuario registrado correctamente",
+                payload: response
             })
         } catch (error) {
             res.status(500).json({
@@ -40,16 +41,20 @@ export default class SessionController {
                     errorCode: "NOT_FOUND",
                     description: "Usuario no encontrado"
                 })
-            } else {
-                const response = await sessionService.loginUser(req.user)
-                const sessionDTO = SessionDTO.fromUserDTO(response.payload)
-                req.session.user = sessionDTO
-                res.status(200).json({
-                    status: "success",
-                    message: response
-                })
-            }
+            } 
+
+            const userDTO = await sessionService.loginUser(req.user)
+            //paso el userDTO por sessionDTO para que en sesión solo estén disponibles los datos necesarios
+            const sessionDTO = SessionDTO.fromUserDTO(userDTO)
+            req.session.user = sessionDTO
+
+            res.status(200).json({
+                status: "success",
+                message: "Usuario logueado correctamente",
+                payload: sessionDTO,
+            })
         } catch (error) {
+            console.error("Error al loguear usuario:", error.message)
             res.status(500).json({
                 status: "failure",
                 errorCode: "INTERNAL_SERVER_ERROR",
@@ -120,7 +125,8 @@ export default class SessionController {
             const response = await sessionService.restorePassword(email, password)
             res.status(200).json({
                 status: "success",
-                message: response
+                message:"Password restaurado correctamente",
+                payload: response
             })
         } catch (error) {
             res.status(400).send({
@@ -135,7 +141,11 @@ export default class SessionController {
     async currentUser(req, res) {
         try {
             const response = await sessionService.getCurrentUser(req.session)
-            res.status(200).send(response)
+            res.status(200).json({
+                status: "success",
+                message: "Usuario actual",
+                payload: response
+            })
         } catch (error) {
             res.status(400).send({ 
                 status: "failure",

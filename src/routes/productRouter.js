@@ -8,7 +8,7 @@ const productController = new ProductController()
 productRouter.get('/', productController.getProducts)
 
 // Obtener un producto por su Id. 
-productRouter.get('/:pid/', productController.getProductById)
+productRouter.get('/:pid/', productController.getProductById.bind(productController))
 
 // Agregar un nuevo producto. 
 productRouter.post('/', productController.addProduct)

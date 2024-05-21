@@ -34,9 +34,9 @@ export default class ProductsService {
 
         // console.log(result)
         //Convertir los documentos de mongo en DTOs.
-        const products = ProductDTO.fromProductDocuments(result.docs)
-        console.log(products);
-
+        const products = ProductDTO.fromProductArray(result.docs)
+        // console.log(products);
+        console.log(result);
 
         // Retorna el objeto de paginación original con los productos convertidos a DTOs.
         return { ...result, docs: products} 
@@ -46,6 +46,7 @@ export default class ProductsService {
     //Obtiene un producto por su id.
     async getProductById(id) {
         const product = await this.model.findById(id)
+        console.log("service pid: ", product.id)
         //Si el producto no existe, devuelve un mensaje de error. Si existe, devuelve el producto.
         if (!product) throw new Error("Producto no encontrado")
         return ProductDTO.fromProductDocument(product)

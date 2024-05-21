@@ -1,34 +1,21 @@
 
 export default class ProductDTO {
-    constructor({ _id, title, description, price, thumbnail, code, stock, status, category }) {
-        this.id = _id
-        this.title = title
-        this.description = description
-        this.price = price
-        this.thumbnail = thumbnail
-        this.code = code
-        this.stock = stock
-        this.status = status
-        this.category = category
+    constructor(product) {
+        this._id = product._id
+        this.title = product.title
+        this.description = product.description
+        this.price = product.price
+        this.thumbnail = product.thumbnail
+        this.code = product.code
+        this.stock = product.stock
+        this.status = product.status
+        this.category = product.category
     }
 
-    // Metodo estático para convertir el documento de mongo en un DTO
-    static fromProductDocument(doc) {
-        return new ProductDTO({
-            _id: doc._id,
-            title: doc.title,
-            description: doc.description,
-            price: doc.price,
-            thumbnail: doc.thumbnail,
-            code: doc.code,
-            stock: doc.stock,
-            status: doc.status,
-            category: doc.category
-        })
+    static fromProductDocument(product) {
+        return new ProductDTO(product)
     }
-
-    // Método estatico para convertir un array de documentos en un array de DTOs
-    static fromProductDocuments(docs) {
-        return docs.map(doc => ProductDTO.fromProductDocument(doc))
+    static fromProductArray(products) {
+        return products.map(product => new ProductDTO(product))
     }
 }
