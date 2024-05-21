@@ -44,13 +44,9 @@ const serverConfig = () => {
     app.use(express.static(path.join(__dirname, 'public')))
     app.use('/api/products/', productRouter)
     app.use('/api/carts/', cartRouter)
-    app.use('/api/session', sessionRouter)
+    app.use('/api/session/', sessionRouter)
     app.use(viewsRouter)
     console.log("Rutas configuradas...")    
-
-
-
-
 
 
     return app

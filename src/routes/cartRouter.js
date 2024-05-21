@@ -1,5 +1,6 @@
 import { Router } from "express"
-import CartController from "../controllers/cart.controller.js";
+import CartController from "../controllers/cart.controller.js"
+// import { auth } from "../middlewares/auth.js"
 
 const cartRouter = Router()
 const cartController = new CartController()
@@ -14,10 +15,10 @@ cartRouter.get('/:cid/', cartController.getCartById)
 cartRouter.post('/', cartController.createCart)
 
 // Agregar un producto al carrito por su id. 
-cartRouter.post('/:cid/products/:pid/', cartController.addProductToCart)
+cartRouter.post('/:cid/products/:pid/',cartController.addProductToCart)
 
 //Actualizar un carrito con un array de productos.
-cartRouter.put('/:cid/', cartController.updateCart)
+cartRouter.put('/:cid/' ,cartController.updateCart)
 
 //Actualizar solo la cantidad del producto.
 cartRouter.put('/:cid/products/:pid/', cartController.updateProductQuantity)

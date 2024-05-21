@@ -79,7 +79,7 @@ export default class ViewsController{
             // Verificar si hay productos en la página actual (condición para renderizado)
             const isValid = productsData.docs.length > 0
 
-            const sessionUser = req.session.user ? sessionService.getCurrentUser(req.session) : null
+            const sessionUser = req.session.user ? await sessionService.getCurrentUser(req.session) : null
             // console.log("Usuario: ", req.session.user)
             console.log("Usuario: ", sessionUser)
             // console.log(productsData.docs)
