@@ -15,12 +15,12 @@ viewsRouter.get('/restorePassword', viewsController.renderRestorePassword)
 // esta ruta no debería tener funcionalidad en el estado actual del proyecto.
 // viewsRouter.get('/realtimeproducts', auth, viewsController.renderRealtimeProducts)
 
-viewsRouter.get('/chat',  viewsController.renderChat)
+viewsRouter.get('/chat', auth('user'),viewsController.renderChat)
 
-viewsRouter.get('/products/', viewsController.renderProducts)
+viewsRouter.get('/products/',auth('user', 'admin'), viewsController.renderProducts)
 
-viewsRouter.get('/products/:pid',  viewsController.renderProductDetails)
+viewsRouter.get('/products/:pid', auth('user'), viewsController.renderProductDetails)
 
-viewsRouter.get('/carts/:cid',  viewsController.renderCartById)
+viewsRouter.get('/carts/:cid', auth('user'),viewsController.renderCartById)
 
 export default viewsRouter
