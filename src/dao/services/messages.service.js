@@ -1,28 +1,24 @@
-import messageModel from "../models/messagesModel.js"
+import MessageDAO from "../DAOs/message.mongo.dao.js"
+import MessageDTO from "../DTOs/message.dto.js"
 
 export default class MessagesService {
     constructor() {
-        this.model = messageModel
+        this.dao = MessageDAO
     }
 
     async getAllMessages() {
-        try {
-            const messages = await this.model.find()
-            return messages
-        } catch (error) {
-            console.log("No se encontraron los mensajes",error)
-        }
+        const messages = await this.dao.findAllMessages()
+        return MessageDTO.fromDocuments(messages)
     }
-    async addMessage(message) {
-        try {
-            const newMessage = await this.model({
-                user: message.user,
-                message: message.message
-            })
-            const savedMessage = await newMessage.save()
-            return savedMessage
-        } catch (error) {
-            console.log("No se pudo crear el mensaje", error)
-        }
+
+    async addMessage(messageData) {
+        const savedMessage = await this.dao.createMessage(messageData)
+        return MessageDTO.fromDocument(savedMessage)
+    }
+
+    async deleteMessageById(id) {
+        const deletedMessage = await this.dao.deleteMessageById(id)
+        if (!deletedMessage) throw new Error("Mensaje no encontrado")
+        return MessageDTO.fromDocument(deletedMessage)
     }
 }

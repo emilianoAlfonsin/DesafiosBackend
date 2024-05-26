@@ -5,10 +5,10 @@ form.addEventListener('submit', (e) => {
 
     const data = new FormData(form)
     const obj = {}
+    
+    data.forEach((value, key) => obj[key] = value)
     console.log(data)
     console.log(obj)
-
-    data.forEach((value, key) => obj[key] = value)
 
     fetch('/api/session/register/', {
         method: 'POST',

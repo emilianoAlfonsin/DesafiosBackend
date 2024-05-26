@@ -8,17 +8,19 @@ export default class SessionController {
     // Registro de usuarios.
     async registerUser(req, res) {
         try {
-            const response = await sessionService.registerUser(req.body)
+            const userData = req.body
+            const userDto = await sessionService.registerUser(userData)
             res.status(201).json({
                 status: "success",
                 message: "Usuario registrado correctamente",
-                payload: response
+                user: userDto
             })
         } catch (error) {
             res.status(500).json({
                 status: "failure",
                 errorCode: "INTERNAL_SERVER_ERROR",
-                description: "Error al registrar usuario"
+                description: "Error al registrar usuario",
+                message: error.message
             })
         }
     }

@@ -9,6 +9,8 @@ import CartService from "../dao/services/cart.service.js"
 
 const LocalStrategy = local.Strategy
 
+const cartService = new CartService()
+
 const initializePassport = () => {
 
     // Estrategia local de registro de usuarios.
@@ -23,25 +25,32 @@ const initializePassport = () => {
                     const user = await UserModel.findOne({ email: username })
                     if (user) {
                         console.log("El ususario ya existe")
-                        return done(null, false)
+                        return done(null, false, {message: "El usuario ya existe"})
                     }
-                    // Instancio la clase dentro del método para que se cree un carrito al crear el usuario.
-                    const cartManager = new CartService()
-                    const cart = await cartManager.createCart()
-
+                    
                     let role = email === "adminCoder@coder.com" ? "admin" : "user"
-
-                    const newUser = {
+                    
+                    // Se crea el usuario sin carrito asignado
+                    const newUser = new UserModel({
                         first_name,
                         last_name,
                         email,
                         age,
                         password: hashPassword(password),
-                        cart: cart,
                         role
-                    }
+                    })
+                    
+                    // Guardo el usuario para obtener su id
+                    const savedUser = await newUser.save()
 
-                    const result = await UserModel.create(newUser)
+                    // Creo el carrito para el usuario
+                    const cart = await cartService.createCart(savedUser._id)// Asigno el id del usuario al carrito
+
+                    savedUser.cart = cart._id // Asigno el id del carrito al usuario
+
+                    // Guardo el usuario con el carrito asignado
+                    const result = await savedUser.save()
+                    
                     return done(null, result)
                 } catch (error) {
                     return done("Error al registrar el usuario")
@@ -101,6 +110,7 @@ const initializePassport = () => {
                         password: "",
                         role: "user"
                     }
+                    
 
                     const result = await UserModel.create(newUser)
                     return done(null, result)

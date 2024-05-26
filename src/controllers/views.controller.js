@@ -6,46 +6,95 @@ const cartService = new CartService()
 const productService = new ProductsService()
 const sessionService = new SessionService()
 
-export default class ViewsController{
+export default class ViewsController {
 
     // Renderizado de vista de inicio
-    async renderIndex(req, res){
-        res.render('index')
+    async renderIndex(req, res) {
+        try {
+            res.render('index')
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al renderizar la vista de inicio"
+            })
+        }
     }
 
     // Renderizador de vista de registro
-    async renderRegister(req,res){
-        res.render('register')
+    async renderRegister(req, res) {
+        try {
+            res.render('register')
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al renderizar la vista de registro"
+            })
+        }
     }
 
-    // Renderizador de vista de reatauración de password
-    async renderRestorePassword(req, res){
-        res.render('restorePassword')
+    // Renderizador de vista de restauración de password
+    async renderRestorePassword(req, res) {
+        try {
+            res.render('restorePassword')
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al renderizar la vista de restauración de password"
+            })
+        }
     }
 
     // Renderizador de vista de realtime products
-    async renderRealtimeProducts(req, res){
-        res.render('realtimeProducts')
+    async renderRealtimeProducts(req, res) {
+        try {
+            res.render('realtimeProducts')
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al renderizar la vista de productos en tiempo real"
+            })
+        }
     }
 
     // Renderizador de vista de chat
-    async renderChat(req, res){
-        res.render('chat')
+    async renderChat(req, res) {
+        try {
+            res.render('chat')
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al renderizar la vista de chat"
+            })
+        }
     }
 
     // Renderizador de vista de productos
-    async renderProducts(req, res){
+    async renderProducts(req, res) {
         try {
             const page = parseInt(req.query.page) || 1
             const limit = parseInt(req.query.limit) || 10
             const sort = req.query.sort
             const category = req.query.category
             const status = req.query.status
-    
+
             if (isNaN(page) || isNaN(limit) || page <= 0 || limit <= 0) {
-                throw new Error('Los parámetros de paginación son inválidos')
+                return res.status(400).json({
+                    status: "failure",
+                    errorCode: "INVALID_PAGINATION_PARAMS",
+                    description: "Los parámetros de paginación son inválidos"
+                })
             }
-    
+
             const params = { 
                 page, 
                 limit, 
@@ -53,37 +102,34 @@ export default class ViewsController{
                 category, 
                 status 
             }
-    
+
             const productsData = await productService.getProducts(params)
-            // console.log(productsData)
     
             // Generar enlaces de paginación "prevLink" y "nextLink"
             let prevPageUrl = productsData.hasPrevPage ? `/products?page=${page - 1}&limit=${limit}` : null
             let nextPageUrl = productsData.hasNextPage ? `/products?page=${page + 1}&limit=${limit}` : null
-    
+
             if (sort) {
                 prevPageUrl && (prevPageUrl += `&sort=${sort}`)
                 nextPageUrl && (nextPageUrl += `&sort=${sort}`)
             }
-    
+
             if (category) {
                 prevPageUrl && (prevPageUrl += `&category=${category}`)
                 nextPageUrl && (nextPageUrl += `&category=${category}`)
             }
-    
+
             if (status) {
                 prevPageUrl && (prevPageUrl += `&status=${status}`)
                 nextPageUrl && (nextPageUrl += `&status=${status}`)
             }
-    
+
             // Verificar si hay productos en la página actual (condición para renderizado)
             const isValid = productsData.docs.length > 0
 
             const sessionUser = req.session.user ? await sessionService.getCurrentUser(req.session) : null
-            // console.log("Usuario: ", req.session.user)
             console.log("Usuario: ", sessionUser)
-            // console.log(productsData.docs)
-    
+
             // Enviar la respuesta con el formato requerido
             res.status(200).render('products', { 
                 products: productsData.docs, 
@@ -96,37 +142,57 @@ export default class ViewsController{
             })
         } catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'Error al obtener los productos' })
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al obtener los productos"
+            })
         }
     }
 
-    // Renderizador de vista de detalle de prducto
-    async renderProductDetails(req, res){
+    // Renderizador de vista de detalle de producto
+    async renderProductDetails(req, res) {
         try {
             const productId = req.params.pid
             const product = await productService.getProductById(productId)
             if (!product) {
-                return res.status(404).json({ error: 'Producto no encontrado' })
+                return res.status(404).json({
+                    status: "failure",
+                    errorCode: "PRODUCT_NOT_FOUND",
+                    description: "Producto no encontrado"
+                })
             }
-            res.status(200).render('productDetails', product)
+            res.status(200).render('productDetails', { product })
         } catch (error) {
             console.error(error)
-            res.status(500).json({ error: 'Error al obtener el producto' })
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al obtener el producto"
+            })
         }
     }
 
     // Renderizador de vista de carrito
-    async renderCartById(req, res){
+    async renderCartById(req, res) {
         try {
             const cartId = req.params.cid
             const cart = await cartService.getCartById(cartId)
             if (!cart) {
-                return res.status(404).json({ error: 'Carrito no encontrado' })
+                return res.status(404).json({
+                    status: "failure",
+                    errorCode: "CART_NOT_FOUND",
+                    description: "Carrito no encontrado"
+                })
             }
             res.status(200).render('cart', { cart })
         } catch (error) {
             console.error(error)
-            res.status(500).json({ error: 'Error al obtener el carrito' })
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al obtener el carrito"
+            })
         }
     }
 }

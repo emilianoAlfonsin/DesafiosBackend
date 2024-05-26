@@ -31,10 +31,10 @@ export default class ProductController {
 
     //Obtener un producto por su id
     async getProductById(req, res) {
-        console.log("Parametro: ",req.params.pid)
+        // console.log("Parametro: ",req.params.pid)
         try {
             const productId = req.params.pid
-            console.log(`Buscando producto con id: ${productId}`)
+            // console.log(`Buscando producto con id: ${productId}`)
 
             const product = await productService.getProductById(productId)
             if (!product) {

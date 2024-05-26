@@ -1,14 +1,22 @@
-import userModel from "../models/userModel.js"
-import { hashPassword } from "../../utils.js"
+import userDao from "../DAOs/user.mongo.dao.js"
 import UserDTO from "../DTOs/user.dto.js"
 import SessionDTO from "../DTOs/session.dto.js"
+import CartService from "./cart.service.js"
 
 export default class SessionService {
-    
-    // Registro de usuarios.
+
+     // Registro de usuarios.
     async registerUser(userData) {
-        const newUser = new userModel(userData);
+        const newUser = await userDao.createUser(userData)
+        
+        // Crear carrito para el usuario
+        const cartService = new CartService()
+        const cart = await cartService.createCart(newUser._id)
+
+        // Asignar el carrito al usuario
+        newUser.cart = cart._id
         await newUser.save()
+
         return UserDTO.fromUser(newUser) // Devolver el DTO del usuario creado
     }
 
@@ -22,11 +30,10 @@ export default class SessionService {
     async restorePassword(email, password) {
         if (!email || !password) throw new Error("Todos los campos son obligatorios")
 
-        const user = await userModel.findOne({ email })
+        const user = await userDao.findUserByEmail(email)
         if (!user) throw new Error("Error de autenticación")
 
-        const newPassword = hashPassword(password)
-        await userModel.updateOne({ email }, { password: newPassword })
+        await userDao.updatePasswordByEmail(email, password)
 
         return { email } // Devolver los datos necesarios
     }

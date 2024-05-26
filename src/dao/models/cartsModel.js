@@ -6,9 +6,10 @@ const collection = "Carts"
 
 const schema = new Schema({
 
-    user: {
+    owner: {
         type: Schema.Types.ObjectId,
-        ref: "Users"
+        ref: "Users",
+        required: true
     },
 
     products: [
@@ -19,7 +20,8 @@ const schema = new Schema({
             },
             quantity: {
                 type: Number,
-                default: 1
+                default: 1,
+                required: true
             },
         },
     ],
