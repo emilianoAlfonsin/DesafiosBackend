@@ -67,30 +67,30 @@ export default class CartService {
         return CartDTO.fromCartDocument(emptyCart)
     }
 
-    async purchaseCart(cid) {
+    async purchaseCart(cid, productsToPurchase) {
         if (!isValidObjectId(cid)) throw new Error("El ID del carrito no es válido")
 
         const cart = await cartDAO.getCartById(cid)
         if (!cart) throw new Error("Carrito no encontrado")
         if (cart.products.length === 0) throw new Error("El carrito está vacío")
 
-        const productsToPurchase = []
+        const purchaseList = []
         const productsNotPurchased = []
 
         for (const item of cart.products) {
             const product = item.product
-            const quantity = item.quantity
+            const quantity = productsToPurchase.find(p => p.productId === product._id.toString())?.quantity || 0
 
             if (product.stock >= quantity) {
                 product.stock -= quantity
                 await product.save()
-                productsToPurchase.push({ product, quantity })
+                purchaseList.push({ product, quantity })
             } else {
                 productsNotPurchased.push(item)
             }
         }
 
-        const amount = productsToPurchase.reduce((acc, item) => acc + item.product.price * item.quantity, 0)
+        const amount = purchaseList.reduce((acc, item) => acc + item.product.price * item.quantity, 0)
 
         const newTicket = await this.tickets.create({
             code: Math.floor(Math.random() * (999999 - 100000 + 1) + 100000),

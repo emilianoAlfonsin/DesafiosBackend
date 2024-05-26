@@ -29,5 +29,7 @@ cartRouter.delete('/:cid/products/:pid/', cartController.deleteProductFromCart)
 //Eliminar todos los productos del carrito.
 cartRouter.delete('/:cid/', cartController.deleteAllProductsFromCart)
 
+// Ruta para finalizar el proceso de compra del carrito
+cartRouter.post('/:cid/purchase/', cartController.purchaseCart)
 
 export default cartRouter
