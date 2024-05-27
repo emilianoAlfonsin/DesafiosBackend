@@ -159,13 +159,10 @@ export default class CartController {
         }
     }
 
-    async purchaseCart (req, res) {
+    async purchaseCart(req, res) {
         try {
-            const cart = req.params.cid
-            const { products } = req.body // Extrae 'products' del cuerpo de la solicitud
-            if (!Array.isArray(products)) throw new Error("La lista de productos no es válida")
-            const ticket = await cartService.purchaseCart(cart, products)
-            console.log(ticket)
+            const cartId = req.params.cid
+            const ticket = await cartService.purchaseCart(cartId)
             res.status(200).json({
                 status: "success",
                 payload: ticket
@@ -178,6 +175,6 @@ export default class CartController {
                 error: error.message
             })
         }
-    }
+    }    
 
 }
