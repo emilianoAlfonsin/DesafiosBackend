@@ -11,6 +11,7 @@ import viewsRouter from "../routes/viewsRouter.js"
 import sessionRouter from "../routes/sessionRouter.js"
 import passport from "passport"
 import initializePassport from "./passport.config.js"
+import nodemailer from "nodemailer"
 
 const serverConfig = () => {
     const app = express()
@@ -34,6 +35,18 @@ const serverConfig = () => {
         })
     )
 
+    //Nodemailer
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        host: "stmp.gmail.com",
+        secure: false,
+        port: 587,
+        auth: {
+            user: process.env.MAIL_USERNAME,
+            pass: process.env.MAIL_PASSWORD
+        }
+    })
+
     //Configuración de passport.
     initializePassport()
     app.use(passport.initialize())
@@ -46,6 +59,19 @@ const serverConfig = () => {
     app.use('/api/carts/', cartRouter)
     app.use('/api/session/', sessionRouter)
     app.use(viewsRouter)
+    app.get('/mail', async (req, res) => {
+        try{
+            const result = await transporter.sendMail({
+                from: `Correo de prueba <${process.env.MAIL_USERNAME}>`,
+                to: `${process.env.MAIL_USERNAME}`,
+                subject: "Prueba de correo",
+                html: "<h1>Correo de prueba</h1>"
+            })
+            res.send('Correo enviado')
+        } catch(error){
+            console.log(error)
+        }
+    }) 
     console.log("Rutas configuradas...")    
 
 

@@ -68,50 +68,48 @@ export default class CartService {
     }
 
     async purchaseCart(cid) {
-        if (!isValidObjectId(cid)) throw new Error("El ID del carrito no es válido");
+        if (!isValidObjectId(cid)) throw new Error("El ID del carrito no es válido")
     
-        const cart = await cartDAO.getCartById(cid);
-        if (!cart) throw new Error("Carrito no encontrado");
-        if (cart.products.length === 0) throw new Error("El carrito está vacío");
+        const cart = await cartDAO.getCartById(cid)
+        if (!cart) throw new Error("Carrito no encontrado")
+        if (cart.products.length === 0) throw new Error("El carrito está vacío")
     
-        const purchaseList = [];
-        const productsNotPurchased = [];
+        const purchaseList = []
+        const productsNotPurchased = []
     
         for (const item of cart.products) {
-            const product = await this.products.findById(item.product);
+            const product = await this.products.findById(item.product)
             if (!product) {
-                console.error(`Producto con ID ${item.product} no encontrado`);
-                productsNotPurchased.push(item);
-                continue;
+                console.error(`Producto con ID ${item.product} no encontrado`)
+                productsNotPurchased.push(item)
+                continue
             }
-    
+
             if (product.stock >= item.quantity) {
-                product.stock -= item.quantity;
-                await product.save();
-                purchaseList.push({ product, quantity: item.quantity });
+                product.stock -= item.quantity
+                await product.save()
+                purchaseList.push({ product, quantity: item.quantity })
             } else {
-                console.warn(`Stock insuficiente para el producto con ID ${item.product}`);
-                productsNotPurchased.push(item);
+                console.log(`Stock insuficiente para el producto con ID ${item.product}`)
+                productsNotPurchased.push(item)
             }
         }
     
-        const amount = purchaseList.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+        const amount = purchaseList.reduce((acc, item) => acc + item.product.price * item.quantity, 0)
     
-        if (amount === 0) {
-            throw new Error("No se pudieron comprar los productos debido a falta de stock");
-        }
+        if (amount === 0) throw new Error("No se pudieron comprar los productos debido a falta de stock")
     
         const newTicket = await this.tickets.create({
             code: Math.floor(Math.random() * (999999 - 100000 + 1) + 100000),
             purchase_datetime: new Date(),
             amount: amount,
             purchaser: cart.owner
-        });
+        })
     
-        cart.products = productsNotPurchased;
-        await cart.save();
+        cart.products = productsNotPurchased
+        await cart.save()
     
-        return ticketDTO.toDTO(newTicket);
+        return ticketDTO.toDTO(newTicket)
     }
     
     
