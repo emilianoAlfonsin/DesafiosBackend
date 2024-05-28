@@ -3,6 +3,8 @@ import { dirname } from 'path'
 import mongoose from "mongoose"
 import bcrypt from 'bcrypt'
 
+
+
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
@@ -23,3 +25,4 @@ export function hashPassword(password) {
 export function isValidPassword(password, hashedPassword) {
     return bcrypt.compareSync(password, hashedPassword)
 }
+
