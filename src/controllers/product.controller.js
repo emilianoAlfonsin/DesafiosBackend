@@ -62,7 +62,27 @@ export default class ProductController {
     //Agregar un nuevo producto.
     async addProduct(req, res) {
         try{
+            // Validar que los campos requeridos sean enviados
+            const requiredFields = ["title", "description", "thumbnail", "price", "code", "price", "stock", "category", "status"]
+            const missingFields = requiredFields.filter(field => !req.body[field])
+            // Si se encuentran campos faltantes, devolver un error 400 Bad Request
+            if(missingFields.length){
+                return res.status(400).json({
+                    status: "failure",
+                    errorCode: "BAD_REQUEST",
+                    description: `Error al agregar el producto. Campos requeridos: ${missingFields.join(", ")}`
+                })
+            }
+            // Si no se encuentran campos faltantes, agregar el producto
             const product = await productService.addProduct(req.body)
+            // Si no se pudo agregar el producto, devolver un error 400 Bad Request
+            if(!product){
+                return res.status(400).json({
+                    status: "failure",
+                    errorCode: "BAD_REQUEST",
+                    description: "Error al agregar el producto"
+                })
+            }
             res.status(201).json({
                 status: "success",
                 payload: {

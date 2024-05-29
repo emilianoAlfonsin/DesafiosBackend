@@ -12,6 +12,7 @@ import sessionRouter from "../routes/sessionRouter.js"
 import passport from "passport"
 import initializePassport from "./passport.config.js"
 import nodemailer from "nodemailer"
+import { createRandomProduct } from '../utils.js'
 
 const serverConfig = () => {
     const app = express()
@@ -72,8 +73,18 @@ const serverConfig = () => {
             console.log(error)
         }
     }) 
+    app.get('/mockingproducts', async(req, res) => {
+        try{
+            let products = []
+            for(let i = 0; i < 100; i++){
+                products.push(createRandomProduct())
+            }
+            res.send(products)
+        } catch(error){
+            console.log(error)
+        }
+    })
     console.log("Rutas configuradas...")    
-
 
     return app
 }
