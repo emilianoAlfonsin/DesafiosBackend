@@ -3,7 +3,7 @@ import local from "passport-local"
 import GitHubStrategy from "passport-github2"
 
 import UserModel  from "../dao/models/userModel.js"
-import { hashPassword, isValidPassword } from "../utils.js"
+import { hashPassword, isValidPassword } from "../utils/utils.js"
 
 import CartService from "../dao/services/cart.service.js"
 

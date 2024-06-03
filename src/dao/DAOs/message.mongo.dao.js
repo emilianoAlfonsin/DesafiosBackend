@@ -1,5 +1,5 @@
 import messageModel from "../models/messagesModel.js"
-import { isValidObjectId } from "../../utils.js"
+import { isValidObjectId } from "../../utils/utils.js"
 
 class MessageDAO {
     async findAllMessages() {

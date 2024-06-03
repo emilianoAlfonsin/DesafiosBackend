@@ -1,5 +1,5 @@
 import userModel from "../models/userModel.js"
-import { hashPassword, isValidObjectId } from "../../utils.js"
+import { hashPassword, isValidObjectId } from "../../utils/utils.js"
 
 class UserMongoDAO {
     async createUser(userData) {

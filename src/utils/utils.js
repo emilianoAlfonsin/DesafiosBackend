@@ -2,7 +2,7 @@ import {fileURLToPath} from 'url'
 import { dirname } from 'path'
 import mongoose from "mongoose"
 import bcrypt from 'bcrypt'
-import { fa, fakerES as faker } from '@faker-js/faker'
+import { fakerES as faker } from '@faker-js/faker'
 
 
 const __filename = fileURLToPath(import.meta.url)

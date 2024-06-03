@@ -4,7 +4,8 @@ import productsModel from "../models/productsModel.js"
 import ticketModel from "../models/ticketModel.js"
 import ticketDTO from "../DTOs/ticket.dto.js"
 import userModel from "../models/userModel.js"
-import { isValidObjectId } from "../../utils.js"
+import { isValidObjectId } from "../../utils/utils.js"
+import logger from "../../utils/logger.js"
 
 export default class CartService {
     constructor() {
@@ -80,7 +81,7 @@ export default class CartService {
         for (const item of cart.products) {
             const product = await this.products.findById(item.product)
             if (!product) {
-                console.error(`Producto con ID ${item.product} no encontrado`)
+                logger.error(`Producto con ID ${item.product} no encontrado`)
                 productsNotPurchased.push(item)
                 continue
             }
@@ -90,7 +91,7 @@ export default class CartService {
                 await product.save()
                 purchaseList.push({ product, quantity: item.quantity })
             } else {
-                console.log(`Stock insuficiente para el producto con ID ${item.product}`)
+                logger.info(`Stock insuficiente para el producto con ID ${item.product}`)
                 productsNotPurchased.push(item)
             }
         }

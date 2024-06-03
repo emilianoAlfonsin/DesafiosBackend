@@ -1,7 +1,7 @@
 import express from 'express'
 import path from 'path'
 import handlebars from 'express-handlebars'
-import __dirname from '../utils.js'
+import __dirname from '../utils/utils.js'
 import session from "express-session"
 import MongoStore from "connect-mongo"
 import DB_URL from './db.config.js'
@@ -12,7 +12,8 @@ import sessionRouter from "../routes/sessionRouter.js"
 import passport from "passport"
 import initializePassport from "./passport.config.js"
 import nodemailer from "nodemailer"
-import { createRandomProduct } from '../utils.js'
+import { createRandomProduct } from '../utils/utils.js'
+import logerTestRouter from '../routes/loggerRouter.js'
 
 const serverConfig = () => {
     const app = express()
@@ -36,6 +37,7 @@ const serverConfig = () => {
         })
     )
 
+
     //Nodemailer
     const transporter = nodemailer.createTransport({
         service: "gmail",
@@ -53,6 +55,7 @@ const serverConfig = () => {
     app.use(passport.initialize())
     app.use(passport.session())
 
+
     console.log("Configurando las rutas...")
     // Configuración de rutas.
     app.use(express.static(path.join(__dirname, 'public')))
@@ -60,6 +63,7 @@ const serverConfig = () => {
     app.use('/api/carts/', cartRouter)
     app.use('/api/session/', sessionRouter)
     app.use(viewsRouter)
+    app.use(logerTestRouter)
     app.get('/mail', async (req, res) => {
         try{
             const result = await transporter.sendMail({

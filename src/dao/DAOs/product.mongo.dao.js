@@ -1,5 +1,5 @@
 import productsModel from "../models/productsModel.js"
-import { isValidObjectId } from "../../utils.js"
+import { isValidObjectId } from "../../utils/utils.js"
 
 class ProductDAO {
     // Obtener todos los productos paginados y ordenados.
