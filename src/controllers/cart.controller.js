@@ -1,4 +1,5 @@
 import CartService from "../dao/services/cart.service.js"
+import logger from "../utils/logger.js"
 
 const cartService = new CartService()
 
@@ -15,7 +16,7 @@ export default class CartController {
                 payload: carts
             })
         } catch (error) {
-            console.error("Error al obtener los carritos:", error.message)
+            logger.error("Error al obtener los carritos")
             res.status(500).json({ 
                 status: "failure",
                 errorCode: "INTERNAL_SERVER_ERROR",
@@ -34,7 +35,7 @@ export default class CartController {
                 payload: cart
             })
         } catch (error) {
-            console.error("Error al obtener el carrito:", error.message)
+            logger.error("Error al obtener el carrito")
             res.status(500).json({
                 status: "failure",
                 errorCode: "INTERNAL_SERVER_ERROR",

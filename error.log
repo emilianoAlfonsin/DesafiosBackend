@@ -4,3 +4,8 @@
 2024-06-03T21:23:42.579Z [31mfatal[39m: Este es un mensaje fatal
 2024-06-03T21:36:49.338Z [31merror[39m: Este es un mensaje error
 2024-06-03T21:36:49.339Z [90mfatal[39m: Este es un mensaje fatal
+2024-06-03T22:15:27.604Z [31merror[39m: Este es un mensaje error
+2024-06-03T22:15:27.605Z [90mfatal[39m: Este es un mensaje fatal
+2024-06-03T22:15:48.874Z [31merror[39m: Error al obtener el carrito:
+2024-06-03T22:21:06.067Z [31merror[39m: Error al actualizar el producto
+2024-06-03T22:25:21.906Z [31merror[39m: Error al agregar el producto. Campos requeridos: title, category

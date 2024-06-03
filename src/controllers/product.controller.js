@@ -1,4 +1,5 @@
 import ProductsService from "../dao/services/product.service.js"
+import logger from "../utils/logger.js"
 
 const productService = new ProductsService()
 
@@ -9,6 +10,7 @@ export default class ProductController {
         try {
             const products = await productService.getProducts(req.query)
             if (!products.docs.length) {
+                logger.error("No se encuentran productos para mostrar")
                 return res.status(404).json({
                     status: "failure",
                     errorCode: "NOT_FOUND",
@@ -20,7 +22,7 @@ export default class ProductController {
                 payload: products
             })
         } catch (error) {
-            console.error(error)
+            logger.error("Error al obtener los productos")
             res.status(500).json({
                 status: "failure",
                 errorCode: "INTERNAL_SERVER_ERROR",
@@ -38,6 +40,7 @@ export default class ProductController {
 
             const product = await productService.getProductById(productId)
             if (!product) {
+                logger.error(`Error al buscar el producto con id: ${productId}`)
                 res.status(404).json({
                     status: "failure",
                     errorCode: "PRODUCT_NOT_FOUND",
@@ -50,7 +53,7 @@ export default class ProductController {
                 payload: product
             })
         } catch (error) {
-            console.error(`Error al buscar el producto con id: ${req.params.id}`)
+            logger.error(`Error al buscar el producto con id: ${req.params.id}`)
             res.status(500).json({
                 status: "failure",
                 errorCode: "INTERNAL_SERVER_ERROR",
@@ -67,6 +70,7 @@ export default class ProductController {
             const missingFields = requiredFields.filter(field => !req.body[field])
             // Si se encuentran campos faltantes, devolver un error 400 Bad Request
             if(missingFields.length){
+                logger.error(`Error al agregar el producto. Campos requeridos: ${missingFields.join(", ")}`)
                 return res.status(400).json({
                     status: "failure",
                     errorCode: "BAD_REQUEST",
@@ -77,6 +81,7 @@ export default class ProductController {
             const product = await productService.addProduct(req.body)
             // Si no se pudo agregar el producto, devolver un error 400 Bad Request
             if(!product){
+                logger.error('Error al agregar el producto')
                 return res.status(400).json({
                     status: "failure",
                     errorCode: "BAD_REQUEST",
@@ -92,7 +97,7 @@ export default class ProductController {
             })
         }
         catch(error){
-            console.error(error)
+            logger.error('Error al agregar el producto')
             res.status(500).json({
                 status: "failure",
                 errorCode: "INTERNAL_SERVER_ERROR",
@@ -107,6 +112,7 @@ export default class ProductController {
             const product = await productService.updateProduct(req.params.id, req.body)
             if(!product){
                 // Si no se encuentra el producto devuelve un código de estado 404
+                logger.error("Error al actualizar el producto")
                 return res.status(404).json({
                     status: "failure",
                     errorCode: "NOT_FOUND",
@@ -122,7 +128,7 @@ export default class ProductController {
             })
         }
         catch(error){
-            console.error(error)
+            logger.error("Error al actualizar el producto")
             res.status(500).json({
                 status: "failure",
                 errorCode: "INTERNAL_SERVER_ERROR",
@@ -151,8 +157,8 @@ export default class ProductController {
             })
         }
         catch(error){
-            console.error(error)
-            res.status(500).json({
+            logger.error("Error al actualizar el producto")
+            res.status(500).json({  
                 status: "failure",
                 errorCode: "INTERNAL_SERVER_ERROR",
                 description: "Error al actualizar el producto"
