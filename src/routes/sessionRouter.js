@@ -51,10 +51,20 @@ sessionRouter.post(
     sessionController.logoutUser
 )
 
-// Ruta para restaurar el password de un usuario.
-sessionRouter.put(
-    "/restorePassword",
-    sessionController.restorePassword
+// Rutas para recuperación de contraseña.
+sessionRouter.post(
+    "/forgot-password",
+    sessionController.forgotPassword
+)
+
+sessionRouter.get(
+    "/reset-password/:token",
+    sessionController.verifyResetToken
+)
+
+sessionRouter.post(
+    "/reset-password/:token",
+    sessionController.resetPassword
 )
 
 // Ruta para obtener el usuario actualmente logueado.

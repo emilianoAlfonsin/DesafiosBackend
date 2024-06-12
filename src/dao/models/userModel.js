@@ -15,13 +15,15 @@ const userSchema = new Schema({
     cart: {
         type: Schema.Types.ObjectId,
         ref : 'Carts'
-    },
+        },
     role: {
         type: String,
         default: 'user',
-        enum: ['user', 'admin']
-    }
-})
+        enum: ['user','premium','admin']
+        },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
+            })
 
 const userModel = mongoose.model(userCollection, userSchema)
 export default userModel

@@ -14,6 +14,7 @@ import initializePassport from "./passport.config.js"
 import nodemailer from "nodemailer"
 import { createRandomProduct } from '../utils/utils.js'
 import logerTestRouter from '../routes/loggerRouter.js'
+import { sendEmail } from './nodemailer.config.js'
 
 const serverConfig = () => {
     const app = express()
@@ -63,20 +64,11 @@ const serverConfig = () => {
     app.use('/api/carts/', cartRouter)
     app.use('/api/session/', sessionRouter)
     app.use(viewsRouter)
+    // Testeo de respuesta de logger
     app.use(logerTestRouter)
-    app.get('/mail', async (req, res) => {
-        try{
-            const result = await transporter.sendMail({
-                from: `Correo de prueba <${process.env.MAIL_USERNAME}>`,
-                to: `${process.env.MAIL_USERNAME}`,
-                subject: "Prueba de correo",
-                html: "<h1>Correo de prueba</h1>"
-            })
-            res.send('Correo enviado')
-        } catch(error){
-            console.log(error)
-        }
-    }) 
+    // Envío de correo de prueba
+    app.get('/mail', sendEmail(process.env.MAIL_USERNAME, "Correo de prueba", "Correo de prueba")) 
+    // Mocking de productos
     app.get('/mockingproducts', async(req, res) => {
         try{
             let products = []

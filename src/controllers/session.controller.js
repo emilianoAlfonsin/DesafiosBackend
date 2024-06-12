@@ -121,23 +121,23 @@ export default class SessionController {
     }
 
     // Restaurar el password de un usuario.
-    async restorePassword(req, res) {
-        try {
-            const { email, password } = req.body
-            const response = await sessionService.restorePassword(email, password)
-            res.status(200).json({
-                status: "success",
-                message:"Password restaurado correctamente",
-                payload: response
-            })
-        } catch (error) {
-            res.status(400).send({
-                status: "failure",
-                errorCode: "BAD_REQUEST",
-                message: error.message
-            })
-        }
-    }
+    // async restorePassword(req, res) {
+    //     try {
+    //         const { email, password } = req.body
+    //         const response = await sessionService.restorePassword(email, password)
+    //         res.status(200).json({
+    //             status: "success",
+    //             message:"Password restaurado correctamente",
+    //             payload: response
+    //         })
+    //     } catch (error) {
+    //         res.status(400).send({
+    //             status: "failure",
+    //             errorCode: "BAD_REQUEST",
+    //             message: error.message
+    //         })
+    //     }
+    // }
 
     // Obtener usuario actual.
     async currentUser(req, res) {
@@ -150,6 +150,66 @@ export default class SessionController {
             })
         } catch (error) {
             res.status(400).send({ 
+                status: "failure",
+                errorCode: "BAD_REQUEST",
+                message: error.message
+            })
+        }
+    }
+
+    // Enviar enlace de recuperación de contraseña
+    async forgotPassword(req, res) {
+        try {
+            const { email } = req.body
+            await sessionService.forgotPassword(email)
+            res.status(200).json({
+                status: "success",
+                message: "Correo de recuperación enviado"
+            })
+        } catch (error) {
+            res.status(400).send({
+                status: "failure",
+                errorCode: "BAD_REQUEST",
+                message: error.message
+            })
+        }
+    }
+
+    // Verificar el token de restablecimiento de contraseña
+    async verifyResetToken(req, res) {
+        try {
+            const { token } = req.params
+            const isValid = await sessionService.verifyResetToken(token)
+            if (isValid) {
+                res.status(200).render('resetPassword', { token })
+            } else {
+                res.status(400).json({
+                    status: "failure",
+                    errorCode: "INVALID_TOKEN",
+                    message: "Token inválido o expirado"
+                })
+            }
+        } catch (error) {
+            res.status(400).send({
+                status: "failure",
+                errorCode: "BAD_REQUEST",
+                message: error.message
+            })
+        }
+    }
+
+    // Restablecer la contraseña
+    async resetPassword(req, res) {
+        try {
+            const { token } = req.params
+            const { password } = req.body
+            await sessionService.resetPassword(token, password)
+            res.status(200).json({
+                status: "success",
+                message: "Contraseña restablecida correctamente"
+            })
+        } catch (error) {
+            res.status(400).send({
                 status: "failure",
                 errorCode: "BAD_REQUEST",
                 message: error.message
