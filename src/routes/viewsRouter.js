@@ -10,7 +10,11 @@ viewsRouter.get('/', viewsController.renderIndex)
 
 viewsRouter.get('/register', viewsController.renderRegister)
 
+viewsRouter.get('/forgot-password', viewsController.renderForgotPassword)
+
 viewsRouter.get('/restorePassword', viewsController.renderRestorePassword)
+
+viewsRouter.get('/resetPassword', viewsController.renderResetPassword)
 
 // esta ruta no debería tener funcionalidad en el estado actual del proyecto.
 // viewsRouter.get('/realtimeproducts', auth, viewsController.renderRealtimeProducts)

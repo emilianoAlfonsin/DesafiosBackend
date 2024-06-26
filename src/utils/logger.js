@@ -3,8 +3,16 @@ import winston from "winston"
 const { combine, timestamp, printf, colorize } = winston.format
 
 // Definir formato de mensaje
-const myFormat = printf(({ level, message, timestamp }) => {
-    return `${timestamp} ${level}: ${message}`
+const myFormat = printf(({ level, message, timestamp, ...meta }) => {
+    // Extrae el documento Mongoose si está presente
+    const metaData = Object.keys(meta).length ? JSON.stringify(meta, (key, value) => {
+        // Filtra y registra solo el documento relevante de Mongoose
+        if (value && value._doc) {
+            return value._doc
+        }
+        return value
+    }, 2) : ''
+    return `${timestamp} ${level}: ${message} ${metaData}`
 })
 
 const levels = {

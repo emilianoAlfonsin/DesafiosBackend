@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer'
-import logger from '../utils/logger'
+import logger from '../utils/logger.js'
 
 // Configuración del transporter de nodemailer
 const transporter = nodemailer.createTransport({
@@ -21,10 +21,10 @@ export async function sendEmail(to, subject, text) {
 
     try {
         const info = await transporter.sendMail(mailOptions)
-        logger.info('Email sent: ' + info.response)
+        logger.info('Correo enviado: ' + info.response)
         return info
     } catch (error) {
-        logger.error('Error sending email: ', error)
+        logger.error('Error al enviar el correo: ', error)
         throw error
     }
 }

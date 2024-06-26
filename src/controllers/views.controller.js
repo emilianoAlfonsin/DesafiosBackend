@@ -36,6 +36,20 @@ export default class ViewsController {
         }
     }
 
+    // Renderizador de vista de formulario de forgot password
+    async renderForgotPassword(req, res) {
+        try {
+            res.render('forgotPassword')
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al renderizar la vista de formulario de forgot password"
+            })
+        }
+    }
+
     // Renderizador de vista de restauración de password
     async renderRestorePassword(req, res) {
         try {
@@ -46,6 +60,20 @@ export default class ViewsController {
                 status: "failure",
                 errorCode: "INTERNAL_SERVER_ERROR",
                 description: "Error al renderizar la vista de restauración de password"
+            })
+        }
+    }
+
+    // Renderizador de vista de reseteo de password
+    async renderResetPassword(req, res) {
+        try {
+            res.render('resetPassword')
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({
+                status: "failure",
+                errorCode: "INTERNAL_SERVER_ERROR",
+                description: "Error al renderizar la vista de reseteo de password"
             })
         }
     }

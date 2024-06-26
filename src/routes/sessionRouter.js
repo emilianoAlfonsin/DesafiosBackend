@@ -1,20 +1,44 @@
 import { Router } from "express"
 import passport from "passport"
 import SessionController from "../controllers/session.controller.js"
+import logger from "../utils/logger.js"
+import UserDTO from "../dao/DTOs/user.dto.js"
 
 const sessionRouter = Router()
 const sessionController = new SessionController()
 
 // Ruta para registrar un usuario.
 sessionRouter.post(
-    "/register/",
-    passport.authenticate("register",{ failureRedirect: "/failregister" }),
-    sessionController.registerUser
+    '/register/',
+    (req, res, next) => {
+        logger.info('Registrando usuario')
+        passport.authenticate('register', (err, user, info) => {
+            if (err) {
+                logger.error(`Error de autenticación: ${err}`)
+                return next(err)
+            }
+            if (!user) {
+                logger.error(`Error de registro: ${info.message}`)
+                return res.status(400).json({
+                    status: "failure",
+                    errorCode: "BAD_REQUEST",
+                    message: info ? info.message : "No se ha podido registrar el usuario"
+                })
+            }
+            logger.info(`Usuario registrado: ${user.email}`)
+            const userDTO = UserDTO.fromUser(user) // Transforma el objeto user en un DTO
+            return res.status(201).json({
+                status: "success",
+                message: "Usuario registrado exitosamente",
+                user: userDTO
+            })
+        })(req, res, next)
+    }
 )
 
-// Ruta para obtener un usuario.
+// Ruta que retorna un mensaje de error de registro.
 sessionRouter.get(
-    "/failregister/", 
+    "/failregister/",
     sessionController.failRegisterUser
 )
 
@@ -53,18 +77,18 @@ sessionRouter.post(
 
 // Rutas para recuperación de contraseña.
 sessionRouter.post(
-    "/forgot-password",
+    "/forgotpassword/",
     sessionController.forgotPassword
 )
-
+// Ruta para verificar el token de recuperación de contraseña.
 sessionRouter.get(
     "/reset-password/:token",
     sessionController.verifyResetToken
 )
-
+// Ruta para cambiar la contraseña del usuario.
 sessionRouter.post(
     "/reset-password/:token",
-    sessionController.resetPassword
+    sessionController.resetPassword 
 )
 
 // Ruta para obtener el usuario actualmente logueado.

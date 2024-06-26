@@ -1,5 +1,6 @@
 import SessionService from "../dao/services/session.service.js"
 import SessionDTO from "../dao/DTOs/session.dto.js"
+import logger from "../utils/logger.js"
 
 const sessionService = new SessionService()
 
@@ -16,12 +17,26 @@ export default class SessionController {
                 user: userDto
             })
         } catch (error) {
-            res.status(500).json({
-                status: "failure",
-                errorCode: "INTERNAL_SERVER_ERROR",
-                description: "Error al registrar usuario",
-                message: error.message
-            })
+            logger.error("Error al registrar usuario:", error.message)
+            if (error.message.includes("El usuario ya existe")) {
+                return res.status(400).json({
+                    status: "failure",
+                    errorCode: "USER_ALREADY_EXISTS",
+                    description: error.message
+                })
+            } else if (error.message.includes("validation")) {
+                res.status(400).json({
+                    status: "failure",
+                    errorCode: "VALIDATION_ERROR",
+                    message: error.message
+                })
+            } else {
+                return res.status(500).json({
+                    status: "failure",
+                    errorCode: "INTERNAL_SERVER_ERROR",
+                    description: "Error al registrar usuario"
+                })
+            }
         }
     }
 
@@ -120,25 +135,6 @@ export default class SessionController {
         })
     }
 
-    // Restaurar el password de un usuario.
-    // async restorePassword(req, res) {
-    //     try {
-    //         const { email, password } = req.body
-    //         const response = await sessionService.restorePassword(email, password)
-    //         res.status(200).json({
-    //             status: "success",
-    //             message:"Password restaurado correctamente",
-    //             payload: response
-    //         })
-    //     } catch (error) {
-    //         res.status(400).send({
-    //             status: "failure",
-    //             errorCode: "BAD_REQUEST",
-    //             message: error.message
-    //         })
-    //     }
-    // }
-
     // Obtener usuario actual.
     async currentUser(req, res) {
         try {
@@ -160,7 +156,9 @@ export default class SessionController {
     // Enviar enlace de recuperación de contraseña
     async forgotPassword(req, res) {
         try {
-            const { email } = req.body
+            const {email} = req.body
+
+            logger.info("Solicitud de restablecimiento de contraseña recibida", email )
             await sessionService.forgotPassword(email)
             res.status(200).json({
                 status: "success",

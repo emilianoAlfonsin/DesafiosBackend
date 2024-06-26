@@ -9,3 +9,18 @@
 2024-06-03T22:15:48.874Z [31merror[39m: Error al obtener el carrito:
 2024-06-03T22:21:06.067Z [31merror[39m: Error al actualizar el producto
 2024-06-03T22:25:21.906Z [31merror[39m: Error al agregar el producto. Campos requeridos: title, category
+2024-06-20T12:31:02.905Z [31merror[39m: El usuario ya existe 
+2024-06-25T22:40:39.024Z [31merror[39m: El usuario ya existe 
+2024-06-25T22:40:39.027Z [31merror[39m: Error al registrar usuario: 
+2024-06-25T23:11:20.378Z [31merror[39m: El usuario ya existe 
+2024-06-25T23:11:20.380Z [31merror[39m: Error al registrar usuario: 
+2024-06-25T23:14:18.831Z [31merror[39m: El usuario ya existe 
+2024-06-25T23:14:18.832Z [31merror[39m: Error al registrar usuario: 
+2024-06-25T23:37:56.045Z [31merror[39m: Error al registrar usuario: 
+2024-06-26T16:37:48.958Z [31merror[39m: El usuario ya existe 
+2024-06-26T16:37:49.013Z [31merror[39m: Error al registrar usuario: 
+2024-06-26T16:41:16.634Z [31merror[39m: El usuario ya existe 
+2024-06-26T16:41:16.636Z [31merror[39m: Error al registrar usuario: 
+2024-06-26T16:46:17.506Z [31merror[39m: El usuario ya existe 
+2024-06-26T16:46:17.507Z [31merror[39m: Error en el registro del usuario prueba9@mail.com, error: Error: El usuario ya existe 
+2024-06-26T16:46:17.508Z [31merror[39m: Error al registrar usuario: 

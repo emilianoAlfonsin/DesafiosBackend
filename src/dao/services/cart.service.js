@@ -30,6 +30,7 @@ export default class CartService {
 
         const user = await this.user.findById(userId)
         if (!user) throw new Error("Usuario no encontrado")
+        if (user.cart) throw new Error("El usuario ya tiene un carrito asignado")
 
         const newCart = await cartDAO.createCart(user._id)
         user.cart = newCart._id

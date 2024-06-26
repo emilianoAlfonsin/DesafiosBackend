@@ -11,7 +11,6 @@ import viewsRouter from "../routes/viewsRouter.js"
 import sessionRouter from "../routes/sessionRouter.js"
 import passport from "passport"
 import initializePassport from "./passport.config.js"
-import nodemailer from "nodemailer"
 import { createRandomProduct } from '../utils/utils.js'
 import logerTestRouter from '../routes/loggerRouter.js'
 import { sendEmail } from './nodemailer.config.js'
@@ -22,7 +21,7 @@ const serverConfig = () => {
     // Configuración de Handlebars y vistas.
     app.engine('handlebars', handlebars.engine())
     app.set('view engine', 'handlebars')
-    app.set('views', path.join(__dirname, 'views'))
+    app.set('views', path.join(__dirname, "..",'views'))
 
     // Midlewares
     app.use(express.json())
@@ -38,19 +37,6 @@ const serverConfig = () => {
         })
     )
 
-
-    //Nodemailer
-    const transporter = nodemailer.createTransport({
-        service: "gmail",
-        host: "stmp.gmail.com",
-        secure: false,
-        port: 587,
-        auth: {
-            user: process.env.MAIL_USERNAME,
-            pass: process.env.MAIL_PASSWORD
-        }
-    })
-
     //Configuración de passport.
     initializePassport()
     app.use(passport.initialize())
@@ -59,7 +45,7 @@ const serverConfig = () => {
 
     console.log("Configurando las rutas...")
     // Configuración de rutas.
-    app.use(express.static(path.join(__dirname, 'public')))
+    app.use(express.static(path.join(__dirname,"..",'public')))
     app.use('/api/products/', productRouter)
     app.use('/api/carts/', cartRouter)
     app.use('/api/session/', sessionRouter)
@@ -67,7 +53,14 @@ const serverConfig = () => {
     // Testeo de respuesta de logger
     app.use(logerTestRouter)
     // Envío de correo de prueba
-    app.get('/mail', sendEmail(process.env.MAIL_USERNAME, "Correo de prueba", "Correo de prueba")) 
+    app.get('/mail', async(req, res) => {
+        try{
+            await sendEmail(process.env.MAIL_USERNAME, "Correo de prueba", "Este es un correo de prueba")
+            res.send("Correo enviado")
+        } catch(error){
+            console.log(error)
+        }
+    }) 
     // Mocking de productos
     app.get('/mockingproducts', async(req, res) => {
         try{
@@ -81,7 +74,6 @@ const serverConfig = () => {
         }
     })
     console.log("Rutas configuradas...")    
-
     return app
 }
 
