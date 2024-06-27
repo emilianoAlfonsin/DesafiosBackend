@@ -17,6 +17,16 @@ paths:
           application/json:
             schema:
               $ref: '#/dao/models/productModel.js'
+              example:
+                title: Producto 1
+                description: Este es un producto de ejemplo
+                price: 9.99
+                thumbnail: https://example.com/product1.jpg
+                code: P001
+                stock: 25
+                category: electronics
+                status: true
+                owner: 645b6a8e4f5d3a1a1c1a1c1a
       responses:
         201:
           description: Producto creado correctamente.
