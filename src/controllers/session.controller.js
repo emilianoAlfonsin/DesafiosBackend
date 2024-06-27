@@ -214,4 +214,23 @@ export default class SessionController {
             })
         }
     }
+
+    // Cambiar el rol del usuario actual. Solo para usuarios con rol "admin".
+    async changeUserRole(req, res) {
+        try {
+            const { uid } = req.params
+            const { role } = req.body
+            await sessionService.changeUserRole(uid, role)
+            res.status(200).json({
+                status: "success",
+                message: "Rol de usuario cambiado correctamente"
+            })
+        } catch (error) {
+            res.status(400).send({
+                status: "failure",
+                errorCode: "BAD_REQUEST",
+                message: error.message
+            })
+        }
+    }
 }

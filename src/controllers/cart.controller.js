@@ -2,6 +2,7 @@ import CartService from "../dao/services/cart.service.js"
 import logger from "../utils/logger.js"
 
 const cartService = new CartService()
+const productService = new ProductService()
 
 export default class CartController {
     constructor(){
@@ -68,7 +69,26 @@ export default class CartController {
     //Agregar un producto al carrito por su id.
     async addProductToCart (req, res) {
         try {
+            // Verificar si el usuario es el propietario del producto
+            const product = await productService.getProductById(req.params.pid)
+            if (!product) {
+                return res.status(404).json({
+                    status: "failure",
+                    errorCode: "NOT_FOUND",
+                    description: "Producto no encontrado"
+                })
+            }
+
+            if (req.session.user.role === 'premium' && product.owner === req.session.user.email) {
+                return res.status(403).json({
+                    status: "failure",
+                    errorCode: "FORBIDDEN",
+                    description: "No tienes permiso para agregar este producto al carrito"
+                })
+            }
+
             const cart = await cartService.addProductToCart(req.params.cid, req.params.pid)
+
             res.status(200).json({
                 status: "success",
                 payload: cart
@@ -106,6 +126,23 @@ export default class CartController {
     //Actualizar la cantidad de un producto en un carrito.
     async updateProductQuantity (req, res) {
         try {
+            // Verificar si el usuario es propietario del producto
+            const product = await productService.getProductById(req.params.pid)
+            if (!product) {
+                return res.status(404).json({
+                    status: "failure",
+                    errorCode: "NOT_FOUND",
+                    description: "Producto no encontrado"
+                })
+            }
+            if (req.session.user.role === 'premium' && product.owner === req.session.user.email) {
+                return res.status(403).json({
+                    status: "failure",
+                    errorCode: "FORBIDDEN",
+                    description: "No tienes permiso para actualizar la cantidad de este producto"
+                })
+            } 
+
             const cart = await cartService.updateProductQuantity(req.params.cid, req.params.pid, req.body.quantity)
             res.status(200).json({
                 status: "success",
@@ -125,6 +162,23 @@ export default class CartController {
     //Eliminar un producto del carrito por su id.
     async deleteProductFromCart (req, res) {
         try {
+            // Verificar si el usuario es propietario del producto
+            const product = await productService.getProductById(req.params.pid)
+            if (!product) {
+                return res.status(404).json({
+                    status: "failure",
+                    errorCode: "NOT_FOUND",
+                    description: "Producto no encontrado"
+                })
+            }
+            if (req.session.user.role === 'premium' && product.owner === req.session.user.email) {
+                return res.status(403).json({
+                    status: "failure",
+                    errorCode: "FORBIDDEN",
+                    description: "No tienes permiso para eliminar este producto del carrito"
+                })
+            }
+
             const cart = await cartService.deleteProductFromCart(req.params.cid, req.params.pid)
             res.status(200).json({
                 status: "success",

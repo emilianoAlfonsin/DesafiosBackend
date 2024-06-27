@@ -30,6 +30,7 @@ export default class SessionService {
             await newUser.save()
             logger.info(`Carrito asignado al usuario: ${newUser.email}`)
     
+            await sendEmail(newUser.email, "Registro exitoso", `Hola ${newUser.first_name}. Bienvenido a nuestra app!!`)
             return UserDTO.fromUser(newUser) // Devolver el DTO del usuario creado
         } catch (error) {
             logger.error(`Error en el registro del usuario ${userData.email}, error: ${error}`)
@@ -126,6 +127,30 @@ export default class SessionService {
         await user.save()
 
         await sendEmail(user.email, "Restablecimiento de contraseña", "Tu contraseña ha sido reestablecida")
+
+        return UserDTO.fromUser(user)
+    }
+
+    // Cambiar el rol del usuario actual. Solo puede ser accesible por los usuarios con rol "admin".
+    async changeUserRole(email, newRole) {
+        if (!email || !newRole) throw new Error("Todos los campos son obligatorios")
+
+        // Verificar que el usuario exista
+        const user = await userDao.findUserByEmail(email)
+        if (!user) throw new Error("El usuario no existe")
+
+        // Verificar que el rol sea válido
+        const validRoles = ["user", "premium", "admin"]
+        if (!validRoles.includes(newRole)) throw new Error("Rol inválido")
+
+        // Verificar que el usuario no intente cambiar su propio rol
+        if (user.email === req.session.user.email && newRole === "admin") {
+            throw new Error("No puedes cambiar tu propio rol")
+        }
+
+        // Cambiar el rol del usuario
+        user.role = newRole
+        await user.save()
 
         return UserDTO.fromUser(user)
     }

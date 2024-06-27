@@ -110,8 +110,19 @@ export default class ProductController {
     async updateProduct(req, res) {
         try{
             const product = await productService.updateProduct(req.params.id, req.body)
+
+            // Verificar si el usuario tiene permiso para modificar el producto
+            if (!req.session.user || (req.session.user.role !== "premium" && req.session.user.email !== product.owner)) {
+                logger.error("No tienes permiso para modificar este producto")
+                return res.status(403).json({
+                    status: "failure",
+                    errorCode: "FORBIDDEN",
+                    description: "No tienes permiso para modificar este producto"
+                })
+            }
+
+            // Si no se encuentra el producto devuelve un código de estado 404
             if(!product){
-                // Si no se encuentra el producto devuelve un código de estado 404
                 logger.error("Error al actualizar el producto")
                 return res.status(404).json({
                     status: "failure",
@@ -119,6 +130,7 @@ export default class ProductController {
                     description: "Producto no encontrado"
                 })
             }
+
             res.status(200).json({
                 status: "success",
                 payload: {
@@ -141,6 +153,18 @@ export default class ProductController {
     async deleteProductById(req, res) {
         try{
             const product = await productService.deleteProductById(req.params.id)
+
+            // Verificarsi el usuario tiene permiso para eliminar el producto
+            if (!req.session.user || (req.session.user.role !== "premium" && req.session.user.email !== product.owner)) {
+                logger.error("No tienes permiso para eliminar este producto")
+                return res.status(403).json({
+                    status: "failure",
+                    errorCode: "FORBIDDEN",
+                    description: "No tienes permiso para eliminar este producto"
+                })
+            }
+
+            // Si no se encuentra el producto devuelve un código de estado 404
             if(!product){
                 return res.status(404).json({
                     status: "failure",
@@ -148,6 +172,7 @@ export default class ProductController {
                     description: "Producto no encontrado"
                 })
             }
+            
             res.status(200).json({
                 status: "success",
                 payload: {

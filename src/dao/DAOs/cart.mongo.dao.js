@@ -25,7 +25,7 @@ class CartDAO {
         if (!isValidObjectId(cid)) throw new Error("El ID del carrito no es válido")
         if (!isValidObjectId(pid)) throw new Error("El ID del producto no es válido")
 
-        // Verificar si el producto ya existe en el carrito
+        // Buscar el carrito por su Id
         const cart = await cartsModel.findById(cid)
         if (!cart) throw new Error("Carrito no encontrado")
 

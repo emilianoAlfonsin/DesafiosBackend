@@ -38,6 +38,10 @@ const schema = new Schema({
     category: {
         type: String,
         required: true
+    },
+    owner: {
+        type: String,
+        default: "admin"
     }
 })
 

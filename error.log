@@ -24,3 +24,7 @@
 2024-06-26T16:46:17.506Z [31merror[39m: El usuario ya existe 
 2024-06-26T16:46:17.507Z [31merror[39m: Error en el registro del usuario prueba9@mail.com, error: Error: El usuario ya existe 
 2024-06-26T16:46:17.508Z [31merror[39m: Error al registrar usuario: 
+2024-06-26T22:10:35.540Z [31merror[39m: El usuario ya existe 
+2024-06-26T22:10:35.541Z [31merror[39m: Error en el registro del usuario emiliano.a.83@gmail.com, error: Error: El usuario ya existe 
+2024-06-26T22:10:35.542Z [31merror[39m: Error al registrar el usuario: Error: Error al crear el usuario 
+2024-06-26T22:10:35.543Z [31merror[39m: Error de autenticación: Error: Error al crear el usuario 
