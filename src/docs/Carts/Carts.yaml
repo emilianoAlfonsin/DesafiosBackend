@@ -1,0 +1,69 @@
+paths:
+  /api/carts/:
+    get:
+      summary: Obtiene todos los carritos
+      tags: [Carts]
+      responses:
+        "200":
+          description: Lista de carritos
+        "500":
+          description: Error al obtener los carritos
+    
+    post:
+      summary: Crea un nuevo carrito
+      tags: [Carts]
+      requestBody:
+        description: Datos del carrito a crear
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/dao/models/cartsModel.js'
+
+  /api/carts/{cid}:
+    get:
+      summary: Obtiene un carrito por su ID
+      tags: [Carts]
+      parameters:
+        - name: cid
+          in: path
+          description: ID del carrito
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Carrito encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/dao/models/cartsModel.js'
+        "404":
+          description: Carrito no encontrado
+    put:
+      summary: Actualiza un carrito por su ID
+      tags: [Carts]
+      parameters:
+        - name: cid
+          in: path
+          description: ID del carrito
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Datos del carrito actualizados
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/dao/models/cartsModel.js'
+    delete:
+      summary: Elimina un carrito por su ID
+      tags: [Carts]
+      parameters:
+        - name: cid
+          in: path
+          description: ID del carrito
+          required: true
+          schema:
+            type: string

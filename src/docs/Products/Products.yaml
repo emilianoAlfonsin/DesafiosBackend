@@ -1,0 +1,75 @@
+paths:
+  /api/products/:
+    get:
+      summary: Obtener todos los productos (paginado)
+      tags: [Productos]
+      responses:
+        200:
+          description: Lista de productos.
+        500:
+          description: Error al obtener los productos.
+    post:
+      summary: Crear un nuevo producto
+      tags: [Productos]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/dao/models/productModel.js'
+      responses:
+        201:
+          description: Producto creado correctamente.
+        400:
+          description: Error al crear el producto.
+  /api/products/{id}:
+    get:
+      summary: Obtener un producto por ID
+      tags: [Productos]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Producto encontrado.
+        404:
+          description: Producto no encontrado.
+    put:
+      summary: Actualizar un producto por ID
+      tags: [Productos]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/dao/models/productModel.js'
+      responses:
+        200:
+          description: Producto actualizado correctamente.
+        400:
+          description: Error al actualizar el producto.
+        404:
+          description: Producto no encontrado.
+    delete:
+      summary: Eliminar un producto por ID
+      tags: [Productos]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Producto eliminado correctamente.
+        404:
+          description: Producto no encontrado.

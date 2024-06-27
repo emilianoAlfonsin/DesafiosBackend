@@ -14,10 +14,28 @@ import initializePassport from "./passport.config.js"
 import { createRandomProduct } from '../utils/utils.js'
 import logerTestRouter from '../routes/loggerRouter.js'
 import { sendEmail } from './nodemailer.config.js'
+import swaggerJSDoc from 'swagger-jsdoc'
+import swaggerUi from 'swagger-ui-express'
 
 const serverConfig = () => {
     const app = express()
 
+    const swaggerOptions = {
+        definition: {
+            openapi: '3.0.0',
+            info: {
+                title: 'Documentación de la API',
+                version: '1.0.0',
+                description: 'Documentación de la API de e-commerce'
+            }
+        },
+        apis: [`${__dirname}/../docs/**/*.yaml`]
+    }
+
+    const swaggerSpecs = swaggerJSDoc(swaggerOptions)
+
+    // Ruta de documentación de la API
+    app.use('/apidocs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs))
     // Configuración de Handlebars y vistas.
     app.engine('handlebars', handlebars.engine())
     app.set('view engine', 'handlebars')

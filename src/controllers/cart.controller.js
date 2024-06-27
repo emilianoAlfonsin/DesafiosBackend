@@ -1,4 +1,5 @@
 import CartService from "../dao/services/cart.service.js"
+import ProductService from "../dao/services/product.service.js"
 import logger from "../utils/logger.js"
 
 const cartService = new CartService()
