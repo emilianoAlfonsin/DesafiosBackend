@@ -114,7 +114,7 @@ export default sessionRouter
 //     const { first_name, last_name, email, password, age } = req.body
 
 //     //Validar campos obligatorios
-//     console.log(req.body);
+//     console.log(req.body) 
 //     console.log("Validando campos obligatorios")
 //     if (!first_name || !last_name || !email || !password || !age) {
 //         res.status(400).send({ status: "error", message: "Todos los campos son obligatorios" })

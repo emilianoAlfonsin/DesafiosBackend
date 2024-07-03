@@ -1,9 +1,10 @@
-import MessageDAO from "../DAOs/message.mongo.dao.js"
-import MessageDTO from "../DTOs/message.dto.js"
+import MessageRepository from "../dao/repositories/message.repository.js"
+import MessageDTO from "../dao/DTOs/message.dto.js"
+
 
 export default class MessagesService {
     constructor() {
-        this.dao = MessageDAO
+        this.dao = MessageRepository
     }
 
     async getAllMessages() {

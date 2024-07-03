@@ -1,6 +1,6 @@
 import { Server } from "socket.io"
-import ProductsService from "../dao/services/product.service.js"
-import MessagesService from "../dao/services/messages.service.js"
+import ProductsService from "../services/product.service.js"
+import MessagesService from "../services/messages.service.js"
 
 const initializeSocket = (server) => {
 

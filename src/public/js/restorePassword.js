@@ -14,9 +14,9 @@ form.addEventListener('submit', (e) => {
     })
     .then(result => {
         if(result.status === 200) {
-            console.log('Contraseña restaurada correctamente');
+            console.log('Contraseña restaurada correctamente') 
         }else{
-            console.log('Error al restaurar contraseña');
+            console.log('Error al restaurar contraseña') 
         }
     })
 })

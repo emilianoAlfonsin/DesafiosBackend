@@ -23,11 +23,11 @@ productForm.addEventListener("submit", async (e) => {
         // Si el key es "status" cambia el valor a true o false, sino asigna el valor del input al objeto product
         product[key] = key === 'status' 
         ? formData.get(key) === 'on' 
-        : value;
+        : value 
         // Si el key es "price" o "stock", convierte el valor a un número
         product[key] = key === 'price' || key === 'stock' 
         ? parseFloat(value) 
-        : value;
+        : value 
     }
     
     // Emitir el nuevo producto al servidor para almacenarlo en products.json

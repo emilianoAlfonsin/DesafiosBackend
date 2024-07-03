@@ -1,7 +1,7 @@
 import messageModel from "../models/messagesModel.js"
 import { isValidObjectId } from "../../utils/utils.js"
 
-class MessageDAO {
+class MessageRepository {
     async findAllMessages() {
         return await messageModel.find()
     }
@@ -17,4 +17,4 @@ class MessageDAO {
     }
 }
 
-export default new MessageDAO()
+export default new MessageRepository()

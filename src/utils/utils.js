@@ -29,7 +29,7 @@ export function isValidPassword(password, hashedPassword) {
 // export function createRandomUser() {
 //     let numberOfProducts = parseInt(faker.string.numeric())
 //     let products = []
-//     for (let i = 0; i < numberOfProducts; i++) {
+//     for (let i = 0  i < numberOfProducts  i++) {
 //         products.push(createRandomProduct())
 //     }
 //     return {

@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import { Schema } from "mongoose";
+import mongoose from "mongoose" 
+import { Schema } from "mongoose" 
 import mongoosePaginate from "mongoose-paginate-v2"
 
 

@@ -1,6 +1,7 @@
-import SessionService from "../dao/services/session.service.js"
+import SessionService from "../services/session.service.js"
 import SessionDTO from "../dao/DTOs/session.dto.js"
 import logger from "../utils/logger.js"
+import UserDTO from "../dao/DTOs/user.dto.js"
 
 const sessionService = new SessionService()
 
@@ -60,9 +61,8 @@ export default class SessionController {
                 })
             } 
 
-            const userDTO = await sessionService.loginUser(req.user)
-            //paso el userDTO por sessionDTO para que en sesión solo estén disponibles los datos necesarios
-            const sessionDTO = SessionDTO.fromUserDTO(userDTO)
+            const userDTO = UserDTO.fromUser(req.user)// Asume que req.user es autenticado por passport
+            const sessionDTO = SessionDTO.fromUserDTO(userDTO) //paso el userDTO por sessionDTO para que en sesión solo estén disponibles los datos necesarios
             req.session.user = sessionDTO
 
             res.status(200).json({
@@ -91,7 +91,7 @@ export default class SessionController {
 
     // Manejar la solicitud de inicio de sesión con github.
     async github(req, res) {
-        console.log("Solicitud de GET recibida en /github")
+        logger.info("Solicitud de GET recibida en /github")
     }
 
     // Manejar la respuesta de github
@@ -105,10 +105,10 @@ export default class SessionController {
                 role: req.user.role,
                 carts: req.user.carts
             }
-            console.log(req.session.user)
+            logger.info(`Usuario: ${req.session.user}`)
             res.redirect("/products")
         } catch (error) {
-            console.error("Error en el callback de GitHub:", error.message)
+            logger.error("Error en el callback de GitHub:", error.message)
             res.status(500).json({
                 status: "failure",
                 errorCode: "INTERNAL_SERVER_ERROR",

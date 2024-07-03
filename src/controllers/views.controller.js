@@ -1,9 +1,10 @@
-import CartService from "../dao/services/cart.service.js"
-import ProductsService from "../dao/services/product.service.js"
-import SessionService from "../dao/services/session.service.js"
+import CartService from "../services/cart.service.js"
+import ProductService from "../services/product.service.js"
+import SessionService from "../services/session.service.js"
+import logger from "../utils/logger.js"
 
 const cartService = new CartService()
-const productService = new ProductsService()
+const productService = new ProductService()
 const sessionService = new SessionService()
 
 export default class ViewsController {
@@ -156,8 +157,8 @@ export default class ViewsController {
             const isValid = productsData.docs.length > 0
 
             const sessionUser = req.session.user ? await sessionService.getCurrentUser(req.session) : null
-            console.log("Usuario: ", sessionUser)
-
+            logger.info(`Usuario: ${sessionUser}`)
+            
             // Enviar la respuesta con el formato requerido
             res.status(200).render('products', { 
                 products: productsData.docs, 
@@ -169,7 +170,7 @@ export default class ViewsController {
                 user: sessionUser
             })
         } catch (error) {
-            console.error(error);
+            console.error(error) 
             res.status(500).json({
                 status: "failure",
                 errorCode: "INTERNAL_SERVER_ERROR",

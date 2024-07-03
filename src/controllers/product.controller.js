@@ -1,4 +1,4 @@
-import ProductsService from "../dao/services/product.service.js"
+import ProductsService from "../services/product.service.js"
 import logger from "../utils/logger.js"
 
 const productService = new ProductsService()
@@ -33,11 +33,8 @@ export default class ProductController {
 
     //Obtener un producto por su id
     async getProductById(req, res) {
-        // console.log("Parametro: ",req.params.pid)
         try {
             const productId = req.params.pid
-            // console.log(`Buscando producto con id: ${productId}`)
-
             const product = await productService.getProductById(productId)
             if (!product) {
                 logger.error(`Error al buscar el producto con id: ${productId}`)
@@ -58,7 +55,7 @@ export default class ProductController {
                 status: "failure",
                 errorCode: "INTERNAL_SERVER_ERROR",
                 description: "Error al obtener el producto"
-            });
+            }) 
         }
     }
 
@@ -110,7 +107,6 @@ export default class ProductController {
     async updateProduct(req, res) {
         try{
             const product = await productService.updateProduct(req.params.id, req.body)
-
             // Verificar si el usuario tiene permiso para modificar el producto
             if (!req.session.user || (req.session.user.role !== "premium" && req.session.user.email !== product.owner)) {
                 logger.error("No tienes permiso para modificar este producto")

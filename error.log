@@ -28,3 +28,9 @@
 2024-06-26T22:10:35.541Z [31merror[39m: Error en el registro del usuario emiliano.a.83@gmail.com, error: Error: El usuario ya existe 
 2024-06-26T22:10:35.542Z [31merror[39m: Error al registrar el usuario: Error: Error al crear el usuario 
 2024-06-26T22:10:35.543Z [31merror[39m: Error de autenticación: Error: Error al crear el usuario 
+2024-06-29T23:45:12.210Z [31merror[39m: Contraseña incorrecta 
+2024-06-29T23:50:24.102Z [31merror[39m: Contraseña incorrecta 
+2024-06-29T23:50:38.447Z [31merror[39m: Contraseña incorrecta 
+2024-06-30T15:17:35.531Z [31merror[39m: Contraseña incorrecta 
+2024-06-30T20:51:38.660Z [31merror[39m: El usuario ya existe 
+2024-06-30T21:14:10.219Z [31merror[39m: Contraseña incorrecta 

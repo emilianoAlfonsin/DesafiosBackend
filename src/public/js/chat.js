@@ -28,7 +28,7 @@ chatbox.addEventListener('keyup', e => {
 })
 
 socket.on('messageLogs', data => {
-    console.log('Mensajes recibidos en el cliente:', data);
+    console.log('Mensajes recibidos en el cliente:', data) 
     // Limpiar el contenido del div de registro (log)
     log.innerHTML = ''
     

@@ -117,7 +117,7 @@ export default class CartManager {
 
         if (!cartById) throw new Error(`No se encuentra el carrito con ID ${cid}`)
     
-        const productIndex = cartById.products.findIndex(product => product.id === parseInt(pid));
+        const productIndex = cartById.products.findIndex(product => product.id === parseInt(pid)) 
     
         if (productIndex === -1) throw new Error(`No se encuentra el producto con ID ${pid} en el carrito con ID ${cid}`)
     

@@ -21,8 +21,7 @@ form.addEventListener('submit', async (e) => {
             window.location.replace('/products')
         } else {
             console.log('Error en la solicitud de inicio de sesión')
-            errorMessage.textContent = json.message
-            errorMessage.style.display = 'block' // Mostrar el mensaje de error
+            alert('Error en la solicitud de inicio de sesión')
         }
     } catch (error) {
         console.error('Error en la solicitud de inicio de sesión:', error)

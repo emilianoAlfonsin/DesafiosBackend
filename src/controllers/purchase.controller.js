@@ -63,19 +63,19 @@ export default class PurchaseController {
     // Eliminar un ticket por su id
     async deleteTicketById(req, res) {
         try {
-            const ticketId = req.params.id;
-            const ticket = await purchaseService.deleteTicketById(ticketId);
+            const ticketId = req.params.id 
+            const ticket = await purchaseService.deleteTicketById(ticketId) 
             res.status(200).json({
                 status: "success",
                 payload: ticket
-            });
+            }) 
         } catch (error) {
-            console.error(error);
+            console.error(error) 
             res.status(500).json({
                 status: "failure",
                 errorCode: "INTERNAL_SERVER_ERROR",
                 description: "Error al eliminar el ticket"
-            });
+            }) 
         }
     }
 }

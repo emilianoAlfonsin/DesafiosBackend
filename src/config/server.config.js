@@ -16,6 +16,7 @@ import logerTestRouter from '../routes/loggerRouter.js'
 import { sendEmail } from './nodemailer.config.js'
 import swaggerJSDoc from 'swagger-jsdoc'
 import swaggerUi from 'swagger-ui-express'
+import logger from '../utils/logger.js'
 
 const serverConfig = () => {
     const app = express()
@@ -61,7 +62,7 @@ const serverConfig = () => {
     app.use(passport.session())
 
 
-    console.log("Configurando las rutas...")
+    logger.info("Configurando las rutas...")
     // Configuración de rutas.
     app.use(express.static(path.join(__dirname,"..",'public')))
     app.use('/api/products/', productRouter)
@@ -76,7 +77,7 @@ const serverConfig = () => {
             await sendEmail(process.env.MAIL_USERNAME, "Correo de prueba", "Este es un correo de prueba")
             res.send("Correo enviado")
         } catch(error){
-            console.log(error)
+            logger.error(`No se ha podido enviar el correo, error: ${error}`)
         }
     }) 
     // Mocking de productos
@@ -88,10 +89,10 @@ const serverConfig = () => {
             }
             res.send(products)
         } catch(error){
-            console.log(error)
+            logger.error(`No es posible crear los productos, error: ${error}`)
         }
     })
-    console.log("Rutas configuradas...")    
+    logger.info("Rutas configuradas...")    
     return app
 }
 
