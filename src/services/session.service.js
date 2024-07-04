@@ -73,7 +73,7 @@ export default class SessionService {
     }
 
     async resetPassword(token, newPassword) {
-        const user = UserRepository.findUserByResetToken(token)
+        const user = await UserRepository.findUserByResetToken(token)
         if (!user) throw new Error("El usuario no existe")
 
         logger.info(`Tipo de user: ${typeof user.save}`)
