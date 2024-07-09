@@ -34,3 +34,6 @@
 2024-06-30T15:17:35.531Z [31merror[39m: Contraseña incorrecta 
 2024-06-30T20:51:38.660Z [31merror[39m: El usuario ya existe 
 2024-06-30T21:14:10.219Z [31merror[39m: Contraseña incorrecta 
+2024-07-04T16:40:39.018Z [31merror[39m: Este es un mensaje error 
+2024-07-04T16:40:39.020Z [90mfatal[39m: Este es un mensaje fatal 
+2024-07-04T16:42:45.260Z [31merror[39m: Error al buscar el producto con id: undefined 

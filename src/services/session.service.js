@@ -76,9 +76,9 @@ export default class SessionService {
         const user = await UserRepository.findUserByResetToken(token)
         if (!user) throw new Error("El usuario no existe")
 
-        logger.info(`Tipo de user: ${typeof user.save}`)
+        logger.debug(`Tipo de user: ${typeof user.save}`)
         const hashedPassword = hashPassword(newPassword)
-        logger.info(`Tipo de user password hasheado: ${typeof user.save}`)
+        logger.debug(`Tipo de user password hasheado: ${typeof user.save}`)
         user.password = hashedPassword
         user.resetPasswordToken = undefined
         user.resetPasswordExpires = undefined

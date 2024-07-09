@@ -23,7 +23,14 @@ const userSchema = new Schema({
         },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
-            })
+    documents: [
+        {
+            name: String,
+            reference: String
+        }
+    ],
+    last_connection: Date
+})
 
 const userModel = mongoose.model(userCollection, userSchema)
 export default userModel
