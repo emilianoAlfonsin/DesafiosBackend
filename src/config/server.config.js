@@ -17,6 +17,7 @@ import { sendEmail } from './nodemailer.config.js'
 import swaggerJSDoc from 'swagger-jsdoc'
 import swaggerUi from 'swagger-ui-express'
 import logger from '../utils/logger.js'
+import userRouter from '../routes/userRouter.js'
 
 const serverConfig = () => {
     const app = express()
@@ -65,9 +66,11 @@ const serverConfig = () => {
     logger.info("Configurando las rutas...")
     // Configuración de rutas.
     app.use(express.static(path.join(__dirname,"..",'public')))
+    app.use(express.static(path.join(__dirname, "..",'uploads')))
     app.use('/api/products/', productRouter)
     app.use('/api/carts/', cartRouter)
     app.use('/api/session/', sessionRouter)
+    app.use('/api/users/', userRouter)
     app.use(viewsRouter)
     // Testeo de respuesta de logger
     app.use(logerTestRouter)

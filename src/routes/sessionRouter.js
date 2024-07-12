@@ -97,14 +97,6 @@ sessionRouter.get(
     sessionController.currentUser
 )
 
-// Dentro de sessionRouter.js
-
-// Ruta para cambiar el rol de un usuario
-sessionRouter.post(
-    "/premium/:uid", 
-    sessionController.changeUserRole
-)
-
 export default sessionRouter
 
 
