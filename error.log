@@ -37,3 +37,9 @@
 2024-07-04T16:40:39.018Z [31merror[39m: Este es un mensaje error 
 2024-07-04T16:40:39.020Z [90mfatal[39m: Este es un mensaje fatal 
 2024-07-04T16:42:45.260Z [31merror[39m: Error al buscar el producto con id: undefined 
+2024-08-04T22:39:57.524Z [31merror[39m: El usuario no existe 
+2024-08-04T22:39:57.581Z [31merror[39m: Error al loguear usuario: Error al loguear usuario 
+2024-08-04T22:40:06.628Z [31merror[39m: El usuario no existe 
+2024-08-04T22:40:06.679Z [31merror[39m: Error al loguear usuario: Error al loguear usuario 
+2024-08-04T23:33:20.041Z [31merror[39m: Unhandled error: Error: Failed to lookup view "updateUserRole" in views directory "C:\Users\HP\Documents\CoderBackendDesafios\desafio-01\src\views" 
+2024-08-04T23:35:57.764Z [31merror[39m: Unhandled error: Error: Failed to lookup view "updateUserRole" in views directory "C:\Users\HP\Documents\CoderBackendDesafios\desafio-01\src\views" 

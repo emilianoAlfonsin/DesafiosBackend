@@ -1,12 +1,10 @@
 import winston from "winston"
 
-const { combine, timestamp, printf, colorize } = winston.format
+const { combine, timestamp, printf, colorize, json } = winston.format
 
 // Definir formato de mensaje
 const myFormat = printf(({ level, message, timestamp, ...meta }) => {
-    // Extrae el documento Mongoose si está presente
     const metaData = Object.keys(meta).length ? JSON.stringify(meta, (key, value) => {
-        // Filtra y registra solo el documento relevante de Mongoose
         if (value && value._doc) {
             return value._doc
         }
@@ -35,37 +33,44 @@ const colors = {
 
 winston.addColors(colors)
 
-const createLogger = (env) => {
-    if (env === "production") {
-        return winston.createLogger({
-            levels,
-            level: "info",
-            format: combine(
-                timestamp(),
-                colorize(),
-                myFormat
-            ),
-            transports: [
-                new winston.transports.Console()
-            ]
-        })
-    } else {
-        return winston.createLogger({
-            levels,
-            level: "debug",
-            format: combine(
-                timestamp(), 
-                colorize(), 
-                myFormat
-            ),
-            transports: [
-                new winston.transports.Console(),
-                new winston.transports.File({ filename: "error.log", level: "error" }),            
-            ]
-        })
-    }
+const createDevelopmentLogger = () => {
+    return winston.createLogger({
+        levels,
+        level: process.env.LOG_LEVEL || "debug",
+        format: combine(
+            timestamp(),
+            colorize(),
+            myFormat
+        ),
+        transports: [
+            new winston.transports.Console(),
+            new winston.transports.File({ filename: "error.log", level: "error" }),
+        ],
+        exceptionHandlers: [
+            new winston.transports.File({ filename: 'exceptions.log' })
+        ]
+    })
 }
 
-const logger = createLogger(process.env.NODE_ENV || "development")
+const createProductionLogger = () => {
+    return winston.createLogger({
+        levels,
+        level: process.env.LOG_LEVEL || "info",
+        format: combine(
+            timestamp(),
+            json()
+        ),
+        transports: [
+            new winston.transports.Console(),
+            new winston.transports.File({ filename: "combined.log" }),
+            new winston.transports.File({ filename: "error.log", level: "error" }),
+        ],
+        exceptionHandlers: [
+            new winston.transports.File({ filename: 'exceptions.log' })
+        ]
+    })
+}
+
+const logger = process.env.NODE_ENV === "production" ? createProductionLogger() : createDevelopmentLogger()
 
 export default logger

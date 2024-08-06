@@ -29,7 +29,7 @@ export function isValidPassword(password, hashedPassword) {
 // export function createRandomUser() {
 //     let numberOfProducts = parseInt(faker.string.numeric())
 //     let products = []
-//     for (let i = 0  i < numberOfProducts  i++) {
+//     for (let i = 0; i < numberOfProducts; i++) {
 //         products.push(createRandomProduct())
 //     }
 //     return {
@@ -49,8 +49,8 @@ export function createRandomProduct() {
         id: faker.database.mongodbObjectId(),
         name: faker.commerce.productName(),
         description: faker.commerce.productDescription(),
-        price: parseInt(faker.string.numeric()),
-        stock: parseInt(faker.string.numeric()),
+        price: faker.number.int({ min: 1, max: 1000 }),
+        stock: faker.number.int({ min: 0, max: 100 }),
         category: faker.commerce.department(),
         thumbnail: faker.image.urlLoremFlickr({width:240}),
         code: faker.string.numeric(),

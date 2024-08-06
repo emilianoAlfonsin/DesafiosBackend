@@ -1,236 +1,157 @@
-import CartService from "../services/cart.service.js"
-import ProductService from "../services/product.service.js"
-import logger from "../utils/logger.js"
+import CartService from "../services/cart.service.js";
+import ProductService from "../services/product.service.js";
+import logger from "../utils/logger.js";
+import { handleSuccess, handleError } from "../utils/responseHandler.js";
 
-const cartService = new CartService()
-const productService = new ProductService()
+// Instancia de los servicios de carrito y producto
+const cartService = new CartService();
+const productService = new ProductService();
 
 export default class CartController {
-    constructor(){
-    }
+    constructor() {}
 
-    // Obtener todos los carritos.
-    async getCarts (req, res) {
+    // Método para obtener todos los carritos
+    async getCarts(req, res) {
         try {
-            const carts = await cartService.getCarts()
-            res.status(200).json({
-                status: "success",
-                payload: carts
-            })
+            logger.info("Iniciando la obtención de todos los carritos");
+            const carts = await cartService.getCarts();
+            logger.info("Carritos obtenidos exitosamente");
+            return handleSuccess(res, 200, "Carritos obtenidos exitosamente", carts);
         } catch (error) {
-            logger.error("Error al obtener los carritos")
-            res.status(500).json({ 
-                status: "failure",
-                errorCode: "INTERNAL_SERVER_ERROR",
-                description: "Error al obtener los carritos",
-                message: error.message
-            })
+            return handleError(res, 500, "INTERNAL_SERVER_ERROR", "Error al obtener los carritos", error);
         }
     }
 
-    // Obtener un carrito por su id.
-    async getCartById (req, res) {
+    // Método para obtener un carrito por su ID
+    async getCartById(req, res) {
         try {
-            const cart = await cartService.getCartById(req.params.cid)
-            res.status(200).json({
-                status: "success",
-                payload: cart
-            })
+            logger.info(`Iniciando la obtención del carrito con id: ${req.params.cid}`);
+            const cart = await cartService.getCartById(req.params.cid);
+            logger.info(`Carrito con id ${req.params.cid} obtenido exitosamente`);
+            return handleSuccess(res, 200, `Carrito con id ${req.params.cid} obtenido exitosamente`, cart);
         } catch (error) {
-            logger.error("Error al obtener el carrito")
-            res.status(500).json({
-                status: "failure",
-                errorCode: "INTERNAL_SERVER_ERROR",
-                description: "Error al obtener el carrito",
-                message: error.message
-            }
-            )
+            return handleError(res, 500, "INTERNAL_SERVER_ERROR", "Error al obtener el carrito", error);
         }
     }
 
-    //Crear un nuevo carrito.
-    async createCart (req, res) {
+    // Método para crear un nuevo carrito
+    async createCart(req, res) {
         try {
-            const newCart = await cartService.createCart()
-            res.status(200).json({
-                status: "success",
-                payload: newCart
-            })
+            logger.info("Iniciando la creación de un nuevo carrito");
+            const newCart = await cartService.createCart();
+            logger.info("Carrito creado exitosamente");
+            return handleSuccess(res, 201, "Carrito creado exitosamente", newCart);
         } catch (error) {
-            console.error("Error al crear el carrito:", error.message)
-            res.status(500).json({
-                status: "failure",
-                errorCode: "INTERNAL_SERVER_ERROR",
-                description: "Error al crear el carrito",
-                message: error.message
-            })
+            return handleError(res, 500, "INTERNAL_SERVER_ERROR", "Error al crear el carrito", error);
         }
     }
 
-    //Agregar un producto al carrito por su id.
-    async addProductToCart (req, res) {
+    // Método para agregar un producto al carrito
+    async addProductToCart(req, res) {
         try {
-            // Verificar si el usuario es el propietario del producto
-            const product = await productService.getProductById(req.params.pid)
+            logger.info(`Iniciando la adición del producto con id ${req.params.pid} al carrito con id ${req.params.cid}`);
+            const product = await productService.getProductById(req.params.pid);
             if (!product) {
-                return res.status(404).json({
-                    status: "failure",
-                    errorCode: "NOT_FOUND",
-                    description: "Producto no encontrado"
-                })
+                logger.warn(`Producto con id ${req.params.pid} no encontrado`);
+                return handleError(res, 404, "NOT_FOUND", "Producto no encontrado", new Error("Producto no encontrado"));
             }
 
+            // Verifica si el usuario premium intenta agregar su propio producto
             if (req.session.user.role === 'premium' && product.owner === req.session.user.email) {
-                return res.status(403).json({
-                    status: "failure",
-                    errorCode: "FORBIDDEN",
-                    description: "No tienes permiso para agregar este producto al carrito"
-                })
+                logger.warn(`Usuario premium ${req.session.user.email} intentó agregar su propio producto al carrito`);
+                return handleError(res, 403, "FORBIDDEN", "No tienes permiso para agregar este producto al carrito", new Error("No tienes permiso para agregar este producto al carrito"));
             }
 
-            const cart = await cartService.addProductToCart(req.params.cid, req.params.pid)
-
-            res.status(200).json({
-                status: "success",
-                payload: cart
-            })
+            const cart = await cartService.addProductToCart(req.params.cid, req.params.pid);
+            logger.info(`Producto con id ${req.params.pid} agregado al carrito con id ${req.params.cid} exitosamente`);
+            return handleSuccess(res, 200,"Producto agregado con éxito", cart);
         } catch (error) {
-            console.error("Error al agregar el producto al carrito:", error.message)
-            res.status(500).json({
-                status: "failure",
-                errorCode: "INTERNAL_SERVER_ERROR",
-                description: "Error al agregar el producto al carrito",
-                message: error.message
-            })
+            return handleError(res, "Error al agregar el producto al carrito", error);
         }
     }
 
-    //Actualizar un carrito con un array de productos.
-    async updateCart (req, res) {
+    // Método para actualizar un carrito
+    async updateCart(req, res) {
         try {
-            const cart = await cartService.updateCart(req.params.cid, req.body)
-            res.status(200).json({
-                status: "success",
-                payload: cart
-            })
+            logger.info(`Iniciando la actualización del carrito con id ${req.params.cid}`);
+            const cart = await cartService.updateCart(req.params.cid, req.body);
+            logger.info(`Carrito con id ${req.params.cid} actualizado exitosamente`);
+            return handleSuccess(res, 200,"Carrito actualizado con éxito",cart);
         } catch (error) {
-            console.error("Error al actualizar el carrito:", error.message)
-            res.status(500).json({
-                status: "failure",
-                errorCode: "INTERNAL_SERVER_ERROR",
-                description: "Error al actualizar el carrito",
-                message: error.message
-            })
+            return handleError(res, "Error al actualizar el carrito", error);
         }
     }
 
-    //Actualizar la cantidad de un producto en un carrito.
-    async updateProductQuantity (req, res) {
+    // Método para actualizar la cantidad de un producto en el carrito
+    async updateProductQuantity(req, res) {
         try {
-            // Verificar si el usuario es propietario del producto
-            const product = await productService.getProductById(req.params.pid)
+            logger.info(`Iniciando la actualización de la cantidad del producto con id ${req.params.pid} en el carrito con id ${req.params.cid}`);
+            const product = await productService.getProductById(req.params.pid);
             if (!product) {
-                return res.status(404).json({
-                    status: "failure",
-                    errorCode: "NOT_FOUND",
-                    description: "Producto no encontrado"
-                })
+                logger.warn(`Producto con id ${req.params.pid} no encontrado`);
+                return handleError(res, 404, "NOT_FOUND", "Producto no encontrado", new Error("Producto no encontrado"));
             }
-            if (req.session.user.role === 'premium' && product.owner === req.session.user.email) {
-                return res.status(403).json({
-                    status: "failure",
-                    errorCode: "FORBIDDEN",
-                    description: "No tienes permiso para actualizar la cantidad de este producto"
-                })
-            } 
 
-            const cart = await cartService.updateProductQuantity(req.params.cid, req.params.pid, req.body.quantity)
-            res.status(200).json({
-                status: "success",
-                payload: cart
-            })
+            // Verifica si el usuario premium intenta actualizar la cantidad de su propio producto
+            if (req.session.user.role === 'premium' && product.owner === req.session.user.email) {
+                logger.warn(`Usuario premium ${req.session.user.email} intentó actualizar la cantidad de su propio producto`);
+                return handleError(res, 403, "FORBIDDEN", "No tienes permiso para actualizar la cantidad de este producto", new Error("No tienes permiso para actualizar la cantidad de este producto"));
+            }
+
+            const cart = await cartService.updateProductQuantity(req.params.cid, req.params.pid, req.body.quantity);
+            logger.info(`Cantidad del producto con id ${req.params.pid} en el carrito con id ${req.params.cid} actualizada exitosamente`);
+            return handleSuccess(res, 200,"Cantidad actualizada con éxito", cart);
         } catch (error) {
-            console.error("Error al actualizar la cantidad del producto:", error.message)
-            res.status(500).json({
-                status: "failure",
-                errorCode: "INTERNAL_SERVER_ERROR",
-                description: "Error al actualizar la cantidad del producto",
-                message: error.message
-            })
+            return handleError(res, "Error al actualizar la cantidad del producto", error);
         }
     }
 
-    //Eliminar un producto del carrito por su id.
-    async deleteProductFromCart (req, res) {
+    // Método para eliminar un producto del carrito
+    async deleteProductFromCart(req, res) {
         try {
-            // Verificar si el usuario es propietario del producto
-            const product = await productService.getProductById(req.params.pid)
+            logger.info(`Iniciando la eliminación del producto con id ${req.params.pid} del carrito con id ${req.params.cid}`);
+            const product = await productService.getProductById(req.params.pid);
             if (!product) {
-                return res.status(404).json({
-                    status: "failure",
-                    errorCode: "NOT_FOUND",
-                    description: "Producto no encontrado"
-                })
+                logger.warn(`Producto con id ${req.params.pid} no encontrado`);
+                return handleError(res, 404, "NOT_FOUND", "Producto no encontrado", new Error("Producto no encontrado"));
             }
+
+            // Verifica si el usuario premium intenta eliminar su propio producto
             if (req.session.user.role === 'premium' && product.owner === req.session.user.email) {
-                return res.status(403).json({
-                    status: "failure",
-                    errorCode: "FORBIDDEN",
-                    description: "No tienes permiso para eliminar este producto del carrito"
-                })
+                logger.warn(`Usuario premium ${req.session.user.email} intentó eliminar su propio producto del carrito`);
+                return handleError(res, 403, "FORBIDDEN", "No tienes permiso para eliminar este producto del carrito", new Error("No tienes permiso para eliminar este producto del carrito"));
             }
 
-            const cart = await cartService.deleteProductFromCart(req.params.cid, req.params.pid)
-            res.status(200).json({
-                status: "success",
-                payload: cart
-            })
+            const cart = await cartService.deleteProductFromCart(req.params.cid, req.params.pid);
+            logger.info(`Producto con id ${req.params.pid} eliminado del carrito con id ${req.params.cid} exitosamente`);
+            return handleSuccess(res, 200, "Producto eliminado exitosamente", cart);
         } catch (error) {
-            console.error("Error al eliminar el producto del carrito:", error.message)
-            res.status(500).json({
-                status: "failure",
-                errorCode: "INTERNAL_SERVER_ERROR",
-                description: "Error al eliminar el producto del carrito",
-                message: error.message
-            })
+            return handleError(res, "Error al eliminar el producto del carrito", error);
         }
     }
 
-    //Eliminar todos los productos del carrito.
-    async deleteAllProductsFromCart (req, res) {
+    // Método para eliminar todos los productos del carrito
+    async deleteAllProductsFromCart(req, res) {
         try {
-            const cart = await cartService.deleteAllProductsFromCart(req.params.cid)
-            res.status(200).json({
-                status: "success",
-                payload: cart
-            })
+            logger.info(`Iniciando la eliminación de todos los productos del carrito con id ${req.params.cid}`);
+            const cart = await cartService.deleteAllProductsFromCart(req.params.cid);
+            logger.info(`Todos los productos del carrito con id ${req.params.cid} eliminados exitosamente`);
+            return handleSuccess(res, 200, "Productos del carrito eliminados exitosamente",cart);
         } catch (error) {
-            console.error("Error al eliminar todos los productos del carrito:", error.message)
-            res.status(500).json({
-                status: "failure",
-                errorCode: "INTERNAL_SERVER_ERROR",
-                description: "Error al eliminar todos los productos del carrito",
-                message: error.message
-            })
+            return handleError(res, "Error al eliminar todos los productos del carrito", error);
         }
     }
 
+    // Método para finalizar la compra del carrito
     async purchaseCart(req, res) {
         try {
-            const cartId = req.params.cid
-            const ticket = await cartService.purchaseCart(cartId)
-            res.status(200).json({
-                status: "success",
-                payload: ticket
-            })
+            logger.info(`Iniciando el proceso de compra del carrito con id ${req.params.cid}`);
+            const cartId = req.params.cid;
+            const ticket = await cartService.purchaseCart(cartId);
+            logger.info(`Proceso de compra del carrito con id ${cartId} finalizado exitosamente`);
+            return handleSuccess(res, 200, "Compra realizada con exito", ticket);
         } catch (error) {
-            res.status(500).json({ 
-                status: "failure",
-                errorCode: "INTERNAL_SERVER_ERROR",
-                description: "Error al finalizar el proceso de compra del carrito",
-                error: error.message
-            })
+            return handleError(res, "Error al finalizar el proceso de compra del carrito", error);
         }
-    }    
-
+    }
 }

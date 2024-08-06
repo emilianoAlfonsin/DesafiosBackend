@@ -1,0 +1,39 @@
+<div class="container text-center">
+    <h2>Modificar Rol de Usuario</h2>
+    <hr>
+    <form id="editRoleForm" data-user-id="{{user._id}}">
+        <div class="list-group-item" class="container d-grid justify-center">
+            <input type="text" id="userId" placeholder="User ID" class="row m-2">
+            <input type="text" id="role" placeholder="Role" class="row m-2">
+            <button type="submit" class="btn btn-primary">Modificar Rol</button>
+        </div>
+    </form>
+    <hr>
+</div>
+
+<!-- Modal para editar el rol -->
+<div class="modal fade" id="editRoleModal" tabindex="-1" role="dialog" aria-labelledby="editRoleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editRoleModalLabel">Editar Rol de Usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="modalEditRoleForm">
+                    <div class="form-group">
+                        <label for="role">Nuevo Rol</label>
+                        <select class="form-control" id="role" name="role">
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
+                            <!-- Agrega más roles según sea necesario -->
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

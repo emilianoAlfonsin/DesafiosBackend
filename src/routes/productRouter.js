@@ -6,18 +6,18 @@ const productRouter = Router()
 const productController = new ProductController()
 
 // Obtener todos los productos. (paginado)
-productRouter.get('/', productController.getProducts)
+productRouter.get('/', productController.getProducts.bind(productController))
 
 // Obtener un producto por su Id. 
 productRouter.get('/:pid/', productController.getProductById.bind(productController))
 
-// Agregar un nuevo producto. 
-productRouter.post('/', productController.addProduct)
+// Agregar un nuevo producto. (Requiere autenticación)
+productRouter.post('/', auth, productController.addProduct.bind(productController))
 
-// Actualizar producto.
-productRouter.put('/:pid/', productController.updateProduct)
+// Actualizar producto. (Requiere autenticación)
+productRouter.put('/:pid/', auth, productController.updateProduct.bind(productController))
 
-// Eliminar un producto mediante su Id. 
-productRouter.delete('/:pid/', productController.deleteProductById)
+// Eliminar un producto mediante su Id. (Requiere autenticación)
+productRouter.delete('/:pid/', auth, productController.deleteProductById.bind(productController))
 
 export default productRouter

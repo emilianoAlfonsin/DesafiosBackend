@@ -7,17 +7,17 @@ const storage = multer.diskStorage({
             cb(null, "/uploads/profiles")
         }
         if(file.fieldname === 'product'){
-            cb(null, "/uploads/products")
+            cb(null, __dirname + "../uploads/products")
         }
         if(file.fieldname === 'document'){
-            cb(null, "/uploads/documents")
+            cb(null, __dirname + "../uploads/documents")
         }
         else{
-            cb(null, "/uploads/others")
+            cb(null, __dirname + "../uploads/others")
         }
     },
     filename: (req, file, cb) => {
-        cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`)
+        cb(null, `${file.fieldname}`)
     }
 })
 
